@@ -21,7 +21,7 @@ module.exports = {
       ctx.clearRect(1024, 794, 124, 224);
       ctx.drawImage(hazmat, 0, 0, canvas.width, canvas.height);
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'hazmat.png');
-      return message.channel.send(attachment);
+      message.channel.send(attachment);
     });
 	},
 };

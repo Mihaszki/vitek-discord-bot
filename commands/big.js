@@ -15,7 +15,7 @@ module.exports = {
       const user_image = await Canvas.loadImage(user_image_url);
       ctx.drawImage(user_image, 0, 0, canvas.width, canvas.height);
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'big.png');
-      return message.channel.send(attachment);
+      message.channel.send(attachment);
     });
 	},
 };

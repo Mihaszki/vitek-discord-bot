@@ -23,6 +23,6 @@ module.exports = {
     );
 
   loadingMessage.delete({ timeout: 1000 });
-  return message.channel.send(embed);
+  message.channel.send(embed);
 	},
 };

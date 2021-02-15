@@ -19,7 +19,7 @@ module.exports = {
       ctx.drawImage(user_image, 148, 114, 414, 162);
       ctx.drawImage(linus, 0, 0, canvas.width, canvas.height);
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'linus.png');
-      return message.channel.send(attachment);
+      message.channel.send(attachment);
     });
 	},
 };
