@@ -1,8 +1,8 @@
 module.exports = {
   name: 'help',
-  description: 'List all of my commands or info about a specific command.',
+  description: 'List all of my commands or info about a specific command',
   usage: '<command name>',
-  cooldown: 3,
+  cooldown: 1,
   execute(message, args) {
     const { prefix } = require('../bot_config.json');
     const data = [];

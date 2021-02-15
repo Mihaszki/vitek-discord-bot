@@ -3,7 +3,6 @@ module.exports = {
   cooldown: 1,
   description: 'Information about the bot',
   guildOnly: true,
-  args: false,
   async execute(message) {
     const Discord = require('discord.js');
     const config = require('../bot_config.json');
@@ -12,7 +11,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
     .setColor('#00aeff')
     .setTitle(`${config.bot_name} | Info`)
-    .setThumbnail(config.bot_avatar_picture)
+    .setThumbnail(message.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }))
     .addFields(
       { name: 'Tag', value: loadingMessage.author.tag, inline: true },
       { name: 'ID', value: loadingMessage.author.id, inline: true },

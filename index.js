@@ -14,13 +14,15 @@ for(const file of commandFiles) {
 }
 
 const cooldowns = new Discord.Collection();
+const getTimeNow = () => '[' + new Date().toLocaleTimeString() + ']';
 
 client.once('ready', () => {
-  console.log(`#####################\nREADY! ${client.user.tag}\n#####################`);
+  console.log('\x1b[33m%s\x1b[0m', `#####################\nREADY! ${client.user.tag}\n#####################`);
   client.user.setActivity(config.activity, { type: 'PLAYING' });
 });
 
 client.on('message', message => {
+  console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
   if(!message.content.startsWith(config.prefix) || message.author.bot) return;
 
   // Get arguments from user's input
@@ -64,6 +66,7 @@ client.on('message', message => {
   setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
   try {
+    console.log('\x1b[32m%s\x1b[0m', `${getTimeNow()} ${message.author.tag}: ${config.prefix}${command.name}`);
     command.execute(message, args);
 	}
   catch (error) {
