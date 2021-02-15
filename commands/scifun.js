@@ -50,5 +50,5 @@ module.exports = {
       message.channel.send(attachment);
       loadingMessage.delete({ timeout: 1000 });
     });
-	},
+  },
 };

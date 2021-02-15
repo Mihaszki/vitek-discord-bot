@@ -21,5 +21,5 @@ module.exports = {
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'linus.png');
       message.channel.send(attachment);
     });
-	},
+  },
 };

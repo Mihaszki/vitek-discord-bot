@@ -23,5 +23,5 @@ module.exports = {
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'hazmat.png');
       message.channel.send(attachment);
     });
-	},
+  },
 };

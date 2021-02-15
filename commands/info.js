@@ -24,5 +24,5 @@ module.exports = {
 
   loadingMessage.delete({ timeout: 1000 });
   message.channel.send(embed);
-	},
+  },
 };
