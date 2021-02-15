@@ -16,7 +16,7 @@ module.exports = {
       const x = Math.floor(Math.random() * 10);
       if(x > a) return true;
       else return false;
-    }
+    };
 
     for(let i = 0; i < msg.length; i++) {
       if(msg[i] == ',' && msg[i + 1] != ',') {
@@ -114,4 +114,4 @@ module.exports = {
     new_msg += '\n\n||**Added ' + kurwa_counter + ' ' + kurwa_counter_word + '.**||';
     return new_msg;
   },
-}
+};

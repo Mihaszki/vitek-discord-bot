@@ -1,14 +1,13 @@
 module.exports = {
-  wrapText: function(context, text, args = {x, maxWidth, quoteAuthor, fontColor: 'black'}) {
+  wrapText: function(context, text, args = { x: null, maxWidth: null, quoteAuthor: null, fontColor: 'black' }) {
     const cleanText = require('../vitek_modules/cleanText');
     const words = cleanText.emojis(text.replace(/\s+/g, ' ')).split(' ');
     let line = '';
-    let lineCount = 0;
     let test = '';
     let metrics = '';
     let fontSize = 50;
     let y = 0;
-    let x = args.x;
+    const x = args.x;
 
     if(text.length >= 1900) { y = 70; fontSize = 22; }
     else if(text.length >= 1800) { y = 60; fontSize = 24; }
@@ -32,21 +31,20 @@ module.exports = {
         metrics = context.measureText(test);
       }
       if(words[i] != test) {
-        words.splice(i + 1, 0,  words[i].substr(test.length))
+        words.splice(i + 1, 0, words[i].substr(test.length));
         words[i] = test;
-      } 
-      test = line + words[i] + ' ';  
+      }
+      test = line + words[i] + ' ';
       metrics = context.measureText(test);
       if(metrics.width > args.maxWidth && i > 0) {
         context.fillText(line, x, y);
         line = words[i] + ' ';
         y += fontSize;
-        lineCount++;
       }
       else {
         line = test;
       }
-    }    
+    }
     context.fillText(line, x, y);
 
     if(args.quoteAuthor) {

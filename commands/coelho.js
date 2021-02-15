@@ -5,7 +5,7 @@ module.exports = {
   cooldown: 3,
   args: true,
   guildOnly: true,
-  async execute(message, args) {
+  async execute(message) {
     const Discord = require('discord.js');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(1280, 720);
@@ -17,7 +17,7 @@ module.exports = {
     const background = await Canvas.loadImage('images/coelho/coelho.png');
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
     canvasDraw.wrapText(context, `„${msg}”`, {
-      x: 475, maxWidth: 800, fontColor: 'white', quoteAuthor: '~ Paulo Coelho'
+      x: 475, maxWidth: 800, fontColor: 'white', quoteAuthor: '~ Paulo Coelho',
     });
     const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'coelho.png');
     message.channel.send(attachment);

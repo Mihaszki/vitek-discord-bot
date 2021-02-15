@@ -11,7 +11,7 @@ module.exports = {
     if(args[0]) {
       const name = args[0].toLowerCase();
       const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
-      
+
       if (!command) return message.reply('That\'s not a valid command!');
 
       data.push(`**Name:** ${command.name}`);

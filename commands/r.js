@@ -14,7 +14,6 @@ module.exports = {
     if(!args[1] || !(/^\d+$/.test(args[1]))) num = 1;
     else if(args[1] > 2048) num = 2048;
     else num = parseInt(args[1]);
-    console.log(num);
     getImage.getImageAndCheckSize(args[0], message, async (user_image_url) => {
       const user_image = await Canvas.loadImage(user_image_url);
       if(num == 1) generateImage(user_image);
@@ -25,7 +24,7 @@ module.exports = {
     async function generateImage(user_image) {
       const canvas = Canvas.createCanvas(648, 667);
       const context = canvas.getContext('2d');
-      const background = await Canvas.loadImage('images/revox/r.png');
+      const background = await Canvas.loadImage('images/r/r.png');
       context.fillStyle = '#fafafa';
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.drawImage(user_image, 0, 0, canvas.width, canvas.height);
@@ -37,7 +36,7 @@ module.exports = {
     async function generateTiles(tilesNum, user_image) {
       const tiles = [];
       for(let i = 1; i <= 10; i++) {
-        tiles.push(await Canvas.loadImage(`images/revox/r_tiles/r_tile${i}.png`));
+        tiles.push(await Canvas.loadImage(`images/r/r_tiles/r_tile${i}.png`));
       }
 
       const divider = getDivider(tilesNum);
@@ -82,11 +81,11 @@ module.exports = {
       loadingMessage.delete({ timeout: 1000 });
     }
 
-    const median = arr => {
-      const mid = Math.floor(arr.length / 2),
-      nums = [...arr].sort((a, b) => a - b);
+    function median(arr) {
+      const mid = Math.floor(arr.length / 2);
+      const nums = [...arr].sort((a, b) => a - b);
       return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
-    };
+    }
 
     function getDivider(tilesNum) {
       if(tilesNum == 1) return 1;
