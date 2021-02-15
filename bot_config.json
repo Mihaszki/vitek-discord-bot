@@ -1,3 +1,8 @@
 {
-	"prefix": "."
+  "prefix": ".",
+  "activity": ".info",
+  "bot_name": "Vitek",
+  "bot_avatar_picture": "https://i.imgur.com/4OYDFI2.png",
+  "bot_author": "Mihaszki",
+  "github_link": "https://github.com/Mihaszki/vitek-discord-bot"
 }
