@@ -1,5 +1,5 @@
 module.exports = {
-  wrapText: function(context, text, args = { x: null, maxWidth: null, quoteAuthor: null, fontColor: 'black' }) {
+  wrapText: function(context, text, args = { x: null, maxWidth: null, quoteAuthor: null, shadowColor: null, y: 180, fontColor: 'black' }) {
     const cleanText = require('../vitek_modules/cleanText');
     const words = cleanText.emojis(text.replace(/\s+/g, ' ')).split(' ');
     let line = '';
@@ -18,10 +18,15 @@ module.exports = {
     else if(text.length >= 400) { y = 140; fontSize = 39; }
     else if(text.length >= 300) { y = 150; fontSize = 40; }
     else if(text.length >= 200) { y = 130; fontSize = 40; }
-    else { y = 180; }
+    else { y = args.y; }
+
+    if(args.shadowColor) {
+      context.shadowColor = args.shadowColor;
+      context.shadowBlur = 2;
+    }
 
     context.fillStyle = args.fontColor;
-    context.font = `${fontSize}px arial, sans-serif`;
+    context.font = `${fontSize}px sans-serif`;
 
     for(let i = 0; i < words.length; i++) {
       test = words[i];
@@ -51,5 +56,15 @@ module.exports = {
       context.textAlign = 'left';
       context.fillText(args.quoteAuthor, args.maxWidth, y + fontSize);
     }
+  },
+
+  getFontSize: function(text, canvas, offset = 50) {
+    const ctx = canvas.getContext('2d');
+    let fontSize = 100;
+    do {
+      ctx.font = `${fontSize -= 10}px sans-serif`;
+    }
+    while (ctx.measureText(text).width > canvas.width - offset);
+    return ctx.font;
   },
 };
