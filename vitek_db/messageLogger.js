@@ -1,0 +1,50 @@
+module.exports = {
+  saveToDB: async function(message) {
+    const serverModel = require('../vitek_db/models/serverModel');
+    const messageModel = require('../vitek_db/models/messageModel');
+
+    // Get all attachments from message
+    const msgAttachments = [];
+    if(message.attachments.first()) {
+      for(const att of Array.from(message.attachments.values())) {
+        msgAttachments.push({ url: att.url, name: att.name });
+      }
+    }
+
+    // Save message to DB
+    try {
+      const newMessage = new messageModel({
+        server_id: message.guild.id,
+        message_id: message.id,
+        content: message.content,
+        cleanContent: message.cleanContent,
+        author: {
+          user_id: message.author.id,
+          username: message.author.username,
+          tag: message.author.tag,
+          isBot: message.author.bot,
+        },
+        attachments: msgAttachments,
+      });
+      await newMessage.save();
+    }
+    catch (error) {
+      return console.error(error);
+    }
+
+    // Save server info to DB
+    try {
+      const findServer = await serverModel.findOne({ server_id: message.guild.id }).exec();
+      if(!findServer) {
+        const newServer = new serverModel({
+          name: message.client.guilds.cache.find(id => id == message.guild.id).name,
+          server_id: message.guild.id,
+        });
+        await newServer.save();
+      }
+    }
+    catch (error) {
+      return console.error(error);
+    }
+  },
+};

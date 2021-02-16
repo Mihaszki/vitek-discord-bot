@@ -1,7 +1,12 @@
 const Discord = require('discord.js');
 const fs = require('fs');
+const messageLogger = require('./vitek_db/messageLogger');
+const { connectToDB } = require('./vitek_db/connectToDB');
 const config = require('./bot_config.json');
 require('dotenv').config();
+
+// Connect to mongoDB
+connectToDB();
 
 const client = new Discord.Client();
 
@@ -17,11 +22,12 @@ const cooldowns = new Discord.Collection();
 const getTimeNow = () => '[' + new Date().toLocaleTimeString() + ']';
 
 client.once('ready', () => {
-  console.log('\x1b[33m%s\x1b[0m', `#####################\nREADY! ${client.user.tag}\n#####################`);
+  console.log('\x1b[33m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
   client.user.setActivity(config.activity, { type: 'PLAYING' });
 });
 
 client.on('message', message => {
+  messageLogger.saveToDB(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
   if(!message.content.startsWith(config.prefix) || message.author.bot) return;
 
