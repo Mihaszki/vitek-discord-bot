@@ -37,7 +37,7 @@ module.exports = {
       const findServer = await serverModel.findOne({ server_id: message.guild.id }).exec();
       if(!findServer) {
         const newServer = new serverModel({
-          name: message.client.guilds.cache.find(id => id == message.guild.id).name,
+          name: message.guild.name,
           server_id: message.guild.id,
         });
         await newServer.save();
@@ -45,6 +45,19 @@ module.exports = {
     }
     catch (error) {
       return console.error(error);
+    }
+  },
+
+  count: async function(message, onSuccess) {
+    const MessageModel = require('../vitek_db/models/messageModel');
+    try {
+      const countAll = await MessageModel.find().estimatedDocumentCount();
+      const countThisServer = await MessageModel.where({ 'server_id': message.guild.id }).countDocuments();
+      onSuccess(countAll, countThisServer);
+    }
+    catch (error) {
+      console.error(error);
+      return message.channel.send('Something went wrong! Try again later.');
     }
   },
 };
