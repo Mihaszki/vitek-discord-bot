@@ -11,6 +11,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setColor('#00aeff')
       .setTitle(`${config.bot_name} | Info`)
+      .setDescription('**Special thanks to: Jojczak#7487** :heart:')
       .setThumbnail(message.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })).addFields(
         { name: 'Tag', value: loadingMessage.author.tag, inline: true },
         { name: 'ID', value: loadingMessage.author.id, inline: true },
