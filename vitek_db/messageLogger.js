@@ -1,7 +1,7 @@
 module.exports = {
   saveToDB: async function(message) {
-    const serverModel = require('../vitek_db/models/serverModel');
-    const messageModel = require('../vitek_db/models/messageModel');
+    const ServerModel = require('../vitek_db/models/serverModel');
+    const MessageModel = require('../vitek_db/models/messageModel');
 
     // Get all attachments from message
     const msgAttachments = [];
@@ -13,7 +13,7 @@ module.exports = {
 
     // Save message to DB
     try {
-      const newMessage = new messageModel({
+      const newMessage = new MessageModel({
         server_id: message.guild.id,
         message_id: message.id,
         content: message.content,
@@ -34,9 +34,9 @@ module.exports = {
 
     // Save server info to DB
     try {
-      const findServer = await serverModel.findOne({ server_id: message.guild.id }).exec();
+      const findServer = await ServerModel.findOne({ server_id: message.guild.id }).exec();
       if(!findServer) {
-        const newServer = new serverModel({
+        const newServer = new ServerModel({
           name: message.guild.name,
           server_id: message.guild.id,
         });

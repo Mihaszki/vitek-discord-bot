@@ -3,5 +3,11 @@
   "activity": ".info",
   "bot_name": "Vitek",
   "bot_author": "Mihaszki",
-  "github_link": "https://github.com/Mihaszki/vitek-discord-bot"
+  "github_link": "https://github.com/Mihaszki/vitek-discord-bot",
+  "positiveRepMessages": [
+    "Good job!", "I'll always have your back!", "I love making you laugh!", "You're a gift to those around you!", "You are awesome!", "I appreciate you!", "I like your style!", "Your dance moves are quite amazing!", "You are my soul-mate!", "I always learn so much from you!", "You have such a positive charisma!", "Your are the liquor!", "Bam! Peanut, butter and Jam!"
+  ],
+  "negativeRepMessages": [
+    "Bruh...", "Take your little gun and get out of my trailer park!", "You cheeseburger walrus!", "You onion ring sasquatch!", "You mustard tiger!", "Why don't you shut up and let somebody with a brain talk?", "You are the weakest individual I ever know!", "It's time to stop writing..."
+  ]
 }

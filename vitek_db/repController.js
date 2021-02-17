@@ -1,0 +1,110 @@
+module.exports = {
+  sliceReason: function(reason, limit = 90) {
+    return reason.length > limit ? reason.slice(0, limit) + '...' : reason;
+  },
+
+  sendToDB: async function(message, member, username, reason, repValue) {
+    const RepModel = require('../vitek_db/models/repModel');
+    try {
+      const newRep = new RepModel({
+        server_id: message.guild.id,
+        reason: reason,
+        value: repValue,
+        receiver: {
+          user_id: member.id,
+          username: username,
+          tag: member.user.tag,
+        },
+        sender: {
+          user_id: message.author.id,
+          username: message.author.username,
+          tag: message.author.tag,
+        },
+      });
+      await newRep.save();
+
+      const allPoints = await RepModel.aggregate([
+        { $match: { 'receiver.user_id': member.id } },
+        { $group: { _id: null, value: { $sum: '$value' } } },
+      ]);
+
+      this.sendRepEmbed(message, member, reason, repValue, allPoints[0].value);
+    }
+    catch (error) {
+      console.error(error);
+      return message.channel.send('Something went wrong! Try again later.');
+    }
+  },
+
+  newRep: function(message, args, repValue, commandName) {
+    const getMention = require('../vitek_modules/getMention');
+    const { prefix } = require('../bot_config.json');
+
+    const member = getMention.member(args[0], message);
+    if(!member) return message.channel.send('You must select one user that is on the server!');
+
+    const username = getMention.username(member);
+    const reason = message.cleanContent.slice(commandName.length + prefix.length + username.length + 3).trim().replace(/\s+/g, ' ');
+
+    this.sendToDB(message, member, username, reason.length == 0 ? 'None' : reason, repValue);
+  },
+
+  sendRepEmbed: function(message, member, reason, repValue, allPoints) {
+    const Discord = require('discord.js');
+    const { avatar } = require('../vitek_modules/getMention');
+    const { positiveRepMessages, negativeRepMessages } = require('../bot_config.json');
+
+    let color = '';
+    let randomMessage = '';
+
+    if(repValue == 1) {
+      color = '#04ff00';
+      randomMessage = positiveRepMessages[Math.floor(Math.random() * positiveRepMessages.length)];
+    }
+    else {
+      color = '#ff0000';
+      randomMessage = negativeRepMessages[Math.floor(Math.random() * negativeRepMessages.length)];
+    }
+
+    const embed = new Discord.MessageEmbed()
+      .setColor(color)
+      .setAuthor(randomMessage, avatar(member))
+      .setThumbnail(message.guild.iconURL())
+      .addFields(
+        { name: 'Your points:', value: allPoints, inline: true },
+        { name: 'From:', value: message.author, inline: true },
+        { name: 'To:', value: member, inline: true },
+        { name: 'Reason:', value: this.sliceReason(reason), inline: true },
+      );
+    message.channel.send(embed);
+  },
+
+  getUserHistory: async function(user_id, server_id, message, onSuccess) {
+    const RepModel = require('../vitek_db/models/repModel');
+    try {
+      const items = await RepModel
+        .find({ server_id: server_id, 'receiver.user_id': user_id })
+        .sort({ field: 'asc', _id: -1 })
+        .limit(10);
+
+      const allPoints = await RepModel.aggregate([
+        { $match: { 'receiver.user_id': user_id } },
+        { $group: { _id: null, value: { $sum: '$value' } } },
+      ]);
+
+      const pointsOnServer = await RepModel.aggregate([
+        { $match: { server_id: server_id, 'receiver.user_id': user_id } },
+        { $group: { _id: null, value: { $sum: '$value' } } },
+      ]);
+
+      onSuccess(
+        items,
+        allPoints.length == 0 ? 0 : allPoints[0].value,
+        pointsOnServer.length == 0 ? 0 : pointsOnServer[0].value);
+    }
+    catch (error) {
+      console.error(error);
+      return message.channel.send('Something went wrong! Try again later.');
+    }
+  },
+};
