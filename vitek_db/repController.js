@@ -26,6 +26,7 @@ module.exports = {
       const allPoints = await RepModel.aggregate([
         { $match: { 'receiver.user_id': member.id } },
         { $group: { _id: null, value: { $sum: '$value' } } },
+        { $project: { _id: 0, value: 1 } },
       ]);
 
       this.sendRepEmbed(message, member, reason, repValue, allPoints[0].value);
@@ -90,17 +91,36 @@ module.exports = {
       const allPoints = await RepModel.aggregate([
         { $match: { 'receiver.user_id': user_id } },
         { $group: { _id: null, value: { $sum: '$value' } } },
+        { $project: { _id: 0, value: 1 } },
       ]);
 
       const pointsOnServer = await RepModel.aggregate([
         { $match: { server_id: server_id, 'receiver.user_id': user_id } },
         { $group: { _id: null, value: { $sum: '$value' } } },
+        { $project: { _id: 0, value: 1 } },
       ]);
 
-      onSuccess(
-        items,
+      onSuccess(items,
         allPoints.length == 0 ? 0 : allPoints[0].value,
         pointsOnServer.length == 0 ? 0 : pointsOnServer[0].value);
+    }
+    catch (error) {
+      console.error(error);
+      return message.channel.send('Something went wrong! Try again later.');
+    }
+  },
+
+  getRanking: async function(server_id, message, onSuccess) {
+    const RepModel = require('../vitek_db/models/repModel');
+
+    try {
+      const items = await RepModel.aggregate([
+        { $match: { server_id: server_id } },
+        { $group: { _id: { 'user_id': '$receiver.user_id' }, value: { $sum: '$value' } } },
+        { $sort: { value: -1 } },
+        { $limit: 10 },
+      ]);
+      onSuccess(items);
     }
     catch (error) {
       console.error(error);

@@ -11,7 +11,20 @@ module.exports = {
     const getMention = require('../vitek_modules/getMention');
     const { prefix } = require('../bot_config.json');
 
-    if(args[0] == 'history') {
+    if(args[0] == 'ranking') {
+      repController.getRanking(message.guild.id, message, items => {
+        let description = '**Top 10 on the server**\n\n**Place** | **User** | **Points**\n';
+        if(items.length == 0) { description += '**NONE :(**'; }
+        else {
+          for(let i = 0; i < items.length; i++) {
+            description += `**${i + 1}.** | <@${items[i]._id.user_id}> | ${items[i].value}\n`;
+          }
+        }
+
+        sendEmbed('Rep - Ranking', description, message.guild.iconURL());
+      });
+    }
+    else if(args[0] == 'history') {
       let member = null;
       if(!args[1]) member = getMention.member(`<@${message.author.id}>`, message);
       else member = getMention.member(args[1], message);
@@ -22,6 +35,7 @@ module.exports = {
 
         if(items.length == 0) { description += '**NONE :(**'; }
         else {
+          description += '**Value** | **Reason** | **Sender**\n';
           for(const item of items) {
             description += `**${item.value}** | *${repController.sliceReason(item.reason)}* | <@${item.sender.user_id}>\n`;
           }
