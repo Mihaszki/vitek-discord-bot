@@ -5,6 +5,8 @@ const messageSchema = new mongoose.Schema({
   message_id: String,
   content: String,
   cleanContent: String,
+  swears: Number,
+  words: Number,
   author: {
     user_id: String,
     username: String,

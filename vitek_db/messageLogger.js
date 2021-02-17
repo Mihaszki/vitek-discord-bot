@@ -53,7 +53,13 @@ module.exports = {
     try {
       const countAll = await MessageModel.find().estimatedDocumentCount();
       const countThisServer = await MessageModel.where({ 'server_id': message.guild.id }).countDocuments();
-      onSuccess(countAll, countThisServer);
+      const ranking = await MessageModel.aggregate([
+        { $match: { server_id: message.guild.id } },
+        { $group: { _id: { 'user_id': '$author.user_id', 'username': '$author.username' }, count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 10 },
+      ]);
+      onSuccess(countAll, countThisServer, ranking);
     }
     catch (error) {
       console.error(error);
