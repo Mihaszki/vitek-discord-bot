@@ -27,7 +27,7 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
-  messageLogger.saveToDB(message);
+  messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
   if(!message.content.startsWith(config.prefix) || message.author.bot) return;
 

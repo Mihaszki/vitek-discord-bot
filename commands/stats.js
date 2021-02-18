@@ -7,10 +7,15 @@ module.exports = {
     const Discord = require('discord.js');
     const messageLogger = require('../vitek_db/messageLogger');
     messageLogger.count(message, (allMessages, serverMessages, items) => {
-      let description = `Estimated number of messages on all servers: ${allMessages}\nNumber of messages on this server: ${serverMessages}\n\n**Most active users**:\n\n**User** | **Messages**\n`;
+      let description = '**Most active users**:\n\n``User | Messages``\n';
+      let swears = 0;
+      let words = 0;
       for(const item of items) {
         description += `<@${item._id.user_id}> | ${item.count}\n`;
+        swears += parseInt(item.swears);
+        words += parseInt(item.words);
       }
+      description += `\nNumber of messages: ${serverMessages}\nWords: ${words}\nSwears: ${swears}`;
       const embed = new Discord.MessageEmbed()
         .setColor('#fc9803')
         .setTitle(`Logged messages - ${message.guild.name}`)

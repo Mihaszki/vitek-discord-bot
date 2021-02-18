@@ -13,7 +13,7 @@ module.exports = {
 
     if(args[0] == 'ranking') {
       repController.getRanking(message.guild.id, message, items => {
-        let description = '**Top 10 on the server**\n\n**Place** | **User** | **Points**\n';
+        let description = `**Top 10 on** \`\`${message.guild.name}\`\`\n\n\`\`Place | User | Points\`\`\n`;
         if(items.length == 0) { description += '**NONE :(**'; }
         else {
           for(let i = 0; i < items.length; i++) {
@@ -21,7 +21,7 @@ module.exports = {
           }
         }
 
-        sendEmbed('Rep - Ranking', description, message.guild.iconURL());
+        sendEmbed(`Rep - Top 10 | ${message.guild.name}`, description, message.guild.iconURL());
       });
     }
     else if(args[0] == 'history') {
@@ -31,11 +31,11 @@ module.exports = {
       if(!member) return message.channel.send('You must select one user that is on the server!');
 
       repController.getUserHistory(member.id, message.guild.id, message, (items, allPoints, pointsOnServer) => {
-        let description = `**All points:** ${allPoints}\n**Points on the server:** ${pointsOnServer}\n**Last 10 reps:**\n\n`;
+        let description = `All points: ${allPoints}\nPoints on \`\`${message.guild.name}\`\`: ${pointsOnServer}\n\n**Last 10 reps:**\n`;
 
         if(items.length == 0) { description += '**NONE :(**'; }
         else {
-          description += '**Value** | **Reason** | **Sender**\n';
+          description += '``Value | Reason | Sender``\n';
           for(const item of items) {
             description += `**${item.value}** | *${repController.sliceReason(item.reason)}* | <@${item.sender.user_id}>\n`;
           }
@@ -45,18 +45,18 @@ module.exports = {
       });
     }
     else {
-      sendEmbed('Rep - Help', `\`\`${prefix}+rep <@User> <optional reason>\`\` - Give a positive point to the user
-      \`\`${prefix}-rep <@User> <optional reason>\`\` - Give a negative point to the user
+      sendEmbed('Rep - Help', `\`\`${prefix}+rep <@User> <reason>\`\` - Give a positive point to the user
+      \`\`${prefix}-rep <@User> <reason>\`\` - Give a negative point to the user
       \`\`${prefix}rep history\`\` - Your rep history
       \`\`${prefix}rep history <@User>\`\` - Check someone's rep history
       \`\`${prefix}rep ranking\`\` - Ranking`);
     }
 
-    function sendEmbed(title, description, avatar = null) {
+    function sendEmbed(title, description, thumbnail = null) {
       const embed = new Discord.MessageEmbed()
         .setColor('#fff200')
         .setTitle(title)
-        .setThumbnail(avatar == null ? message.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }) : avatar)
+        .setThumbnail(thumbnail == null ? message.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }) : thumbnail)
         .setDescription(description);
       message.channel.send(embed);
     }

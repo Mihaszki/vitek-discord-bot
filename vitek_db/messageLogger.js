@@ -1,7 +1,7 @@
 module.exports = {
-  saveToDB: async function(message) {
-    const ServerModel = require('../vitek_db/models/serverModel');
+  saveMessage: async function(message) {
     const MessageModel = require('../vitek_db/models/messageModel');
+    const profanityCheck = require('../vitek_modules/profanityCheck');
 
     // Get all attachments from message
     const msgAttachments = [];
@@ -10,7 +10,7 @@ module.exports = {
         msgAttachments.push({ url: att.url, name: att.name });
       }
     }
-
+    console.log(profanityCheck.count(message.cleanContent + message.author.username));
     // Save message to DB
     try {
       const newMessage = new MessageModel({
@@ -18,30 +18,17 @@ module.exports = {
         message_id: message.id,
         content: message.content,
         cleanContent: message.cleanContent,
+        attachments: msgAttachments,
+        swears: profanityCheck.count(message.cleanContent + message.author.username),
+        words: message.cleanContent.split(' ').length,
         author: {
           user_id: message.author.id,
           username: message.author.username,
           tag: message.author.tag,
           isBot: message.author.bot,
         },
-        attachments: msgAttachments,
       });
       await newMessage.save();
-    }
-    catch (error) {
-      return console.error(error);
-    }
-
-    // Save server info to DB
-    try {
-      const findServer = await ServerModel.findOne({ server_id: message.guild.id }).exec();
-      if(!findServer) {
-        const newServer = new ServerModel({
-          name: message.guild.name,
-          server_id: message.guild.id,
-        });
-        await newServer.save();
-      }
     }
     catch (error) {
       return console.error(error);
@@ -55,10 +42,11 @@ module.exports = {
       const countThisServer = await MessageModel.where({ 'server_id': message.guild.id }).countDocuments();
       const ranking = await MessageModel.aggregate([
         { $match: { server_id: message.guild.id } },
-        { $group: { _id: { 'user_id': '$author.user_id', 'username': '$author.username' }, count: { $sum: 1 } } },
+        { $group: { _id: { 'user_id': '$author.user_id' }, count: { $sum: 1 }, swears: { $sum: '$swears' }, words: { $sum: '$words' } } },
         { $sort: { count: -1 } },
         { $limit: 10 },
       ]);
+      console.log(ranking);
       onSuccess(countAll, countThisServer, ranking);
     }
     catch (error) {

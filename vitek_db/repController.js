@@ -23,17 +23,12 @@ module.exports = {
       });
       await newRep.save();
 
-      const allPoints = await RepModel.aggregate([
-        { $match: { 'receiver.user_id': member.id } },
-        { $group: { _id: null, value: { $sum: '$value' } } },
-        { $project: { _id: 0, value: 1 } },
-      ]);
+      const allPoints = await this.getAllUserPoints(member.id, message);
 
-      this.sendRepEmbed(message, member, reason, repValue, allPoints[0].value);
+      this.sendRepEmbed(message, member, reason, repValue, allPoints);
     }
     catch (error) {
-      console.error(error);
-      return message.channel.send('Something went wrong! Try again later.');
+      this.sendError(error, message);
     }
   },
 
@@ -43,6 +38,7 @@ module.exports = {
 
     const member = getMention.member(args[0], message);
     if(!member) return message.channel.send('You must select one user that is on the server!');
+    else if(member.id == message.author.id) return message.channel.send('You can\'t rep yourself!');
 
     const username = getMention.username(member);
     const reason = message.cleanContent.slice(commandName.length + prefix.length + username.length + 3).trim().replace(/\s+/g, ' ');
@@ -88,25 +84,13 @@ module.exports = {
         .sort({ field: 'asc', _id: -1 })
         .limit(10);
 
-      const allPoints = await RepModel.aggregate([
-        { $match: { 'receiver.user_id': user_id } },
-        { $group: { _id: null, value: { $sum: '$value' } } },
-        { $project: { _id: 0, value: 1 } },
-      ]);
+      const pointsOnServer = await this.getUserPointsOnServer(server_id, user_id, message);
+      const allPoints = await this.getAllUserPoints(user_id, message);
 
-      const pointsOnServer = await RepModel.aggregate([
-        { $match: { server_id: server_id, 'receiver.user_id': user_id } },
-        { $group: { _id: null, value: { $sum: '$value' } } },
-        { $project: { _id: 0, value: 1 } },
-      ]);
-
-      onSuccess(items,
-        allPoints.length == 0 ? 0 : allPoints[0].value,
-        pointsOnServer.length == 0 ? 0 : pointsOnServer[0].value);
+      onSuccess(items, allPoints, pointsOnServer);
     }
     catch (error) {
-      console.error(error);
-      return message.channel.send('Something went wrong! Try again later.');
+      this.sendError(error, message);
     }
   },
 
@@ -123,8 +107,42 @@ module.exports = {
       onSuccess(items);
     }
     catch (error) {
-      console.error(error);
-      return message.channel.send('Something went wrong! Try again later.');
+      this.sendError(error, message);
     }
+  },
+
+  getUserPointsOnServer: async function(server_id, user_id, message) {
+    try {
+      const RepModel = require('../vitek_db/models/repModel');
+      const pointsOnServer = await RepModel.aggregate([
+        { $match: { server_id: server_id, 'receiver.user_id': user_id } },
+        { $group: { _id: null, value: { $sum: '$value' } } },
+        { $project: { _id: 0, value: 1 } },
+      ]);
+      return pointsOnServer.length == 0 ? 0 : pointsOnServer[0].value;
+    }
+    catch (error) {
+      this.sendError(error, message);
+    }
+  },
+
+  getAllUserPoints: async function(user_id, message) {
+    try {
+      const RepModel = require('../vitek_db/models/repModel');
+      const allPoints = await RepModel.aggregate([
+        { $match: { 'receiver.user_id': user_id } },
+        { $group: { _id: null, value: { $sum: '$value' } } },
+        { $project: { _id: 0, value: 1 } },
+      ]);
+      return allPoints.length == 0 ? 0 : allPoints[0].value;
+    }
+    catch (error) {
+      this.sendError(error, message);
+    }
+  },
+
+  sendError: function(error, message) {
+    console.error(error);
+    return message.channel.send('Something went wrong! Try again later.');
   },
 };
