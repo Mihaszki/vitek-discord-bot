@@ -29,6 +29,13 @@ client.once('ready', () => {
 client.on('message', message => {
   messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
+  if(message.guild.id === '771628652533514251' && message.channel.id === '771689939875790868') {
+    if(message.attachments.first()) {
+      message.react('771685520455368705')
+        .then(() => message.react('771685939013222411'))
+        .catch(() => console.error('One of the emojis failed to react.'));
+    }
+  }
   if(!message.content.startsWith(prefix) || message.author.bot) return;
 
   // Get arguments from user's input

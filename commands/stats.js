@@ -6,14 +6,16 @@ module.exports = {
   async execute(message) {
     const Discord = require('discord.js');
     const messageLogger = require('../vitek_db/messageLogger');
-    messageLogger.count(message, (allMessages, serverMessages, items) => {
-      let description = '**Most active users**:\n\n``User | Messages``\n';
+    messageLogger.count(message, (serverMessages, items) => {
+      let description = '**Most active users**:\n\n``Place | User | Messages``\n';
       let swears = 0;
       let words = 0;
-      for(const item of items) {
-        description += `<@${item._id.user_id}> | ${item.count}\n`;
-        swears += parseInt(item.swears);
-        words += parseInt(item.words);
+      for(let i = 0; i < items.length; i++) {
+        if(!items[i]._id.isBot) {
+          description += `**${i + 1}.** <@${items[i]._id.user_id}> | ${items[i].count}\n`;
+          swears += parseInt(items[i].swears);
+          words += parseInt(items[i].words);
+        }
       }
       description += `\nNumber of messages: ${serverMessages}\nWords: ${words}\nSwears: ${swears}`;
       const embed = new Discord.MessageEmbed()
