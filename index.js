@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const messageLogger = require('./vitek_db/messageLogger');
 const { connectToDB } = require('./vitek_db/connectToDB');
-const config = require('./bot_config.json');
+const { prefix, status } = require('./bot_config.json');
 require('dotenv').config();
 
 // Connect to mongoDB
@@ -23,16 +23,16 @@ const getTimeNow = () => '[' + new Date().toLocaleTimeString() + ']';
 
 client.once('ready', () => {
   console.log('\x1b[33m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
-  client.user.setActivity(config.activity, { type: 'PLAYING' });
+  client.user.setActivity(status, { type: 'PLAYING' });
 });
 
 client.on('message', message => {
   messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
-  if(!message.content.startsWith(config.prefix) || message.author.bot) return;
+  if(!message.content.startsWith(prefix) || message.author.bot) return;
 
   // Get arguments from user's input
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/);
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
   const command = client.commands.get(commandName);
@@ -45,7 +45,7 @@ client.on('message', message => {
     let reply = `You didn't provide any arguments, ${message.author}!`;
 
     if(command.usage) {
-      reply += `\n:wrench: Proper usage: \`\`${config.prefix}${command.name} ${command.usage}\`\``;
+      reply += `\n:wrench: Proper usage: \`\`${prefix}${command.name} ${command.usage}\`\``;
     }
 
     return message.channel.send(reply);
@@ -64,7 +64,7 @@ client.on('message', message => {
 
     if(now < expirationTime) {
       const timeLeft = (expirationTime - now) / 1000;
-      return message.reply(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`\`${command.name}\`\` command. :clock1:`);
+      return message.reply(`Please wait \`\`${timeLeft.toFixed(1)}\`\` more second(s) before reusing the \`\`${command.name}\`\` command. :clock1:`);
     }
   }
 
@@ -72,7 +72,7 @@ client.on('message', message => {
   setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
   try {
-    console.log('\x1b[32m%s\x1b[0m', `${getTimeNow()} ${message.author.tag}: ${config.prefix}${command.name}`);
+    console.log('\x1b[32m%s\x1b[0m', `${getTimeNow()} ${message.author.tag}: ${prefix}${command.name}`);
     command.execute(message, args);
   }
   catch (error) {

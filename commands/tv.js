@@ -14,7 +14,7 @@ module.exports = {
     const { prefix } = require('../bot_config.json');
 
     const text = cleanText.emojis(message.cleanContent.replace(/\s/g, ' ').slice(prefix.length + this.name.length + 1)).toUpperCase();
-    if(text.length > 60) return message.channel.send('The text is too long.');
+    if(text.length > 60) return message.channel.send('The text is too long!');
 
     const images = [
       'images/tv/tv1.png',

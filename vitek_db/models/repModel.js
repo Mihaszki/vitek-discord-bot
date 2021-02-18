@@ -16,4 +16,4 @@ const repSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Reps', repSchema);
+module.exports = mongoose.model('Rep', repSchema);

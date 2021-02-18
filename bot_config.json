@@ -1,6 +1,5 @@
 {
   "prefix": ".",
-  "activity": ".info",
   "bot_name": "Vitek",
   "bot_author": "Mihaszki",
   "github_link": "https://github.com/Mihaszki/vitek-discord-bot",
@@ -10,5 +9,5 @@
   "negativeRepMessages": [
     "Bruh...", "Take your little gun and get out of my trailer park!", "You cheeseburger walrus!", "You onion ring sasquatch!", "You mustard tiger!", "Why don't you shut up and let somebody with a brain talk?", "You are the weakest individual I ever know!", "It's time to stop writing...", "You are so clueless Sherlock Holmes would be turning in his grave!"
   ],
-  "swearWordList": "srak|sracz|sram|srani|sra|gown|cipa|cipy|cipe|cipo|cipk|pener|kurw|huj|spierd|wypierd|odpierd|cwel|dupa|dupe|japa|jape|pizda|pizde|pizdy|pizdo|pedal|morda|frajer|morde|debil|ciec|kutas|jeban|jebal|dziwk|szmate|szmaty|szmato|suki|suka|bitch|fuck|shit|ass|cunt|slut|bastard|dick|retard|idiot"
+  "swearWordList": "srak|sracz|sram|srani|sra|gown|cipa|cipy|cipe|cipo|cipk|pener|kurw|huj|spierd|wypierd|odpierd|cwel|dupa|dupe|japa|jape|pizda|pizde|pizdy|pizdo|pedal|morda|franca|frajer|morde|debil|ciec|kutas|jeban|jebal|dziwk|szmate|szmaty|szmato|suki|suka|bitch|fuck|shit|ass|cunt|slut|bastard|dick|retard|idiot"
 }

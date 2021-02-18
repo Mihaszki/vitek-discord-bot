@@ -10,7 +10,7 @@ module.exports = {
         msgAttachments.push({ url: att.url, name: att.name });
       }
     }
-    console.log(profanityCheck.count(message.cleanContent + message.author.username));
+
     // Save message to DB
     try {
       const newMessage = new MessageModel({
@@ -46,7 +46,6 @@ module.exports = {
         { $sort: { count: -1 } },
         { $limit: 10 },
       ]);
-      console.log(ranking);
       onSuccess(countAll, countThisServer, ranking);
     }
     catch (error) {
