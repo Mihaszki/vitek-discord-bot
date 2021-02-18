@@ -1,13 +1,11 @@
 module.exports = {
-  wrapText: function(context, text, args = { x: null, maxWidth: null, quoteAuthor: null, shadowColor: null, y: 180, fontColor: 'black' }) {
+  wrapText: function(context, text, { x, maxWidth, quoteAuthor, shadowColor, y = 180, fontColor = '#000000' }) {
     const cleanText = require('../vitek_modules/cleanText');
     const words = cleanText.emojis(text.replace(/\s+/g, ' ')).split(' ');
     let line = '';
     let test = '';
     let metrics = '';
     let fontSize = 50;
-    let y = 0;
-    const x = args.x;
 
     if(text.length >= 1900) { y = 70; fontSize = 22; }
     else if(text.length >= 1800) { y = 60; fontSize = 24; }
@@ -18,20 +16,19 @@ module.exports = {
     else if(text.length >= 400) { y = 140; fontSize = 39; }
     else if(text.length >= 300) { y = 150; fontSize = 40; }
     else if(text.length >= 200) { y = 130; fontSize = 40; }
-    else { y = args.y; }
 
-    if(args.shadowColor) {
-      context.shadowColor = args.shadowColor;
+    if(shadowColor) {
+      context.shadowColor = shadowColor;
       context.shadowBlur = 2;
     }
 
-    context.fillStyle = args.fontColor;
+    context.fillStyle = fontColor;
     context.font = `${fontSize}px sans-serif`;
 
     for(let i = 0; i < words.length; i++) {
       test = words[i];
       metrics = context.measureText(test);
-      while (metrics.width > args.maxWidth) {
+      while (metrics.width > maxWidth) {
         test = test.substring(0, test.length - 1);
         metrics = context.measureText(test);
       }
@@ -41,7 +38,7 @@ module.exports = {
       }
       test = line + words[i] + ' ';
       metrics = context.measureText(test);
-      if(metrics.width > args.maxWidth && i > 0) {
+      if(metrics.width > maxWidth && i > 0) {
         context.fillText(line, x, y);
         line = words[i] + ' ';
         y += fontSize;
@@ -52,19 +49,36 @@ module.exports = {
     }
     context.fillText(line, x, y);
 
-    if(args.quoteAuthor) {
+    if(quoteAuthor) {
       context.textAlign = 'left';
-      context.fillText(args.quoteAuthor, args.maxWidth, y + fontSize);
+      context.fillText(quoteAuthor, maxWidth, y + fontSize);
     }
   },
 
   getFontSize: function(text, canvas, offset = 50) {
-    const ctx = canvas.getContext('2d');
+    const context = canvas.getContext('2d');
     let fontSize = 100;
     do {
-      ctx.font = `${fontSize -= 10}px sans-serif`;
+      context.font = `${fontSize -= 10}px sans-serif`;
     }
-    while (ctx.measureText(text).width > canvas.width - offset);
-    return ctx.font;
+    while (context.measureText(text).width > canvas.width - offset);
+    return context.font;
+  },
+
+  drawTextInBox: function(context, txt, font, x, y, w, h, angle) {
+    angle = angle || 0;
+    const fontHeight = 20;
+    const hMargin = 1;
+    context.font = fontHeight + 'px ' + font;
+    context.textAlign = 'left';
+    context.textBaseline = 'top';
+    const txtWidth = context.measureText(txt).width + 2 * hMargin;
+    context.save();
+    context.translate(x + w / 2, y);
+    context.rotate(angle);
+    context.scale(w / txtWidth, h / fontHeight);
+    context.translate(hMargin, 0);
+    context.fillText(txt, -txtWidth / 2, 0);
+    context.restore();
   },
 };

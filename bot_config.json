@@ -2,6 +2,7 @@
   "prefix": ".",
   "bot_name": "Vitek",
   "bot_author": "Mihaszki",
+  "status": ".help / .info",
   "github_link": "https://github.com/Mihaszki/vitek-discord-bot",
   "positiveRepMessages": [
     "Good job!", "I'll always have your back!", "I love making you laugh!", "You're a gift to those around you!", "You are awesome!", "I appreciate you!", "I like your style!", "Your dance moves are quite amazing!", "You are my soul-mate!", "I always learn so much from you!", "You have such a positive charisma!", "Your are the liquor!", "Bam! Peanut, butter and Jam!"
