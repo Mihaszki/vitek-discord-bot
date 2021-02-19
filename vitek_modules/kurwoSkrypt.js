@@ -1,16 +1,11 @@
 module.exports = {
-  run: function(text) {
+  run: function(text, showStats = true) {
     const msg = text;
     const word = 'kurwa';
     let new_msg = '';
-    const curse_words1 = ['pierdoloną', 'chujową', 'popierdoloną'];
-    const curse_words2 = ['pierdolonych', 'chujowych', 'popierdolonych'];
-    const curse_words3 = ['chujowymi', 'jebiącymi', 'popierdolonymi', 'pierdolonymi'];
-    const curse_words4 = ['ruchające', 'jebiące'];
-    const curse_words5 = ['ruchała', 'jebała'];
     let word_count = 3;
     let kurwa_counter = 0;
-    let kurwa_counter_word = 'kurew';
+    let kurwa_counter_word = 'kurwas';
 
     const randNum = (a = 5) => {
       const x = Math.floor(Math.random() * 10);
@@ -63,37 +58,6 @@ module.exports = {
     word_count = 3;
 
     for (let i = 0; i < words.length; i++) {
-      if(randNum(3) && words[i].slice(-3) == 'ową' && words[i] != 'ową' && !curse_words1.includes(words[i])) {
-        words[i] = curse_words1[Math.floor(Math.random() * curse_words1.length)] + ' ' + words[i];
-      }
-      else if(randNum(3) && words[i].slice(-4) == 'nych' && words[i] != 'nych' && !curse_words2.includes(words[i])) {
-        words[i] = curse_words2[Math.floor(Math.random() * curse_words2.length)] + ' ' + words[i];
-      }
-      else if(randNum(3) && words[i].slice(-5) == ',nych' && words[i] != ',nych' && !curse_words2.includes(words[i])) {
-        words[i] = words[i] + ' ' + curse_words2[Math.floor(Math.random() * curse_words2.length)];
-      }
-      else if(randNum(3) && words[i].slice(-4) == ',ową' && words[i] != ',ową' && !curse_words1.includes(words[i])) {
-        words[i] = words[i] + ' ' + curse_words1[Math.floor(Math.random() * curse_words1.length)];
-      }
-      else if(randNum(3) && words[i].slice(-3) == 'ymi' && words[i] != 'ymi' && !curse_words3.includes(words[i])) {
-        words[i] = words[i] + ' ' + curse_words3[Math.floor(Math.random() * curse_words3.length)];
-      }
-      else if(randNum(3) && words[i].slice(-4) == ',ymi' && words[i] != ',ymi' && !curse_words3.includes(words[i])) {
-        words[i] = words[i] + ' ' + curse_words3[Math.floor(Math.random() * curse_words3.length)];
-      }
-      else if(randNum(3) && words[i].slice(-3) == 'ące' && words[i] != 'ące' && !curse_words4.includes(words[i])) {
-        words[i] = words[i] + ' ' + curse_words4[Math.floor(Math.random() * curse_words4.length)];
-      }
-      else if(randNum(3) && words[i].slice(-4) == ',ące' && words[i] != ',ące' && !curse_words4.includes(words[i])) {
-        words[i] = words[i] + ' ' + curse_words4[Math.floor(Math.random() * curse_words4.length)];
-      }
-      else if(randNum(3) && words[i].slice(-3) == 'ała' && words[i] != 'ała' && !curse_words5.includes(words[i])) {
-        words[i] = words[i] + ' ' + curse_words5[Math.floor(Math.random() * curse_words5.length)];
-      }
-      else if(randNum(3) && words[i].slice(-4) == ',ała' && words[i] != ',ała' && !curse_words5.includes(words[i])) {
-        words[i] = words[i] + ' ' + curse_words5[Math.floor(Math.random() * curse_words5.length)];
-      }
-
       if(words[i][words[i].length - 1] == '.' && words[i + 1] == 'Kurwa' && words[i + 2]) {
         words[i + 2] = words[i + 2].replace(words[i + 2][0], words[i + 2][0].toLowerCase());
       }
@@ -111,7 +75,7 @@ module.exports = {
     if(kurwa_counter == 1) kurwa_counter_word = 'kurwa';
     else kurwa_counter_word = 'kurwas';
 
-    new_msg += '\n\n||**Added ' + kurwa_counter + ' ' + kurwa_counter_word + '.**||';
+    if(showStats) new_msg += '\n\n||**Added ' + kurwa_counter + ' ' + kurwa_counter_word + '.**||';
     return new_msg;
   },
 };
