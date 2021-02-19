@@ -50,10 +50,18 @@ module.exports = {
         options: {
           scales: {
             yAxes: [{
+              gridLines: {
+                color: bgColors,
+              },
               ticks: {
                 stepSize: stepSize,
                 beginAtZero: true,
                 callback: (value) => value + unit,
+              },
+            }],
+            xAxes: [{
+              gridLines: {
+                color: bgColors,
               },
             }],
           },
