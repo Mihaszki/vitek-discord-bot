@@ -10,6 +10,7 @@ module.exports = {
     const getMention = require('../vitek_modules/getMention');
     const canvasDraw = require('../vitek_modules/canvasDraw');
     const Canvas = require('canvas');
+    const { loveQuotes } = require('../bot_config.json');
 
     if(!args[0] || !args[1]) return message.channel.send('You must tag two users!');
 
@@ -19,19 +20,7 @@ module.exports = {
     if(!member1 || !member2) return message.channel.send('You must select two users that are on the server!');
     else if(member1 == member2) return message.channel.send('Love with yourself? :wink:');
 
-    const quotes = [
-      'You know you\'re in love when you can\'t fall asleep because reality is finally better than your dreams.',
-      'The best thing to hold onto in life is each other.',
-      'Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.',
-      'I swear I couldn\'t love you more than I do right now, and yet I know I will tomorrow.',
-      'When I saw you I fell in love, and you smiled because you knew it.',
-      'Remember, we\'re madly in love, so it\'s all right to kiss me any time you feel like it.',
-      'I love you not because of who you are, but because of who I am when I am with you.',
-      'As long as the sun continues to shine, you can be sure that my heart will remain yours.',
-      'Whenever you\'re having a bad day, remember this: I LOVE YOU.',
-      'If love was a storybook we\'d meet on the very first page.',
-    ];
-    const quote = `„${quotes[Math.floor(Math.random() * quotes.length)]}”`;
+    const quote = `„${loveQuotes[Math.floor(Math.random() * loveQuotes.length)]}”`;
 
     const username1 = getMention.username(member1);
     const username2 = getMention.username(member2);

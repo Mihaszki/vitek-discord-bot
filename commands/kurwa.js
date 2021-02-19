@@ -4,7 +4,7 @@ module.exports = {
   cooldown: 0.5,
   guildOnly: true,
   args: true,
-  usage: '<tekst>',
+  usage: '<text>',
   execute(message) {
     const { prefix } = require('../bot_config.json');
     const checkMessageLength = require('../vitek_modules/checkMessageLength');
