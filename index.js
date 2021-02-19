@@ -52,7 +52,7 @@ client.on('message', message => {
     let reply = `You didn't provide any arguments, ${message.author}!`;
 
     if(command.usage) {
-      reply += `\n:wrench: Proper usage: \`\`${prefix}${command.name} ${command.usage}\`\``;
+      reply += `\n:wrench: Proper usage: \`${prefix}${command.name} ${command.usage}\``;
     }
 
     return message.channel.send(reply);
@@ -71,7 +71,7 @@ client.on('message', message => {
 
     if(now < expirationTime) {
       const timeLeft = (expirationTime - now) / 1000;
-      return message.reply(`Please wait \`\`${timeLeft.toFixed(1)}\`\` more second(s) before reusing the \`\`${command.name}\`\` command. :clock1:`);
+      return message.reply(`Please wait \`${timeLeft.toFixed(1)}\` more second(s) before reusing the \`${command.name}\` command. :clock1:`);
     }
   }
 

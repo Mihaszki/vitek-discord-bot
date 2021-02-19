@@ -13,7 +13,7 @@ module.exports = {
 
     if(args[0] == 'ranking') {
       repController.getRanking(message.guild.id, message, items => {
-        let description = `**Top 10 on** \`\`${message.guild.name}\`\`\n\n\`\`Place | User | Points\`\`\n`;
+        let description = `**Top 10 on** \`${message.guild.name}\`\n\n\`Place | User | Points\`\n`;
         if(items.length == 0) { description += '**NONE :(**'; }
         else {
           for(let i = 0; i < items.length; i++) {
@@ -31,7 +31,7 @@ module.exports = {
       if(!member) return message.channel.send('You must select one user that is on the server!');
 
       repController.getUserHistory(member.id, message.guild.id, message, (items, allPoints, pointsOnServer) => {
-        let description = `All points: ${allPoints}\nPoints on \`\`${message.guild.name}\`\`: ${pointsOnServer}\n\n**Last 10 reps:**\n`;
+        let description = `All points: ${allPoints}\nPoints on \`${message.guild.name}\`: ${pointsOnServer}\n\n**Last 10 reps:**\n`;
 
         if(items.length == 0) { description += '**NONE :(**'; }
         else {
@@ -45,11 +45,11 @@ module.exports = {
       });
     }
     else {
-      sendEmbed('Rep - Help', `\`\`${prefix}+rep <@User> <reason>\`\` - Give a positive point to the user
-      \`\`${prefix}-rep <@User> <reason>\`\` - Give a negative point to the user
-      \`\`${prefix}rep history\`\` - Your rep history
-      \`\`${prefix}rep history <@User>\`\` - Check someone's rep history
-      \`\`${prefix}rep ranking\`\` - Ranking`);
+      sendEmbed('Rep - Help', `\`${prefix}+rep <@User> <reason>\` - Give a positive point to the user
+      \`${prefix}-rep <@User> <reason>\` - Give a negative point to the user
+      \`${prefix}rep history\` - Your rep history
+      \`${prefix}rep history <@User>\` - Check someone's rep history
+      \`${prefix}rep ranking\` - Ranking`);
     }
 
     function sendEmbed(title, description, thumbnail = null) {

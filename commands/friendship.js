@@ -14,7 +14,7 @@ module.exports = {
     const context = canvas.getContext('2d');
     const { drawTextInBox } = require('../vitek_modules/canvasDraw');
 
-    if(!args[0] || !args[1] || !args[2]) return message.channel.send(`You must give all three arguments!\n\`\`${prefix}friendship <Word1> <Word2> <Server emoji/@User/URL>\`\``);
+    if(!args[0] || !args[1] || !args[2]) return message.channel.send(`You must give all three arguments!\n\`${prefix}${this.name} ${this.usage}\``);
 
     getImage.getImageAndCheckSize(args[2], message, async (user_image_url) => {
       const background = await Canvas.loadImage('images/friendship/friendship.png');

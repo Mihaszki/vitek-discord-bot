@@ -13,13 +13,6 @@ module.exports = {
     const cleanText = require('../vitek_modules/cleanText');
     const { prefix } = require('../bot_config.json');
 
-    /*
-		ctx.save();
-		ctx.translate(470, 557 + heightOffset);
-		ctx.rotate(-0.13 * Math.PI);
-
-		ctx.fillText(msgtext, 0, 0);
-		ctx.restore();*/
     const msgtext = cleanText.emojis(message.cleanContent.slice(this.name.length + prefix.length + 1).replace(/\s+/g, ' '));
     const words = msgtext.split(' ');
     let lineHeight = 45;
