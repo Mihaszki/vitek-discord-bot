@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
   server_id: String,
+  server_name: String,
+  channel_id: String,
+  channel_name: String,
   message_id: String,
   content: String,
   cleanContent: String,

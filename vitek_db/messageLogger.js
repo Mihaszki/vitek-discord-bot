@@ -15,6 +15,9 @@ module.exports = {
     try {
       const newMessage = new MessageModel({
         server_id: message.guild.id,
+        server_name: message.guild.name,
+        channel_id: message.channel.id,
+        channel_name: message.channel.name,
         message_id: message.id,
         content: message.content,
         cleanContent: message.cleanContent,
