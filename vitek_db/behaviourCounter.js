@@ -2,7 +2,6 @@ module.exports = {
   getRanking: async function(server_id, message, onSuccess) {
     try {
       const MessageModel = require('./models/messageModel');
-      const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
         { $match: { server_id: server_id, 'author.isBot': false } },
         { $group: {
@@ -10,16 +9,15 @@ module.exports = {
           count: { $sum: 1 },
           swears: { $sum: '$swears' },
           words: { $sum: '$words' },
-          tag: { $last: '$author.tag' },
+          username: { $last: '$author.username' },
         } },
       ]);
 
       let calculatedData = [];
 
       for(const user of data) {
-        const member = getMention.member(`<@${user._id.user_id}>`, message);
         calculatedData.push({
-          username: (!member) ? user.tag : getMention.username(member),
+          username: user.username,
           value: this.calculate(user.count, user.swears, user.words),
         });
       }
