@@ -37,6 +37,29 @@ module.exports = {
             ctx.restore();
           }
         },
+        afterDatasetsDraw: function(chartInstance) {
+          const ctx = chartInstance.chart.ctx;
+          chartInstance.data.datasets.forEach(function(dataset, i) {
+            const meta = chartInstance.getDatasetMeta(i);
+            if(!meta.hidden && type == 'bar') {
+              meta.data.forEach(function(element, index) {
+                ctx.fillStyle = 'black';
+                ctx.font = `${fontSize * 1.3}px sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const position = element.tooltipPosition();
+                const posY = height / 2;
+                ctx.shadowBlur = 2;
+                ctx.shadowColor = 'black';
+                ctx.fillStyle = 'black';
+                ctx.fillText(chartData[index] + unit, position.x, posY);
+                ctx.fillStyle = 'white';
+                ctx.shadowBlur = 0;
+                ctx.fillText(chartData[index] + unit, position.x, posY);
+              });
+            }
+          });
+        },
       });
       // New chart type example: https://www.chartjs.org/docs/latest/developers/charts.html
       ChartJS.controllers.MyType = ChartJS.DatasetController.extend({

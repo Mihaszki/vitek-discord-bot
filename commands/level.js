@@ -7,20 +7,20 @@ module.exports = {
   guildOnly: true,
   async execute(message, args) {
     const Discord = require('discord.js');
-    const behaviourCounter = require('../vitek_db/behaviourCounter');
+    const behaviorCounter = require('../vitek_db/behaviorCounter');
     const chartGenerator = require('../vitek_modules/chartGenerator');
 
     if(args[0] == 'ranking') {
-      behaviourCounter.getRanking(message.guild.id, message, (data, labels) => {
+      behaviorCounter.getRanking(message.guild.id, message, (data, labels) => {
         if(data.length == 0) return message.channel.send('There is no data yet!');
         chartGenerator.sendChart(message, data, labels,
-          { width: 1500, height: 1000, chartTitle: ['Behaviour level Top 15', '(Higher is better)', ' '], unit: '%' });
+          { width: 1500, height: 1000, chartTitle: ['Behavior level Top 15', '(Higher is better)', ' '], unit: '%' });
       });
     }
     else {
       const embed = new Discord.MessageEmbed()
         .setColor('#fff200')
-        .setTitle('Behaviour - help')
+        .setTitle('Behavior - help')
         .setThumbnail(message.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }))
         .setDescription(`Level is a command that can show your "behavior level" based on the messages you send.
         \`.level ranking\` - Show ranking
