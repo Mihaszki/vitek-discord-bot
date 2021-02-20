@@ -11,12 +11,10 @@ module.exports = {
     const chartGenerator = require('../vitek_modules/chartGenerator');
 
     if(args[0] == 'ranking') {
-      behaviourCounter.getRanking(message.guild.id, message, (data) => {
-        const sortedData = data.sort((a, b) => (a.value < b.value) ? 1 : -1);
-        chartGenerator.sendChart(message,
-          sortedData.map(a => a.value),
-          sortedData.map(a => a.username),
-          { width: 1000, height: 800, chartTitle: ['Behaviour level Top 10', '(More is better)', ' '], unit: '%' });
+      behaviourCounter.getRanking(message.guild.id, message, (data, labels) => {
+        if(data.length == 0) return message.channel.send('There is no data yet!');
+        chartGenerator.sendChart(message, data, labels,
+          { width: 1500, height: 1000, chartTitle: ['Behaviour level Top 15', '(Higher is better)', ' '], unit: '%' });
       });
     }
     else {

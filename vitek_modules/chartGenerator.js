@@ -1,22 +1,27 @@
 module.exports = {
-  sendChart: function(message, chartData, chartLabels, { width, height, chartTitle, stepSize = null, fontSize = 30, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', attachmentFileName = 'chart' }) {
+  sendChart: function(message, chartData, chartLabels, { width, height, chartTitle, stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', attachmentFileName = 'chart' }) {
     const Discord = require('discord.js');
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 
     const dataSet = [];
+    const bgColors = [];
+
     for(let i = 0; i < chartData.length; i++) {
-      const color = getRandomColor();
+      bgColors.push(getRandomColor());
+    }
+
+    if(type == 'bar') {
       dataSet.push({
-        label: chartLabels[i],
-        data: [chartData[i]],
-        backgroundColor: color,
-        borderColor: color,
+        label: 'Ogólny poziom użytkownika',
+        data: chartData,
+        backgroundColor: bgColors,
+        borderColor: bgColors,
+        borderWidth: 1,
       });
     }
 
     const chartCallback = (ChartJS) => {
       // Global config example: https://www.chartjs.org/docs/latest/configuration/
-      ChartJS.defaults.global.elements.rectangle.borderWidth = 2;
       ChartJS.defaults.global.defaultFontColor = fgColor;
       ChartJS.defaults.global.defaultFontSize = fontSize;
       // Global plugin example: https://www.chartjs.org/docs/latest/developers/plugins.html
@@ -45,7 +50,7 @@ module.exports = {
       const configuration = {
         type: type,
         data: {
-          labels: [''],
+          labels: chartLabels,
           datasets: dataSet,
         },
         options: {
@@ -73,6 +78,17 @@ module.exports = {
           },
           chartArea: {
             backgroundColor: chartAreaBgColor,
+          },
+          legend: {
+            display: false,
+          },
+          layout: {
+            padding: {
+              left: 5,
+              right: 5,
+              top: 5,
+              bottom: 5,
+            },
           },
         },
       };

@@ -14,7 +14,7 @@ module.exports = {
         } },
       ]);
 
-      const calculatedData = [];
+      let calculatedData = [];
 
       for(const user of data) {
         const member = getMention.member(`<@${user._id.user_id}>`, message);
@@ -24,7 +24,9 @@ module.exports = {
         });
       }
 
-      onSuccess(data.length == 0 ? [] : calculatedData);
+      if(data.length == 0) return onSuccess([], []);
+      calculatedData = calculatedData.sort((a, b) => (a.value < b.value) ? 1 : -1).slice(0, 15);
+      onSuccess(calculatedData.map(a => a.value), calculatedData.map(a => a.username));
     }
     catch (error) {
       console.error(error);
