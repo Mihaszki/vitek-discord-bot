@@ -17,6 +17,12 @@ module.exports = {
           { width: 1500, height: 1000, chartTitle: ['Behavior level Top 15', '(Higher is better)', ' '], unit: '%' });
       });
     }
+    else if(args[0] == 'today') {
+      const now = new Date();
+      behaviorCounter.getDataForDay(new Date(now.getFullYear(), now.getMonth(), now.getDate()), message.guild.id, message, users => {
+        console.log(users);
+      });
+    }
     else {
       sendEmbed(message, 'Level - Help', `Level is a command that can show your "behavior level" based on the messages you send.
       \`.level ranking\` - Ranking
