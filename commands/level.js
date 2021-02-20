@@ -2,13 +2,13 @@ module.exports = {
   name: 'level',
   description: 'Behaviour level stats',
   usage: 'help',
-  cooldown: 1,
+  cooldown: 2,
   args: true,
   guildOnly: true,
   async execute(message, args) {
-    const Discord = require('discord.js');
     const behaviorCounter = require('../vitek_db/behaviorCounter');
     const chartGenerator = require('../vitek_modules/chartGenerator');
+    const { sendEmbed } = require('../vitek_modules/embed');
 
     if(args[0] == 'ranking') {
       behaviorCounter.getRanking(message.guild.id, message, (data, labels) => {
@@ -18,14 +18,9 @@ module.exports = {
       });
     }
     else {
-      const embed = new Discord.MessageEmbed()
-        .setColor('#fff200')
-        .setTitle('Behavior - help')
-        .setThumbnail(message.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }))
-        .setDescription(`Level is a command that can show your "behavior level" based on the messages you send.
-        \`.level ranking\` - Show ranking
-        `);
-      message.channel.send(embed);
+      sendEmbed(message, 'Level - Help', `Level is a command that can show your "behavior level" based on the messages you send.
+      \`.level ranking\` - Ranking
+      \`.level today\` - Show levels over time for today`);
     }
   },
 };

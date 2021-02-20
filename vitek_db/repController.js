@@ -5,6 +5,7 @@ module.exports = {
 
   sendToDB: async function(message, member, username, reason, repValue) {
     const RepModel = require('../vitek_db/models/repModel');
+    const { sendRepEmbed } = require('../vitek_modules/embed');
     try {
       const newRep = new RepModel({
         server_id: message.guild.id,
@@ -25,7 +26,7 @@ module.exports = {
 
       const allPoints = await this.getAllUserPoints(member.id, message);
 
-      this.sendRepEmbed(message, member, reason, repValue, allPoints);
+      sendRepEmbed(message, member, this.sliceReason(reason), repValue, allPoints);
     }
     catch (error) {
       this.sendError(error, message);
@@ -44,36 +45,6 @@ module.exports = {
     const reason = message.cleanContent.slice(commandName.length + prefix.length + username.length + 3).trim().replace(/\s+/g, ' ');
 
     this.sendToDB(message, member, username, reason.length == 0 ? 'None' : reason, repValue);
-  },
-
-  sendRepEmbed: function(message, member, reason, repValue, allPoints) {
-    const Discord = require('discord.js');
-    const { avatar } = require('../vitek_modules/getMention');
-    const { positiveRepMessages, negativeRepMessages } = require('../bot_config.json');
-
-    let color = '';
-    let randomMessage = '';
-
-    if(repValue == 1) {
-      color = '#04ff00';
-      randomMessage = positiveRepMessages[Math.floor(Math.random() * positiveRepMessages.length)];
-    }
-    else {
-      color = '#ff0000';
-      randomMessage = negativeRepMessages[Math.floor(Math.random() * negativeRepMessages.length)];
-    }
-
-    const embed = new Discord.MessageEmbed()
-      .setColor(color)
-      .setAuthor(randomMessage, avatar(member))
-      .setThumbnail(message.guild.iconURL())
-      .addFields(
-        { name: 'Your points:', value: allPoints, inline: true },
-        { name: 'From:', value: message.author, inline: true },
-        { name: 'To:', value: member, inline: true },
-        { name: 'Reason:', value: this.sliceReason(reason), inline: true },
-      );
-    message.channel.send(embed);
   },
 
   getUserHistory: async function(user_id, server_id, message, onSuccess) {

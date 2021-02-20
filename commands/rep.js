@@ -6,9 +6,9 @@ module.exports = {
   args: true,
   guildOnly: true,
   async execute(message, args) {
-    const Discord = require('discord.js');
     const repController = require('../vitek_db/repController');
     const getMention = require('../vitek_modules/getMention');
+    const { sendEmbed } = require('../vitek_modules/embed');
     const { prefix } = require('../bot_config.json');
 
     if(args[0] == 'ranking') {
@@ -20,8 +20,7 @@ module.exports = {
             description += `**${i + 1}.** | <@${items[i]._id.user_id}> | ${items[i].value}\n`;
           }
         }
-
-        sendEmbed(`Rep - Top 10 | ${message.guild.name}`, description, message.guild.iconURL());
+        sendEmbed(message, `Rep - Top 10 | ${message.guild.name}`, description, message.guild.iconURL());
       });
     }
     else if(args[0] == 'history') {
@@ -41,24 +40,15 @@ module.exports = {
           }
         }
 
-        sendEmbed(`Rep - History | ${getMention.username(member)}`, description, getMention.avatar(member));
+        sendEmbed(message, `Rep - History | ${getMention.username(member)}`, description, getMention.avatar(member));
       });
     }
     else {
-      sendEmbed('Rep - Help', `\`${prefix}+rep <@User> <reason>\` - Give a positive point to the user
+      sendEmbed(message, 'Rep - Help', `\`${prefix}+rep <@User> <reason>\` - Give a positive point to the user
       \`${prefix}-rep <@User> <reason>\` - Give a negative point to the user
       \`${prefix}rep history\` - Your rep history
       \`${prefix}rep history <@User>\` - Check someone's rep history
       \`${prefix}rep ranking\` - Ranking`);
-    }
-
-    function sendEmbed(title, description, thumbnail = null) {
-      const embed = new Discord.MessageEmbed()
-        .setColor('#fff200')
-        .setTitle(title)
-        .setThumbnail(thumbnail == null ? message.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }) : thumbnail)
-        .setDescription(description);
-      message.channel.send(embed);
     }
   },
 };
