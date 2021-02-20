@@ -11,13 +11,14 @@ module.exports = {
       let swears = 0;
       let words = 0;
       let messages = 0;
-
+      let place_counter = 1;
       for(let i = 0; i < userRanking.length; i++) {
         if(!userRanking[i].isBot) {
-          description += `**${i + 1}.** <@${userRanking[i]._id.user_id}> | ${userRanking[i].count}\n`;
+          description += `**${place_counter}.** <@${userRanking[i]._id.user_id}> | ${userRanking[i].count}\n`;
           swears += parseInt(userRanking[i].swears);
           words += parseInt(userRanking[i].words);
           messages += parseInt(userRanking[i].count);
+          place_counter++;
         }
       }
 
