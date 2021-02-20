@@ -7,7 +7,7 @@ module.exports = {
     const Discord = require('discord.js');
     const messageLogger = require('../vitek_db/messageLogger');
     messageLogger.count(message, (allMessages, userRanking, channelRanking) => {
-      let description = '**Most active users:**\n\n`Place | User | Messages`\n';
+      let description = '**Most active users:**\n`Place | User | Messages`\n';
       let swears = 0;
       let words = 0;
       let messages = 0;
@@ -21,9 +21,10 @@ module.exports = {
         }
       }
 
-      description += '**The most active channels:**\n\n`Place | Channel | Messages`\n';
+      description += '\n**Most active channels:**\n`Place | Channel | Messages`\n';
       for(let i = 0; i < channelRanking.length; i++) {
-        description += `**${i + 1}.** ${channelRanking[i].channel_name} | ${channelRanking[i].count}\n`;
+        const channel = message.guild.channels.cache.get(channelRanking[i]._id.channel_id);
+        description += `**${i + 1}.** ${(!channel) ? channelRanking[i].channel_name : '<#' + channelRanking[i]._id.channel_id + '>'} | ${channelRanking[i].count}\n`;
       }
 
       description += `\n\`\`\`Number of messages: ${messages}\nNumber of messages (with bots): ${allMessages}\nWords: ${words}\nSwears: ${swears}\`\`\``;
