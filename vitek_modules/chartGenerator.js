@@ -1,11 +1,17 @@
 module.exports = {
-  sendChart: function(message, chartData, chartLabels, { width, height, label, stepSize = null, fontSize = 30, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', attachmentFileName = 'chart' }) {
+  sendChart: function(message, chartData, chartLabels, { width, height, chartTitle, stepSize = null, fontSize = 30, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', attachmentFileName = 'chart' }) {
     const Discord = require('discord.js');
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 
-    const bgColors = [];
+    const dataSet = [];
     for(let i = 0; i < chartData.length; i++) {
-      bgColors.push(getRandomColor());
+      const color = getRandomColor();
+      dataSet.push({
+        label: chartLabels[i],
+        data: [chartData[i]],
+        backgroundColor: color,
+        borderColor: color,
+      });
     }
 
     const chartCallback = (ChartJS) => {
@@ -39,19 +45,19 @@ module.exports = {
       const configuration = {
         type: type,
         data: {
-          labels: chartLabels,
-          datasets: [{
-            label: label,
-            data: chartData,
-            backgroundColor: bgColors,
-            borderColor: bgColors,
-          }],
+          labels: [''],
+          datasets: dataSet,
         },
         options: {
+          title: {
+            display: true,
+            fontSize: fontSize * 1.3,
+            text: chartTitle,
+          },
           scales: {
             yAxes: [{
               gridLines: {
-                color: bgColors,
+                color: fgColor,
               },
               ticks: {
                 stepSize: stepSize,
@@ -61,7 +67,7 @@ module.exports = {
             }],
             xAxes: [{
               gridLines: {
-                color: bgColors,
+                color: fgColor,
               },
             }],
           },

@@ -1,7 +1,7 @@
 module.exports = {
-  getRanking: async function(server_id, message) {
+  getRanking: async function(server_id, message, onSuccess) {
     try {
-      const MessageModel = require('../vitek_db/models/messageModel');
+      const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
         { $match: { server_id: server_id, 'author.isBot': false } },
@@ -14,8 +14,6 @@ module.exports = {
         } },
       ]);
 
-      console.log(data);
-
       const calculatedData = [];
 
       for(const user of data) {
@@ -26,9 +24,7 @@ module.exports = {
         });
       }
 
-      console.log(calculatedData);
-
-      return data.length == 0 ? [] : calculatedData;
+      onSuccess(data.length == 0 ? [] : calculatedData);
     }
     catch (error) {
       console.error(error);
@@ -40,8 +36,6 @@ module.exports = {
     const swears_val = swears * 1.2;
     const messages_count_val = (100 * words - swears) / messages_count * 1.05;
     let final = Math.round(100 - ((100 * swears_val) / messages_count_val));
-
-    console.log(final);
 
     if(final > 100) final = 100;
     else if(final < 0) final = 0;
