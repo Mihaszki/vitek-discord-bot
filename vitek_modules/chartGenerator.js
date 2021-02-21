@@ -1,23 +1,116 @@
 module.exports = {
-  sendChart: function(message, chartData, chartLabels, { width, height, chartTitle, stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', attachmentFileName = 'chart' }) {
+  sendChart: function(message, chartData, { width, height, chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', showOneUser = false, showOnlyID = '', attachmentFileName = 'chart' }) {
     const Discord = require('discord.js');
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 
     const dataSet = [];
-    const bgColors = [];
+    const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff'];
 
-    for(let i = 0; i < chartData.length; i++) {
-      bgColors.push(getRandomColor());
+    if(chartData.length > bgColors.length) {
+      for(let i = 0; i < chartData.length - bgColors.length + 1; i++) {
+        bgColors.push(getRandomColor());
+      }
     }
 
     if(type == 'bar') {
       dataSet.push({
-        label: 'Ogólny poziom użytkownika',
+        label: 'User level',
         data: chartData,
         backgroundColor: bgColors,
         borderColor: bgColors,
         borderWidth: 1,
       });
+    }
+    else if(type == 'line') {
+      const serverLevels = [];
+      const hours = [];
+      for(let i = 0; i < chartData.length; i++) {
+        chartData[i].hours.forEach(item => {
+          if(!hours.includes(item.hour)) {
+            hours.push(item.hour);
+          }
+        });
+      }
+      hours.sort();
+      hours.forEach(item => chartLabels.push(item + ':00'));
+
+      for(let i = 0; i < hours.length; i++) {
+        let value = 0;
+        let counter = 0;
+        for(let j = 0; j < chartData.length; j++) {
+          if(chartData[j].hours.some(item => item.hour == hours[i])) {
+            value += chartData[j].hours.filter(item => item.hour == hours[i])[0].value;
+            counter++;
+          }
+        }
+        serverLevels.push({ value: Math.floor(value / counter), hour: hours[i] });
+      }
+
+      chartData.unshift({
+        username: 'Server level',
+        hours: serverLevels,
+      });
+
+      for(let i = 0; i < chartData.length; i++) {
+        const dataNumbers = [];
+        let last_index = 0;
+        chartData[i].hours.forEach(item => {
+          for(let j = last_index; j < hours.length; j++) {
+            if(hours[j] == item.hour) {
+              dataNumbers.push(item.value);
+              last_index = j + 1;
+              break;
+            }
+            else {
+              dataNumbers.push(null);
+            }
+          }
+        });
+        const _diff = hours.length - dataNumbers.length;
+        if(_diff > 0) {
+          for(let j = 0; j < _diff; j++) {
+            dataNumbers.push(null);
+          }
+        }
+
+        let color = '';
+        let username = '';
+
+        if(!showOneUser) {
+          color = bgColors[i];
+          username = chartData[i].username;
+        }
+        else if(showOneUser && showOnlyID == chartData[i].user_id) {
+          color = bgColors[i];
+          username = chartData[i].username;
+        }
+        else {
+          color = 'rgba(0,0,0,0)';
+          username = '';
+        }
+
+        dataSet.push({
+          fill: i == 0 ? true : false,
+          label: i == 0 ? chartData[i].username : username,
+          pointRadius: 5,
+          fontSize: 30,
+          spanGaps: i == 0 ? true : false,
+          data: dataNumbers,
+          borderJoinStyle: 'miter',
+          pointBackgroundColor: i == 0 ? 'red' : color,
+          pointBorderColor: i == 0 ? 'red' : color,
+          pointBorderWidth: i == 0 ? 8 : 5,
+          borderWidth: i == 0 ? 6 : 3,
+          pointHitRadius: 10,
+          borderDash: i == 0 ? [8, 5] : [],
+          backgroundColor: [
+            i == 0 ? 'rgba(255, 21, 0, 0.06)' : color,
+          ],
+          borderColor: [
+            i == 0 ? 'red' : color,
+          ],
+        });
+      }
     }
 
     const chartCallback = (ChartJS) => {
@@ -85,7 +178,7 @@ module.exports = {
           scales: {
             yAxes: [{
               gridLines: {
-                color: fgColor,
+                color: 'rgba(255, 255, 255, 0.3)',
               },
               ticks: {
                 stepSize: stepSize,
@@ -95,7 +188,7 @@ module.exports = {
             }],
             xAxes: [{
               gridLines: {
-                color: fgColor,
+                color: 'rgba(255, 255, 255, 0.3)',
               },
             }],
           },
@@ -103,7 +196,7 @@ module.exports = {
             backgroundColor: chartAreaBgColor,
           },
           legend: {
-            display: false,
+            display: type == 'line' ? true : false,
           },
           layout: {
             padding: {

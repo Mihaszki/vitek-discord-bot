@@ -34,16 +34,16 @@ module.exports = {
     }
   },
 
-  getDataForDay: async function(date, server_id, message, onSuccess) {
+  getDataForDay: async function(date_start, date_stop, server_id, message, onSuccess) {
     try {
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, createdAt: { $gte: date } } },
+        { $match: { server_id: server_id, createdAt: { $gte: date_start, $lt: date_stop } } },
         { $group: {
           _id: {
             user_id: '$author.user_id',
-            hour: { $hour: '$createdAt' },
+            hour: { $hour: { date: '$createdAt', timezone: 'Europe/Warsaw' } },
             day: { $dayOfYear: '$createdAt' },
           },
           count: { $sum: 1 },
@@ -65,12 +65,14 @@ module.exports = {
               swears: '$swears',
               words: '$words',
               username: '$username',
-              user_id: '$user_id',
               date: '$date',
             },
           },
         } },
       ]);
+
+      if(!data || data.length == 0) return message.channel.send('There is no data for your date!');
+
       const users = [];
       for(const d of data) {
         const hours = [];
