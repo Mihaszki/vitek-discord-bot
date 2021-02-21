@@ -22,6 +22,7 @@ module.exports = {
       });
     }
     else if(type == 'line') {
+      let gotUser = false;
       const serverLevels = [];
       const hours = [];
       for(let i = 0; i < chartData.length; i++) {
@@ -83,6 +84,7 @@ module.exports = {
         else if(showOneUser && showOnlyID == chartData[i].user_id) {
           color = bgColors[i];
           username = chartData[i].username;
+          gotUser = true;
         }
         else {
           color = 'rgba(0,0,0,0)';
@@ -110,6 +112,10 @@ module.exports = {
             i == 0 ? 'red' : color,
           ],
         });
+      }
+
+      if(showOneUser && !gotUser) {
+        return message.channel.send('There is no data for the given user!');
       }
     }
 

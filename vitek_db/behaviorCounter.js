@@ -39,7 +39,7 @@ module.exports = {
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, createdAt: { $gte: date_start, $lt: date_stop } } },
+        { $match: { server_id: server_id, 'author.isBot': false, createdAt: { $gte: date_start, $lt: date_stop } } },
         { $group: {
           _id: {
             user_id: '$author.user_id',
