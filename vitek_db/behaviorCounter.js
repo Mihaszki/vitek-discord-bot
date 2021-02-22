@@ -34,9 +34,32 @@ module.exports = {
     }
   },
 
-  getDataForDay: async function(date, server_id, message, onSuccess) {
-    const { endOfDay, startOfDay } = require('date-fns');
+  getAvailableDates: async function(server_id, message, onSuccess) {
     try {
+      const MessageModel = require('./models/messageModel');
+      const data = await MessageModel.aggregate([
+        { $match: { server_id: server_id } },
+        { $group: {
+          _id: {
+            day: { $dayOfMonth: { date: '$createdAt', timezone: 'Europe/Warsaw' } },
+          },
+          date: { $first: '$createdAt' },
+        } },
+      ]);
+      const dates = [];
+      if(!data || data.length == 0) return onSuccess([ 'No data.' ]);
+      data.forEach(item => { dates.push(item.date.toLocaleDateString()); });
+      onSuccess(dates);
+    }
+    catch (error) {
+      console.error(error);
+      return message.channel.send('Something went wrong! Try again later.');
+    }
+  },
+
+  getDataForDay: async function(date, server_id, message, onSuccess) {
+    try {
+      const { endOfDay, startOfDay } = require('date-fns');
       console.log(startOfDay(date), endOfDay(date));
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');

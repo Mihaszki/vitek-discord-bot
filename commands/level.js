@@ -56,13 +56,20 @@ module.exports = {
           { width: 2000, height: 1000, type: 'line', fontSize: 38, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${args[1]}`, '(Higher is better)', ' '], unit: '%' });
       });
     }
+    else if(args[0] == 'dates') {
+      const checkMessageLength = require('../vitek_modules/checkMessageLength');
+      behaviorCounter.getAvailableDates(message.guild.id, message, dateList => {
+        checkMessageLength.send(`**Available dates:** \`\`\`${dateList.join(', ')}\`\`\``, message);
+      });
+    }
     else {
       sendEmbed(message, 'Level - Help', `Level is a command that can show your "behavior level" based on the messages you send.
       \`.level ranking\` - Ranking
       \`.level today\` - Show levels over time for today
       \`.level today <@User>\` - Show user's level over time for today
       \`.level day <date DD-MM-YYYY format>\` - Show levels over time for the date
-      \`.level day <date DD-MM-YYYY format> <@User>\` - Show user's level over time for the date`);
+      \`.level day <date DD-MM-YYYY format> <@User>\` - Show user's level over time for the date
+      \`.level dates\` - Show available dates`);
     }
   },
 };
