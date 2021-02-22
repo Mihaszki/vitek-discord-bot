@@ -7,7 +7,7 @@ module.exports = {
     const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff'];
 
     if(chartData.length > bgColors.length) {
-      for(let i = 0; i <= (chartData.length - bgColors.length) + 1; i++) {
+      for(let i = 0; i <= (chartData.length - bgColors.length) + 5; i++) {
         bgColors.push(getRandomColor());
       }
     }
@@ -92,7 +92,7 @@ module.exports = {
         }
 
         dataSet.push({
-          fill: i == 0 ? true : false,
+          fill: false,
           label: i == 0 ? chartData[i].username : username,
           pointRadius: 5,
           fontSize: 30,
@@ -106,7 +106,7 @@ module.exports = {
           pointHitRadius: 10,
           borderDash: i == 0 ? [8, 5] : [],
           backgroundColor: [
-            i == 0 ? 'rgba(255, 21, 0, 0.06)' : color,
+            i == 0 ? 'red' : color,
           ],
           borderColor: [
             i == 0 ? 'red' : color,
@@ -143,7 +143,7 @@ module.exports = {
             if(!meta.hidden && type == 'bar') {
               meta.data.forEach(function(element, index) {
                 ctx.fillStyle = 'black';
-                ctx.font = `${fontSize * 1.3}px sans-serif`;
+                ctx.font = `${fontSize * 0.8}px sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 const position = element.tooltipPosition();

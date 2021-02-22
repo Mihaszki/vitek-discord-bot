@@ -4,7 +4,7 @@ module.exports = {
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, 'author.isBot': false } },
+        { $match: { server_id: '771628652533514251', 'author.isBot': false } },
         { $group: {
           _id: { 'user_id': '$author.user_id' },
           count: { $sum: 1 },
@@ -40,7 +40,7 @@ module.exports = {
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, 'author.isBot': false, createdAt: { $gte: startOfDay(date), $lte: endOfDay(date) } } },
+        { $match: { server_id: '771628652533514251', 'author.isBot': false, createdAt: { $gte: startOfDay(date), $lte: endOfDay(date) } } },
         { $group: {
           _id: {
             user_id: '$author.user_id',
@@ -98,14 +98,10 @@ module.exports = {
     }
   },
 
-  calculate: function(messages_count, swears, words) {
-    const swears_val = swears * 4.4;
-    const messages_count_val = (100 * words - swears) / messages_count * 1.05;
-    let final = Math.round(100 - ((100 * swears_val * 1.7) / messages_count_val));
-
+  calculate: function(messages_count, swears) {
+    let final = Math.floor(100 - ((28.6 * swears) / messages_count * 2.7));
     if(final > 100) final = 100;
     else if(final < 0) final = 0;
-
     return final;
   },
 };
