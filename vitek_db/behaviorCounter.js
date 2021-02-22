@@ -34,17 +34,17 @@ module.exports = {
     }
   },
 
-  getDataForDay: async function(date_start, date_stop, server_id, message, onSuccess) {
+  getDataForDay: async function(date, server_id, message, onSuccess) {
+    const { endOfDay, startOfDay } = require('date-fns');
     try {
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, 'author.isBot': false, createdAt: { $gte: date_start, $lt: date_stop } } },
+        { $match: { server_id: server_id, 'author.isBot': false, createdAt: { $gte: startOfDay(date), $lte: endOfDay(date) } } },
         { $group: {
           _id: {
             user_id: '$author.user_id',
             hour: { $hour: { date: '$createdAt', timezone: 'Europe/Warsaw' } },
-            day: { $dayOfYear: '$createdAt' },
           },
           count: { $sum: 1 },
           swears: { $sum: '$swears' },
@@ -56,7 +56,6 @@ module.exports = {
         { $group: {
           _id: {
             user_id: '$_id.user_id',
-            day: '$_id.day',
           },
           hours: {
             $push: {
@@ -91,7 +90,7 @@ module.exports = {
           hours: hours,
         });
       }
-      onSuccess(users);
+      onSuccess(users.sort((a, b) => a.user_id.localeCompare(b.user_id)));
     }
     catch (error) {
       console.error(error);
@@ -100,9 +99,9 @@ module.exports = {
   },
 
   calculate: function(messages_count, swears, words) {
-    const swears_val = swears * 1.2;
+    const swears_val = swears * 4.4;
     const messages_count_val = (100 * words - swears) / messages_count * 1.05;
-    let final = Math.round(100 - ((100 * swears_val) / messages_count_val));
+    let final = Math.round(100 - ((100 * swears_val * 1.7) / messages_count_val));
 
     if(final > 100) final = 100;
     else if(final < 0) final = 0;

@@ -20,8 +20,7 @@ module.exports = {
     }
     else if(args[0] == 'today') {
       const now = new Date();
-      const date_start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const date_stop = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
       let hide_id = '';
       let showOneUser = false;
@@ -32,7 +31,7 @@ module.exports = {
         showOneUser = true;
       }
 
-      behaviorCounter.getDataForDay(date_start, date_stop, message.guild.id, message, users => {
+      behaviorCounter.getDataForDay(date, message.guild.id, message, users => {
         chartGenerator.sendChart(message, users,
           { width: 2000, height: 1000, type: 'line', fontSize: 38, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${now.getDate()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${now.getFullYear()}`, '(Higher is better)', ' '], unit: '%' });
       });
@@ -40,9 +39,8 @@ module.exports = {
     else if(args[0] == 'day') {
       if(!args[1]) return message.channel.send('You must specify a date in `DD.MM.YYYY` format!');
       const parts = args[1].replace(/\./g, '-').split('-');
-      const date_start = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-      const date_stop = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]) + 1);
-      if(!date_start.toLocaleString() || !date_stop.toLocaleString()) return message.channel.send('Invalid date!');
+      const date = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+      if(!date.toLocaleString()) return message.channel.send('Invalid date!');
 
       let hide_id = '';
       let showOneUser = false;
@@ -53,7 +51,7 @@ module.exports = {
         showOneUser = true;
       }
 
-      behaviorCounter.getDataForDay(date_start, date_stop, message.guild.id, message, users => {
+      behaviorCounter.getDataForDay(date, message.guild.id, message, users => {
         chartGenerator.sendChart(message, users,
           { width: 2000, height: 1000, type: 'line', fontSize: 38, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${args[1]}`, '(Higher is better)', ' '], unit: '%' });
       });

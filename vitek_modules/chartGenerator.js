@@ -7,7 +7,7 @@ module.exports = {
     const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff'];
 
     if(chartData.length > bgColors.length) {
-      for(let i = 0; i < chartData.length - bgColors.length + 1; i++) {
+      for(let i = 0; i <= (chartData.length - bgColors.length) + 1; i++) {
         bgColors.push(getRandomColor());
       }
     }
@@ -78,11 +78,11 @@ module.exports = {
         let username = '';
 
         if(!showOneUser) {
-          color = bgColors[i];
+          color = bgColors[i - 1];
           username = chartData[i].username;
         }
         else if(showOneUser && showOnlyID == chartData[i].user_id) {
-          color = bgColors[i];
+          color = bgColors[i - 1];
           username = chartData[i].username;
           gotUser = true;
         }
