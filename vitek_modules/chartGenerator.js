@@ -32,8 +32,9 @@ module.exports = {
           }
         });
       }
-      hours.sort();
-      hours.forEach(item => chartLabels.push(item + ':00'));
+
+      hours.sort((a, b) => a - b);
+      hours.forEach(item => chartLabels.push(('0' + item).slice(-2) + ':00'));
 
       for(let i = 0; i < hours.length; i++) {
         let value = 0;
