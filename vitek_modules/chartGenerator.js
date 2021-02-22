@@ -143,18 +143,18 @@ module.exports = {
             const meta = chartInstance.getDatasetMeta(i);
             if(!meta.hidden && type == 'bar') {
               meta.data.forEach(function(element, index) {
-                ctx.fillStyle = 'black';
-                ctx.font = `${fontSize * 0.8}px sans-serif`;
+                ctx.font = `${fontSize * 1.1}px sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 const position = element.tooltipPosition();
                 const posY = height / 2;
                 ctx.shadowBlur = 2;
+                ctx.lineWidth = 5;
                 ctx.shadowColor = 'black';
-                ctx.fillStyle = 'black';
-                ctx.fillText(chartData[index] + unit, position.x, posY);
                 ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'black';
                 ctx.shadowBlur = 0;
+                ctx.strokeText(chartData[index] + unit, position.x, posY);
                 ctx.fillText(chartData[index] + unit, position.x, posY);
               });
             }
