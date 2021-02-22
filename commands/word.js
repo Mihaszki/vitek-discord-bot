@@ -19,13 +19,12 @@ module.exports = {
       words = words.map(str => str.trim());
       words = Array.from(new Set(words));
       if(!words[0]) return message.channel.send('You must give atleast one word!');
-      console.log(words);
       wordCounter.getUsage(words, message.guild.id, message, (labels, data) => {
         chartGenerator.sendChart(message, data,
           { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Words usage stats', ' '], unit: '' });
       });
     }
-    if(args[0] == 'ranking') {
+    else if(args[0] == 'ranking') {
       if(!args[1].trim()) return message.channel.send('You must give a word!');
       wordCounter.getRanking(args[1].trim().toLowerCase(), message.guild.id, message, (labels, data) => {
         chartGenerator.sendChart(message, data,
