@@ -12,6 +12,7 @@ const client = new Discord.Client();
 
 // Setup commands inside commands folder
 client.commands = new Discord.Collection();
+client.botRunningUptime = new Date();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for(const file of commandFiles) {
   const command = require(`./commands/${file}`);
