@@ -36,19 +36,21 @@ module.exports = {
 
   getAvailableDates: async function(server_id, message, onSuccess) {
     try {
+      const { date_timezone, date_locale } = require('../bot_config.json');
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
         { $match: { server_id: server_id } },
         { $group: {
           _id: {
-            day: { $dayOfMonth: { date: '$createdAt', timezone: 'Europe/Warsaw' } },
+            day: { $dayOfMonth: { date: '$createdAt', timezone: date_timezone } },
           },
           date: { $first: '$createdAt' },
         } },
+        { $sort: { '_id.day': -1 } },
       ]);
       const dates = [];
       if(!data || data.length == 0) return onSuccess([ 'No data.' ]);
-      data.forEach(item => { dates.push(item.date.toLocaleDateString('pl-PL').replace(/\//g, '.')); });
+      data.forEach(item => { dates.push(item.date.toLocaleDateString(date_locale).replace(/\//g, '.')); });
       onSuccess(dates);
     }
     catch (error) {
@@ -60,7 +62,7 @@ module.exports = {
   getDataForDay: async function(date, server_id, message, onSuccess) {
     try {
       const { endOfDay, startOfDay } = require('date-fns');
-      console.log(startOfDay(date), endOfDay(date));
+      const { date_timezone } = require('../bot_config.json');
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
@@ -68,7 +70,7 @@ module.exports = {
         { $group: {
           _id: {
             user_id: '$author.user_id',
-            hour: { $hour: { date: '$createdAt', timezone: 'Europe/Warsaw' } },
+            hour: { $hour: { date: '$createdAt', timezone: date_timezone } },
           },
           count: { $sum: 1 },
           swears: { $sum: '$swears' },
