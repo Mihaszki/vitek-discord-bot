@@ -48,7 +48,7 @@ module.exports = {
       ]);
       const dates = [];
       if(!data || data.length == 0) return onSuccess([ 'No data.' ]);
-      data.forEach(item => { dates.push(item.date.toLocaleDateString().replace(/\//g, '.')); });
+      data.forEach(item => { dates.push(item.date.toLocaleDateString('pl-PL').replace(/\//g, '.')); });
       onSuccess(dates);
     }
     catch (error) {
