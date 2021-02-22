@@ -99,7 +99,7 @@ module.exports = {
   },
 
   calculate: function(messages_count, swears) {
-    let final = Math.floor(100 - ((28.6 * swears) / messages_count * 2.7));
+    let final = Math.floor(100 - ((33.1 * swears) / messages_count * 3));
     if(final > 100) final = 100;
     else if(final < 0) final = 0;
     return final;
