@@ -25,10 +25,12 @@ module.exports = {
       });
     }
     else if(args[0] == 'ranking') {
-      if(!args[1].trim()) return message.channel.send('You must give a word!');
-      wordCounter.getRanking(args[1].trim().toLowerCase(), message.guild.id, message, (labels, data) => {
+      args.shift();
+      const sentence = args.join(' ').trim();
+      if(!sentence) return message.channel.send('You must give a word/sentence!');
+      wordCounter.getRanking(sentence.toLowerCase(), message.guild.id, message, (labels, data) => {
         chartGenerator.sendChart(message, data,
-          { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Word usage ranking', ' '], unit: '' });
+          { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Word usage ranking', sentence.length > 40 ? sentence.slice(0, 40) + '...' : sentence, ' '], unit: '' });
       });
     }
     else {

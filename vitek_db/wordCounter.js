@@ -54,7 +54,7 @@ module.exports = {
       words.forEach(word => {
         counted_data.push({
           number: str.split(word).length - 1,
-          word: word,
+          word: word.length > 10 ? word.slice(0, 10) + '...' : word,
         });
       });
       counted_data.sort((a, b) => (a.number < b.number) ? 1 : -1);
