@@ -1,14 +1,18 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const messageLogger = require('./vitek_db/messageLogger');
+const messageGenerator = require('./vitek_db/messageGenerator');
 const { connectToDB } = require('./vitek_db/connectToDB');
-const { prefix, status } = require('./bot_config.json');
+const { prefix, status, date_locale } = require('./bot_config.json');
 require('dotenv').config();
 
 // Connect to mongoDB
 connectToDB();
 
 const client = new Discord.Client();
+
+// Message counter for automatic bot responses
+const guildMessageCounter = new Map();
 
 // Setup commands inside commands folder
 client.commands = new Discord.Collection();
@@ -20,7 +24,7 @@ for(const file of commandFiles) {
 }
 
 const cooldowns = new Discord.Collection();
-const getTimeNow = () => '[' + new Date().toLocaleTimeString() + ']';
+const getTimeNow = () => '[' + new Date().toLocaleTimeString(date_locale) + ']';
 
 client.once('ready', () => {
   console.log('\x1b[33m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
@@ -37,14 +41,29 @@ client.on('message', message => {
         .catch(() => console.error('One of the emojis failed to react.'));
     }
   }
-  if(!message.content.startsWith(prefix) || message.author.bot) return;
+  if(!message.content.startsWith(prefix)) {
+    if(message.author.bot) return;
+    guildMessageCounter['_' + message.guild.id] = (guildMessageCounter['_' + message.guild.id] + 1) || 1;
+    if(guildMessageCounter['_' + message.guild.id] % 200 === 0) {
+      messageGenerator.getMessage(message.cleanContent, message.guild.id, response => {
+        if(response !== false) message.channel.send(response);
+        guildMessageCounter['_' + message.guild.id] = 1;
+      });
+    }
+    return;
+  }
 
   // Get arguments from user's input
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
   const command = client.commands.get(commandName);
-  if(!command) return;
+  if(!command) {
+    messageGenerator.getMessage(message.cleanContent.slice(1), message.guild.id, response => {
+      if(response !== false) message.channel.send(response);
+    });
+    return;
+  }
 
   // Check if it's guild only command
   if(command.guildOnly && message.channel.type === 'dm') return message.channel.send('I can\'t execute that command inside DMs! :man_shrugging:');
