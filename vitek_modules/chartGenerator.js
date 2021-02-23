@@ -13,6 +13,9 @@ module.exports = {
     }
 
     if(type == 'bar') {
+      for(let i = 0; i < chartLabels.length; i++) {
+        chartLabels[i] = chartLabels[i].length > 10 ? chartLabels[i].slice(0, 10) + '...' : chartLabels[i];
+      }
       dataSet.push({
         label: 'User level',
         data: chartData,
@@ -191,9 +194,13 @@ module.exports = {
                 stepSize: stepSize,
                 beginAtZero: true,
                 callback: (value) => value + unit,
+                fontSize: fontSize * 0.8,
               },
             }],
             xAxes: [{
+              ticks: {
+                fontSize: fontSize * 0.8,
+              },
               gridLines: {
                 color: 'rgba(255, 255, 255, 0.3)',
               },
