@@ -33,8 +33,10 @@ module.exports = {
       ]);
 
       if(!data || data.length == 0) return onResponse(false);
-      const msg = data[0].cleanContent[Math.floor(Math.random() * data[0].cleanContent.length)];
-      return onResponse(msg);
+
+      const items = data[0].cleanContent.filter((item, index) => data[0].cleanContent.indexOf(item) === index);
+      const msg = items[Math.floor(Math.random() * items.length)];
+      return onResponse(msg.length > 300 ? msg.slice(0, 300) : msg);
     }
     catch (error) {
       console.error(error);
