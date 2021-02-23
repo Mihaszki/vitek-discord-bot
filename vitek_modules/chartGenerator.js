@@ -14,7 +14,7 @@ module.exports = {
 
     if(type == 'bar') {
       for(let i = 0; i < chartLabels.length; i++) {
-        chartLabels[i] = chartLabels[i].length > 10 ? chartLabels[i].slice(0, 10) + '...' : chartLabels[i];
+        chartLabels[i] = chartLabels[i].length > 15 ? chartLabels[i].slice(0, 15) + '...' : chartLabels[i];
       }
       dataSet.push({
         label: 'User level',

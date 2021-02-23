@@ -73,7 +73,7 @@ module.exports = {
         { $match: { server_id: server_id } },
         { $group: { _id: { 'user_id': '$receiver.user_id' }, value: { $sum: '$value' } } },
         { $sort: { value: -1 } },
-        { $limit: 10 },
+        { $limit: 15 },
       ]);
       onSuccess(items);
     }

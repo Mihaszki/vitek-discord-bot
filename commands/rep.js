@@ -20,7 +20,7 @@ module.exports = {
             description += `**${i + 1}.** | <@${items[i]._id.user_id}> | ${items[i].value}\n`;
           }
         }
-        sendEmbed(message, `Rep - Top 10 | ${message.guild.name}`, description, message.guild.iconURL());
+        sendEmbed(message, `Rep - Top 15 | ${message.guild.name}`, description, message.guild.iconURL());
       });
     }
     else if(args[0] == 'history') {
