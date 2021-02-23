@@ -25,7 +25,8 @@ module.exports = {
 
     data.push('**Commands:**');
     data.push(`\`\`\`${commands.map(command => command.name).join(', ')}\`\`\``);
-    data.push(`You can send \`${prefix}help <command name>\` to get info on a specific command :robot:`);
+    data.push('You can talk with bot by using `.<message>` e.g. `.Hello!`. If the bot finds a response based on messages on your server, you will get a reply.');
+    data.push(`\nYou can send \`${prefix}help <command name>\` to get info on a specific command :robot:`);
     message.channel.send(data, { split: true });
   },
 };
