@@ -3,15 +3,26 @@ Vitek is a discord bot created for entertainment and statistical purposes. It us
 [Invite Link](https://discord.com/oauth2/authorize?client_id=670248278130163722&scope=bot&permissions=1544027328)
 
 ## Main features
-* Reputation system stored in a database
-* It can generate images
-* It can generate GIF animations
-* Saving messages to the database
 
-## Example commands
-![GIF Generator](demo/gifcommand.gif)
-![Some commands](demo/commands1.png)
+### "Behavior" level
+The bot can analyse profanities in your messages and generate "levels". The less profanity you use, the higher level you have.
+![Behavior level](demo/behaviorlevel.png)
+
+### Word usage stats and word usage between users
+![Word usage counter](demo/wordusage.png)
+![Word usage ranking](demo/wordranking.png)
+
+### Reputation system stored in a database
 ![Reputation system](demo/reputationsystem.png)
+
+### Message logs stored in a database
+![Message logs system](demo/stats.png)
+
+### GIF animation generation
+![GIF Generator](demo/scifun.gif)
+
+### Image generation
+![Some commands](demo/commands.png)
 
 ## Setup
 * Install node packages with `npm install`
