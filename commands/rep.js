@@ -9,7 +9,7 @@ module.exports = {
     const repController = require('../vitek_db/repController');
     const getMention = require('../vitek_modules/getMention');
     const { sendEmbed } = require('../vitek_modules/embed');
-    const { prefix } = require('../bot_config.json');
+    const { prefix } = require('../bot_config');
 
     if(args[0] == 'ranking') {
       repController.getRanking(message.guild.id, message, items => {

@@ -4,7 +4,7 @@ module.exports = {
   usage: '<command name>',
   cooldown: 1,
   execute(message, args) {
-    const { prefix } = require('../bot_config.json');
+    const { prefix } = require('../bot_config');
     const data = [];
     const { commands } = message.client;
 

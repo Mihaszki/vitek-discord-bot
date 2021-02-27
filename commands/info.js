@@ -5,7 +5,7 @@ module.exports = {
   guildOnly: true,
   async execute(message) {
     const Discord = require('discord.js');
-    const config = require('../bot_config.json');
+    const config = require('../bot_config');
     const { differenceInMinutes } = require('date-fns');
     const loadingMessage = await message.channel.send(':wave:');
     const uptime = differenceInMinutes(new Date(), message.client.botRunningUptime);

@@ -11,7 +11,7 @@ module.exports = {
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(1016, 565);
     const context = canvas.getContext('2d');
-    const { prefix } = require('../bot_config.json');
+    const { prefix } = require('../bot_config');
 
     const text = cleanText.emojis(message.cleanContent.replace(/\s/g, ' ').slice(prefix.length + this.name.length + 1)).toUpperCase();
     if(text.length > 60) return message.channel.send('The text is too long!');
@@ -46,6 +46,6 @@ module.exports = {
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
     context.fillText(text, x, y);
     const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'tv.png');
-    message.channel.send(' ', attachment);
+    message.channel.send(attachment);
   },
 };

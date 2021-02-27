@@ -10,7 +10,7 @@ module.exports = {
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(1280, 720);
     const context = canvas.getContext('2d');
-    const { prefix } = require('../bot_config.json');
+    const { prefix } = require('../bot_config');
     const spurdoTranslator = require('../vitek_modules/spurdoTranslator');
     const canvasDraw = require('../vitek_modules/canvasDraw');
 

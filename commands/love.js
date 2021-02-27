@@ -10,7 +10,7 @@ module.exports = {
     const getMention = require('../vitek_modules/getMention');
     const canvasDraw = require('../vitek_modules/canvasDraw');
     const Canvas = require('canvas');
-    const { loveQuotes } = require('../bot_config.json');
+    const { loveQuotes } = require('../bot_config');
 
     if(!args[0] || !args[1]) return message.channel.send('You must tag two users!');
 

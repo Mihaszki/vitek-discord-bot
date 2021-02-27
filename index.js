@@ -3,7 +3,7 @@ const fs = require('fs');
 const messageLogger = require('./vitek_db/messageLogger');
 const messageGenerator = require('./vitek_db/messageGenerator');
 const { connectToDB } = require('./vitek_db/connectToDB');
-const { prefix, status, date_locale } = require('./bot_config.json');
+const { prefix, status, date_locale } = require('./bot_config');
 require('dotenv').config();
 
 // Connect to mongoDB

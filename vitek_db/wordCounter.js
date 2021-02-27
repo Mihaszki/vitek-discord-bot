@@ -4,7 +4,12 @@ module.exports = {
     try {
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, 'author.isBot': false, $and: [{ 'cleanContent': { $regex: word, $options: 'i' } }, { 'cleanContent': { $not: /^\.|^!/m } }] } },
+        { $match: {
+          server_id: server_id,
+          'author.isBot': false,
+          $and: [{ 'cleanContent': { $regex: word, $options: 'i' } },
+            { 'cleanContent': { $not: /^\.|^!/m } }],
+        } },
         { $group: {
           _id: '$author.user_id',
           cleanContent: { $push: '$cleanContent' },
@@ -38,7 +43,11 @@ module.exports = {
     try {
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, 'author.isBot': false, $and: [{ 'cleanContent': { $regex: words.join('|'), $options: 'i' } }, { 'cleanContent': { $not: /^\.|^!/m } }] } },
+        { $match: { server_id: server_id,
+          'author.isBot': false,
+          $and: [{ 'cleanContent': { $regex: words.join('|'), $options: 'i' } },
+            { 'cleanContent': { $not: /^\.|^!/m } }],
+        } },
         { $group: {
           _id: 'null',
           cleanContent: { $push: '$cleanContent' },

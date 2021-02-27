@@ -35,7 +35,7 @@ module.exports = {
 
   newRep: function(message, args, repValue, commandName) {
     const getMention = require('../vitek_modules/getMention');
-    const { prefix } = require('../bot_config.json');
+    const { prefix } = require('../bot_config');
 
     const member = getMention.member(args[0], message);
     if(!member) return message.channel.send('You must select one user that is on the server!');

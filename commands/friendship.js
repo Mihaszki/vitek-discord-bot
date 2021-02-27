@@ -7,7 +7,7 @@ module.exports = {
   guildOnly: true,
   execute(message, args) {
     const Discord = require('discord.js');
-    const { prefix } = require('../bot_config.json');
+    const { prefix } = require('../bot_config');
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(500, 372);

@@ -11,7 +11,7 @@ module.exports = {
     const canvas = Canvas.createCanvas(979, 835);
     const ctx = canvas.getContext('2d');
     const cleanText = require('../vitek_modules/cleanText');
-    const { prefix } = require('../bot_config.json');
+    const { prefix } = require('../bot_config');
 
     const msgtext = cleanText.emojis(message.cleanContent.slice(this.name.length + prefix.length + 1).replace(/\s+/g, ' '));
     const words = msgtext.split(' ');

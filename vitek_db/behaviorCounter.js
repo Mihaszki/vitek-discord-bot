@@ -36,7 +36,7 @@ module.exports = {
 
   getAvailableDates: async function(server_id, message, onSuccess) {
     try {
-      const { date_timezone, date_locale } = require('../bot_config.json');
+      const { date_timezone, date_locale } = require('../bot_config');
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
         { $match: { server_id: server_id } },
@@ -62,7 +62,7 @@ module.exports = {
   getDataForDay: async function(date, server_id, message, onSuccess) {
     try {
       const { endOfDay, startOfDay } = require('date-fns');
-      const { date_timezone } = require('../bot_config.json');
+      const { date_timezone } = require('../bot_config');
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([

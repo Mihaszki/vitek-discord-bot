@@ -12,7 +12,7 @@ module.exports = {
   sendRepEmbed: function(message, member, reason, repValue, allPoints) {
     const Discord = require('discord.js');
     const { avatar } = require('../vitek_modules/getMention');
-    const { positiveRepMessages, negativeRepMessages } = require('../bot_config.json');
+    const { positiveRepMessages, negativeRepMessages } = require('../bot_config');
 
     let color = '';
     let randomMessage = '';

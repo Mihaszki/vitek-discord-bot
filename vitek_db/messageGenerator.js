@@ -1,6 +1,7 @@
 module.exports = {
   getMessage: async function(text, server_id, onResponse) {
     try {
+      const { excludeRegex } = require('../bot_config');
       const wordCounts = {};
       text = text.toLowerCase().trim().replace(/\s+/g, ' ').replace(/\?|!|\.|,/g, '');
       if(!text || !text.replace(/\s/g, '').length) return onResponse(false);
@@ -21,7 +22,6 @@ module.exports = {
       }
 
       const sliceMsg = str => str.length > 300 ? str.slice(0, 300) : str;
-      const excludeRegex = /^\.|^!|(https:\/\/|http:\/\/|www\.)/m;
 
       const randomMsg = async () => {
         const MessageModel = require('./models/messageModel');
