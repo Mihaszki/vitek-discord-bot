@@ -21,7 +21,22 @@ module.exports = {
       }
 
       const sliceMsg = str => str.length > 300 ? str.slice(0, 300) : str;
-      const excludeRegex = /^\.|^!/m;
+      const excludeRegex = /^\.|^!|(https:\/\/|http:\/\/|www\.)/m;
+
+      const randomMsg = async () => {
+        const MessageModel = require('./models/messageModel');
+        const count = await MessageModel.where({
+          'server_id': server_id,
+          'author.isBot': false,
+          'cleanContent': { $not: excludeRegex },
+        }).countDocuments();
+        const msg = await MessageModel.findOne({
+          'server_id': server_id,
+          'author.isBot': false,
+          'cleanContent': { $not: excludeRegex },
+        }).skip(Math.floor(Math.random() * count)).exec();
+        return msg.cleanContent;
+      };
 
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
@@ -37,22 +52,14 @@ module.exports = {
       ]);
 
       if(!data || data.length == 0) {
-        const count = await MessageModel.where({
-          'server_id': server_id,
-          'author.isBot': false,
-          'cleanContent': { $not: excludeRegex },
-        }).countDocuments();
-        const msg = await MessageModel.findOne({
-          'server_id': server_id,
-          'author.isBot': false,
-          'cleanContent': { $not: excludeRegex },
-        }).skip(Math.floor(Math.random() * count)).exec();
-        return onResponse(sliceMsg(msg.cleanContent));
+        return onResponse(sliceMsg(await randomMsg()));
       }
 
       const items = data[0].cleanContent.filter((item, index) => data[0].cleanContent.indexOf(item) === index);
       const msg = items[Math.floor(Math.random() * items.length)];
-      return onResponse(sliceMsg(msg));
+
+      if(msg === text) return onResponse(sliceMsg(await randomMsg()));
+      else return onResponse(sliceMsg(msg));
     }
     catch (error) {
       console.error(error);
