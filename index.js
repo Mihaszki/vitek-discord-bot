@@ -44,7 +44,7 @@ client.on('message', message => {
   if(!message.content.startsWith(prefix)) {
     if(message.author.bot) return;
     guildMessageCounter['_' + message.guild.id] = (guildMessageCounter['_' + message.guild.id] + 1) || 1;
-    if(guildMessageCounter['_' + message.guild.id] % 150 === 0) {
+    if(guildMessageCounter['_' + message.guild.id] % 100 === 0) {
       messageGenerator.getMessage(message.cleanContent, message.guild.id, response => {
         if(response !== false) message.channel.send(response);
         guildMessageCounter['_' + message.guild.id] = 1;

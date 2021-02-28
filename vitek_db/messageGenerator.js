@@ -58,6 +58,11 @@ module.exports = {
       }
 
       const items = data[0].cleanContent.filter((item, index) => data[0].cleanContent.indexOf(item) === index);
+      const index = items.indexOf(text);
+      if (index != -1) {
+        items.splice(index, 1);
+      }
+      if(items.length == 0) return onResponse(sliceMsg(await randomMsg()));
       const msg = items[Math.floor(Math.random() * items.length)];
 
       if(msg === text) return onResponse(sliceMsg(await randomMsg()));
