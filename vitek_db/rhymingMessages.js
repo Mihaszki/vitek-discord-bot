@@ -2,8 +2,8 @@ module.exports = {
   getMessages: async function(rhyme, server_id, escapeString = true) {
     try {
       const { excludeRegex } = require('../bot_config');
-
-      if(escapeString) rhyme = rhyme.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+      const { escapeRegex } = require('../vitek_modules/escapeRegex');
+      if(escapeString) rhyme = escapeRegex(rhyme);
 
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([

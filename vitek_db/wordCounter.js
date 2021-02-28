@@ -1,13 +1,16 @@
 module.exports = {
-  getRanking: async function(word, server_id, message, onSuccess) {
-    const getMention = require('../vitek_modules/getMention');
+  getRanking: async function(word, server_id, message, onSuccess, escapeString = true) {
     try {
+      const getMention = require('../vitek_modules/getMention');
+      const { escapeRegex } = require('../vitek_modules/escapeRegex');
+      let wordParsed = word;
+      if(escapeString) wordParsed = escapeRegex(wordParsed);
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
         { $match: {
           server_id: server_id,
           'author.isBot': false,
-          $and: [{ 'cleanContent': { $regex: word, $options: 'i' } },
+          $and: [{ 'cleanContent': { $regex: wordParsed, $options: 'i' } },
             { 'cleanContent': { $not: /^\.|^!/m } }],
         } },
         { $group: {
@@ -39,13 +42,18 @@ module.exports = {
     }
   },
 
-  getUsage: async function(words, server_id, message, onSuccess) {
+  getUsage: async function(words, server_id, message, onSuccess, escapeString = true) {
     try {
       const MessageModel = require('./models/messageModel');
+      const { escapeRegex } = require('../vitek_modules/escapeRegex');
+      let wordsParsed = words;
+      if(escapeString) {
+        wordsParsed = wordsParsed.map(string => escapeRegex(string));
+      }
       const data = await MessageModel.aggregate([
         { $match: { server_id: server_id,
           'author.isBot': false,
-          $and: [{ 'cleanContent': { $regex: words.join('|'), $options: 'i' } },
+          $and: [{ 'cleanContent': { $regex: wordsParsed.join('|'), $options: 'i' } },
             { 'cleanContent': { $not: /^\.|^!/m } }],
         } },
         { $group: {

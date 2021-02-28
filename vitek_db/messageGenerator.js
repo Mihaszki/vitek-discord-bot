@@ -1,7 +1,8 @@
 module.exports = {
-  getMessage: async function(text, server_id, onResponse) {
+  getMessage: async function(text, server_id, onResponse, escapeString = true) {
     try {
       const { excludeRegex } = require('../bot_config');
+      const { escapeRegex } = require('../vitek_modules/escapeRegex');
       const wordCounts = {};
       text = text.toLowerCase().trim().replace(/\s+/g, ' ').replace(/\?|!|\.|,/g, '');
       if(!text || !text.replace(/\s/g, '').length) return onResponse(false);
@@ -18,6 +19,7 @@ module.exports = {
         else if(w.length > 10) w = w.slice(2, -2);
         else if(w.length > 5) w = w.slice(1, -1);
         else if(w.length == 5 || w.length == 2) w = w.slice(0, -1);
+        if(escapeString) w = escapeRegex(w);
         re += `(?=[\\s\\S]*${w})`;
       }
 
