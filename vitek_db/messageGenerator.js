@@ -4,9 +4,9 @@ module.exports = {
       const { excludeRegex } = require('../bot_config');
       const { escapeRegex } = require('../vitek_modules/escapeRegex');
       const wordCounts = {};
-      text = text.toLowerCase().trim().replace(/\s+/g, ' ').replace(/\?|!|\.|,/g, '');
-      if(!text || !text.replace(/\s/g, '').length) return onResponse(false);
-      const words = text.split(' ');
+      const parsedText = text.toLowerCase().trim().replace(/\s+/g, ' ').replace(/\?|!|\.|,/g, '');
+      if(!parsedText || !parsedText.replace(/\s/g, '').length) return onResponse(false);
+      const words = parsedText.split(' ');
 
       for(let i = 0; i < words.length; i++) {
         wordCounts['_' + words[i]] = (wordCounts['_' + words[i]] || 0) + 1;

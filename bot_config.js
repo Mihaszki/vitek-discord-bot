@@ -6,7 +6,7 @@ module.exports = {
   'github_link': 'https://github.com/Mihaszki/vitek-discord-bot',
   'date_timezone': 'Europe/Warsaw',
   'date_locale': 'pl-PL',
-  'excludeRegex': /^\.|^!|(https:\/\/|http:\/\/|www\.)/im,
+  'excludeRegex': /^\.|^!|^\+|^-|^=|(https:\/\/|http:\/\/|www\.)/im,
   'swearWordList': 'sra|fiut|skurw|cipa|cipy|cipe|cipo|cipk|pener|kurw|huj|spierd|wypierd|odpierd|cwel|gown|dupa|dupe|dupo|dupk|japa|jape|pizda|pizde|pizdy|pizdo|pedal|morda|morde|franca|frajer|mordy|szcza|rucha|debil|ciec|szmata|szmato|szmaty|szmate|kupa|kupe|kutas|jeban|jebal|dziwk|ujeb|odjeb|zajeb|wyjeb|zjeb|jeb|leszcz|suki|suka|bitch|fuck|shit|ass|cunt|slut|bastard|dick|retard|idiot',
   'positiveRepMessages': [
     'Good job!', 'I\'ll always have your back!', 'I love making you laugh!', 'You\'re a gift to those around you!', 'You are awesome!', 'I appreciate you!', 'I like your style!', 'Your dance moves are quite amazing!', 'You are my soul-mate!', 'I always learn so much from you!', 'You have such a positive charisma!', 'Your are the liquor!', 'Bam! Peanut, butter and Jam!', 'Very nice!', 'It\'s so cool!', 'Slap my hand!', 'Thanks for ride!', 'Yippee Ki Yay!', 'You were good son, real good, maybe even the best!', 'You deserve a medal!', 'Today is a good day.', 'Now that is what I wanna see!', 'And that is how you do it, men!', 'My appreciation, amigo.', 'Thank you for being such a dear friend.', 'Thank you, laborer!', 'Excellent!', 'Success!', 'You are ze Übermensch!', 'God Save the Queen!', 'Bap!', 'That there was a fine piece of work.', 'Nice work pardner!', 'Aw, fellas!', 'Un-freakin\'-touchable!', 'Guts and glory, lads!', 'That\'s the spirit!', 'I\'m bloody proud of ya!',
