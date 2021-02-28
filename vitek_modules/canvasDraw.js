@@ -55,11 +55,11 @@ module.exports = {
     }
   },
 
-  getFontSize: function(text, canvas, offset = 50) {
+  getFontSize: function(text, canvas, offset = 50, startFontSize = 100, subtractNum = 10) {
     const context = canvas.getContext('2d');
-    let fontSize = 100;
+    let fontSize = startFontSize;
     do {
-      context.font = `${fontSize -= 10}px sans-serif`;
+      context.font = `${fontSize -= subtractNum}px sans-serif`;
     }
     while (context.measureText(text).width > canvas.width - offset);
     return context.font;
