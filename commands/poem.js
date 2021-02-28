@@ -10,6 +10,7 @@ module.exports = {
     const { prefix, poemTitles } = require('../bot_config');
     const { getFontSize } = require('../vitek_modules/canvasDraw');
     const rhymingMessages = require('../vitek_db/rhymingMessages');
+    const { escapeRegex } = require('../vitek_modules/escapeRegex');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(1280, 720);
     const context = canvas.getContext('2d');
@@ -17,19 +18,27 @@ module.exports = {
     let lyrics_A = [];
     let lyrics_B = [];
 
-    if(args[0] == '-') {
-      lyrics_A = await rhymingMessages.getMessages('.', message.guild.id, false);
-      lyrics_B = await rhymingMessages.getMessages('.', message.guild.id, false);
-    }
-    else if(!args[0] || !args[1]) {
-      return message.channel.send(`You must give all two arguments!\n\`${prefix}${this.name} ${this.usage}\``);
+    let arg1 = '';
+    let arg2 = '';
+
+    if(!args[0] || args[0] == '-') {
+      arg1 = '.';
     }
     else {
-      lyrics_A = await rhymingMessages.getMessages(`${args[0]}$`, message.guild.id);
-      lyrics_B = await rhymingMessages.getMessages(`${args[1]}$`, message.guild.id);
+      arg1 = `${escapeRegex(args[0])}$`;
     }
 
-    if(!lyrics_A || !lyrics_B) return message.channel.send(`Not enough data to create a poem for these rhymes!\nYou can run: \`${prefix}${this.name} -\` to generate a poem without rhymes.`);
+    if(!args[1] || args[1] == '-') {
+      arg2 = '.';
+    }
+    else {
+      arg2 = `${escapeRegex(args[1])}$`;
+    }
+
+    lyrics_A = await rhymingMessages.getMessages(arg1, message.guild.id);
+    lyrics_B = await rhymingMessages.getMessages(arg2, message.guild.id);
+
+    if(!lyrics_A || !lyrics_B) return message.channel.send(`Not enough data to create a poem for these rhymes!\nYou can run: \`${prefix}${this.name} - -\` to generate a poem without rhymes.`);
 
     const lyrics_All = [];
 
