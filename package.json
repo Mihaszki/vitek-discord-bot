@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Mihaszki/vitek-discord-bot#readme",
   "dependencies": {
+    "ascii-img-canvas-nodejs": "^1.7.0",
     "canvas": "^2.6.1",
     "chart.js": "^2.9.4",
     "chartjs-node-canvas": "^3.1.0",
