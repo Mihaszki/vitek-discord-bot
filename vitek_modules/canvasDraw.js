@@ -81,4 +81,62 @@ module.exports = {
     context.fillText(txt, -txtWidth / 2, 0);
     context.restore();
   },
+
+  trimCanvas: function(c, _width, _height) {
+    const Canvas = require('canvas');
+    const ctx = c.getContext('2d');
+    const copy = Canvas.createCanvas(_width, _height).getContext('2d');
+    copy.quality = 'best';
+    copy.patternQuality = 'best';
+    const pixels = ctx.getImageData(0, 0, c.width, c.height);
+    const l = pixels.data.length;
+    const bound = {
+      top: null,
+      left: null,
+      right: null,
+      bottom: null,
+    };
+    let xx;
+    let yy;
+
+    for (let i = 0; i < l; i += 4) {
+      if (pixels.data[i + 3] !== 0) {
+        xx = (i / 4) % c.width;
+        yy = ~~((i / 4) / c.width);
+
+        if (bound.top === null) {
+          bound.top = yy;
+        }
+
+        if (bound.left === null) {
+          bound.left = xx;
+        }
+        else if (xx < bound.left) {
+          bound.left = xx;
+        }
+
+        if (bound.right === null) {
+          bound.right = xx;
+        }
+        else if (bound.right < xx) {
+          bound.right = xx;
+        }
+
+        if (bound.bottom === null) {
+          bound.bottom = yy;
+        }
+        else if (bound.bottom < yy) {
+          bound.bottom = yy;
+        }
+      }
+    }
+
+    const trimHeight = bound.bottom - bound.top,
+      trimWidth = bound.right - bound.left,
+      trimmed = ctx.getImageData(bound.left, bound.top, trimWidth, trimHeight);
+    copy.canvas.width = trimWidth;
+    copy.canvas.height = trimHeight;
+    copy.putImageData(trimmed, 0, 0);
+    return copy.canvas;
+  },
 };
