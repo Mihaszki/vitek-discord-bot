@@ -47,13 +47,13 @@ module.exports = {
     this.sendToDB(message, member, username, reason.length == 0 ? 'None' : reason, repValue);
   },
 
-  getUserHistory: async function(user_id, server_id, message, onSuccess) {
+  getUserHistory: async function(user_id, server_id, message, onSuccess, limit = 10) {
     const RepModel = require('../vitek_db/models/repModel');
     try {
       const items = await RepModel
         .find({ server_id: server_id, 'receiver.user_id': user_id })
         .sort({ field: 'asc', _id: -1 })
-        .limit(10);
+        .limit(limit);
 
       const pointsOnServer = await this.getUserPointsOnServer(server_id, user_id, message);
       const allPoints = await this.getAllUserPoints(user_id, message);

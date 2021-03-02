@@ -2,7 +2,7 @@ module.exports = {
   name: 'rep',
   description: 'Reputation stats',
   usage: 'help',
-  cooldown: 1,
+  cooldown: 2,
   args: true,
   guildOnly: true,
   async execute(message, args) {
@@ -43,11 +43,28 @@ module.exports = {
         sendEmbed(message, `Rep - History | ${getMention.username(member)}`, description, getMention.avatar(member));
       });
     }
+    else if(args[0] == 'history-full') {
+      let member = null;
+      if(!args[1]) member = getMention.member(`<@${message.author.id}>`, message);
+      else member = getMention.member(args[1], message);
+      if(!member) return message.channel.send('You must select one user that is on the server!');
+
+      repController.getUserHistory(member.id, message.guild.id, message, (items, allPoints, pointsOnServer) => {
+        const repHistoryHtmlTemplate = require('../vitek_modules/repHistoryHtmlTemplate');
+
+        if(items.length == 0) { return message.channel.send('Not enough data!'); }
+        else {
+          repHistoryHtmlTemplate.sendHTML(getMention.username(member), getMention.avatar(member), member.id, items, allPoints, pointsOnServer, message);
+        }
+      }, null);
+    }
     else {
       sendEmbed(message, 'Rep - Help', `\`${prefix}+rep <@User> <reason>\` - Give a positive point to the user
       \`${prefix}-rep <@User> <reason>\` - Give a negative point to the user
       \`${prefix}rep history\` - Your rep history
       \`${prefix}rep history <@User>\` - Check someone's rep history
+      \`${prefix}rep history-full\` - Your full rep history
+      \`${prefix}rep history-full <@User>\` - Check someone's full rep history
       \`${prefix}rep ranking\` - Ranking`);
     }
   },
