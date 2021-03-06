@@ -57,7 +57,7 @@ module.exports = {
             swears: { $sum: '$swears' },
             words: { $sum: '$words' } } },
         { $sort: { count: -1 } },
-        { $limit: 10 },
+        { $limit: 15 },
       ]);
       const channelRanking = await MessageModel.aggregate([
         { $match: { server_id: message.guild.id, channel_id: { $exists: true } } },
