@@ -6,20 +6,10 @@ module.exports = {
   async execute(message) {
     const Discord = require('discord.js');
     const messageLogger = require('../vitek_db/messageLogger');
-    messageLogger.count(message, (allMessages, userRanking, channelRanking) => {
+    messageLogger.count(message, (allMessages, messagesNoBots, userRanking, channelRanking) => {
       let description = '**Most active users:**\n`Place | User | Messages`\n';
-      let swears = 0;
-      let words = 0;
-      let messages = 0;
-      let place_counter = 1;
       for(let i = 0; i < userRanking.length; i++) {
-        if(!userRanking[i].isBot) {
-          description += `**${place_counter}.** <@${userRanking[i]._id.user_id}> | ${userRanking[i].count}\n`;
-          swears += parseInt(userRanking[i].swears);
-          words += parseInt(userRanking[i].words);
-          messages += parseInt(userRanking[i].count);
-          place_counter++;
-        }
+        description += `**${i + 1}.** <@${userRanking[i]._id.user_id}> | ${userRanking[i].count}\n`;
       }
 
       description += '\n**Most active channels:**\n`Place | Channel | Messages`\n';
@@ -28,7 +18,7 @@ module.exports = {
         description += `**${i + 1}.** ${(!channel) ? channelRanking[i].channel_name : '<#' + channelRanking[i]._id.channel_id + '>'} | ${channelRanking[i].count}\n`;
       }
 
-      description += `\n\`\`\`Number of messages: ${messages}\nNumber of messages (with bots): ${allMessages}\nWords: ${words}\nSwears: ${swears}\`\`\``;
+      description += `\n\`\`\`Messages: ${messagesNoBots}\nMessages (+bots): ${allMessages.count}\nWords: ${allMessages.words}\nSwears: ${allMessages.swears}\`\`\``;
       const embed = new Discord.MessageEmbed()
         .setColor('#fc9803')
         .setTitle(`Logged messages - ${message.guild.name}`)

@@ -47,15 +47,20 @@ module.exports = {
   count: async function(message, onSuccess) {
     const MessageModel = require('../vitek_db/models/messageModel');
     try {
-      const countThisServer = await MessageModel.where({ 'server_id': message.guild.id }).countDocuments();
-      const userRanking = await MessageModel.aggregate([
+      const messagesNoBots = await MessageModel.where({ server_id: message.guild.id, 'author.isBot': false }).countDocuments();
+      const countThisServer = await MessageModel.aggregate([
         { $match: { server_id: message.guild.id } },
         { $group:
-          { _id: { 'user_id': '$author.user_id' },
-            isBot: { $last: '$author.isBot' },
+          { _id: null,
             count: { $sum: 1 },
             swears: { $sum: '$swears' },
             words: { $sum: '$words' } } },
+      ]);
+      const userRanking = await MessageModel.aggregate([
+        { $match: { server_id: message.guild.id, 'author.isBot': false } },
+        { $group:
+          { _id: { 'user_id': '$author.user_id' },
+            count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 15 },
       ]);
@@ -69,8 +74,8 @@ module.exports = {
         { $sort: { count: -1 } },
         { $limit: 10 },
       ]);
-      console.log(channelRanking);
-      onSuccess(countThisServer, userRanking, channelRanking);
+
+      onSuccess(countThisServer[0], messagesNoBots, userRanking, channelRanking);
     }
     catch (error) {
       console.error(error);
