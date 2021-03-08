@@ -7,6 +7,7 @@ module.exports = {
     const { prefix } = require('../bot_config');
     const data = [];
     const { commands } = message.client;
+    const { sendEmbed } = require('../vitek_modules/embed');
 
     if(args[0]) {
       const name = args[0].toLowerCase();
@@ -20,13 +21,14 @@ module.exports = {
       if (command.usage) data.push(`:wrench: **Usage:** \`${prefix}${command.name} ${command.usage}\``);
 
       data.push(`:clock1: **Cooldown:** \`${command.cooldown || 3} second(s)\``);
-      return message.channel.send(data, { split: true });
+
+      return sendEmbed(message, `Help | ${command.name}`, data);
     }
 
     data.push('**Commands:**');
     data.push(`\`\`\`${commands.map(command => command.name).join(', ')}\`\`\``);
     data.push('You can talk with bot by using `.<message>` e.g. `.Hello!`. If the bot finds a response based on messages on your server, you will get a reply.');
     data.push(`\nYou can send \`${prefix}help <command name>\` to get info on a specific command :robot:`);
-    message.channel.send(data, { split: true });
+    return sendEmbed(message, 'Help', data);
   },
 };
