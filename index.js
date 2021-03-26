@@ -52,6 +52,7 @@ client.on('message', message => {
     }
     return;
   }
+  if(message.author.bot) {return;}
 
   // Get arguments from user's input
   const args = message.content.slice(prefix.length).trim().split(/ +/);
