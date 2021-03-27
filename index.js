@@ -28,6 +28,10 @@ const getTimeNow = () => '[' + new Date().toLocaleTimeString(date_locale) + ']';
 
 client.once('ready', () => {
   console.log('\x1b[33m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
+  for(const g of client.guilds.cache) {
+    console.log('\x1b[33m%s\x1b[0m', 'Serving on:');
+    console.log('\x1b[33m%s\x1b[0m', `${g}`);
+  }
   client.user.setActivity(status, { type: 'PLAYING' });
 });
 
