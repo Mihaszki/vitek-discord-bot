@@ -1,5 +1,6 @@
 # Vitek
 Vitek is a discord bot created for entertainment and statistical purposes. It uses Node.js, Discord.js library and MongoDB.
+[Invite Link](https://discord.com/oauth2/authorize?client_id=670248278130163722&scope=bot&permissions=1544027328)
 
 ## Main features
 
