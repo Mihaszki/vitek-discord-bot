@@ -66,7 +66,7 @@ client.on('message', message => {
   if(!command) {
     messageGenerator.getMessage(message.cleanContent.slice(1), message.guild.id, response => {
       if(response !== false) message.channel.send(response);
-    });
+    }, true, 2000);
     return;
   }
 

@@ -1,5 +1,5 @@
 module.exports = {
-  getMessage: async function(text, server_id, onResponse, escapeString = true) {
+  getMessage: async function(text, server_id, onResponse, escapeString = true, sliceLen = 300) {
     try {
       const { excludeRegex } = require('../bot_config');
       const { escapeRegex } = require('../vitek_modules/escapeRegex');
@@ -23,7 +23,7 @@ module.exports = {
         re += `(?=[\\s\\S]*${w})`;
       }
 
-      const sliceMsg = str => str.length > 300 ? str.slice(0, 300) : str;
+      const sliceMsg = str => str.length > sliceLen ? str.slice(0, sliceLen) : str;
 
       const randomMsg = async () => {
         const MessageModel = require('./models/messageModel');
