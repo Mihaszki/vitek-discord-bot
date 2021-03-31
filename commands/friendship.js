@@ -37,10 +37,10 @@ module.exports = {
       context.shadowColor = '#522f64';
       context.shadowBlur = 1;
       context.lineWidth = 5;
-      context.font = '30px Arial Black';
+      context.font = '30px sans-serif';
       context.fillStyle = gradient;
 
-      drawTextInBox(context, args[0], 'sans-serif', 333, -10, 166, 51);
+      drawTextInBox(context, args[0], 'sans-serif', 328, -5, 160, 51);
 
       const gradient2 = context.createLinearGradient(0, 0, canvas.width, 0);
       gradient2.addColorStop(0, '#bd5516');
@@ -50,7 +50,7 @@ module.exports = {
       gradient2.addColorStop(1, '#bd5516');
       context.fillStyle = gradient2;
 
-      drawTextInBox(context, args[1], 'sans-serif', 195, 85, 104, 48);
+      drawTextInBox(context, args[1], 'sans-serif', 195, 85, 110, 50);
 
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'friendship.png');
       message.channel.send(attachment);
