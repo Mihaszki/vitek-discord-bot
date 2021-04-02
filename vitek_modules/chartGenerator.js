@@ -14,7 +14,7 @@ module.exports = {
 
     if(type == 'bar') {
       for(let i = 0; i < chartLabels.length; i++) {
-        chartLabels[i] = chartLabels[i].length > 15 ? chartLabels[i].slice(0, 15) + '...' : chartLabels[i];
+        chartLabels[i] = chartLabels[i].length > 19 ? chartLabels[i].slice(0, 19) + '...' : chartLabels[i];
       }
       dataSet.push({
         label: 'User level',
@@ -146,16 +146,16 @@ module.exports = {
             const meta = chartInstance.getDatasetMeta(i);
             if(!meta.hidden && type == 'bar') {
               meta.data.forEach(function(element, index) {
-                ctx.font = `${fontSize * 1.1}px sans-serif`;
+                ctx.font = `${Math.round(fontSize * 0.8)}px sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 const position = element.tooltipPosition();
                 const posY = height / 2;
                 ctx.shadowBlur = 2;
                 ctx.lineWidth = 5;
-                ctx.shadowColor = 'black';
-                ctx.fillStyle = 'white';
-                ctx.strokeStyle = 'black';
+                ctx.shadowColor = '#000000';
+                ctx.fillStyle = '#ffffff';
+                ctx.strokeStyle = '#000000';
                 ctx.shadowBlur = 0;
                 ctx.strokeText(chartData[index] + unit, position.x, posY);
                 ctx.fillText(chartData[index] + unit, position.x, posY);
