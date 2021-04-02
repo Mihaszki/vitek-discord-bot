@@ -1,5 +1,5 @@
 module.exports = {
-  getMessage: async function(text, server_id, onResponse, escapeString = true, sliceLen = 300) {
+  getMessage: async function(text, server_id, onResponse, escapeString = true, sliceLen = 300, getRandomIfDataNotFound = false) {
     try {
       const { excludeRegex } = require('../bot_config');
       const { escapeRegex } = require('../vitek_modules/escapeRegex');
@@ -54,7 +54,11 @@ module.exports = {
       ]);
 
       if(!data || data.length == 0) {
-        return onResponse(sliceMsg(await randomMsg()));
+        if(getRandomIfDataNotFound) return onResponse(sliceMsg(await randomMsg()));
+        this.getMessage(wordlist[0], server_id, response => {
+          if(response !== false) return onResponse(sliceMsg(response));
+        }, true, sliceLen, true);
+        if(!getRandomIfDataNotFound) return;
       }
 
       const items = data[0].cleanContent.filter((item, index) => data[0].cleanContent.indexOf(item) === index);
