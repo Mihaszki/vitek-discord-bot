@@ -8,6 +8,7 @@ module.exports = {
   async execute(message, args) {
     const behaviorCounter = require('../vitek_db/behaviorCounter');
     const chartGenerator = require('../vitek_modules/chartGenerator');
+    const levelChartHtmlTemplate = require('../vitek_modules/levelChartHtmlTemplate');
     const getMention = require('../vitek_modules/getMention');
     const { sendEmbed } = require('../vitek_modules/embed');
 
@@ -24,7 +25,7 @@ module.exports = {
 
       let hide_id = '';
       let showOneUser = false;
-      if(args[1]) {
+      if(args[1] && args[1] != '-html') {
         const member = getMention.member(args[1], message);
         if(!member) return message.channel.send('You must select one user that is on the server!');
         hide_id = member.id;
@@ -32,8 +33,14 @@ module.exports = {
       }
 
       behaviorCounter.getDataForDay(date, message.guild.id, message, users => {
-        chartGenerator.sendChart(message, users,
-          { width: 2000, height: 1000, type: 'line', fontSize: 38, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${now.getDate()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${now.getFullYear()}`, '(Higher is better)', ' '], unit: '%' });
+        if(args.includes('-html')) {
+          levelChartHtmlTemplate.sendHTML(message, users,
+            { type: 'line', fontSize: 20, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${now.getDate()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${now.getFullYear()}`, '(Higher is better)'], unit: '%' });
+        }
+        else {
+          chartGenerator.sendChart(message, users,
+            { width: 2000, height: 1000, type: 'line', fontSize: 38, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${now.getDate()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${now.getFullYear()}`, '(Higher is better)', ' '], unit: '%' });
+        }
       });
     }
     else if(args[0] == 'day') {
@@ -44,7 +51,7 @@ module.exports = {
 
       let hide_id = '';
       let showOneUser = false;
-      if(args[2]) {
+      if(args[2] && args[2] != '-html') {
         const member = getMention.member(args[2], message);
         if(!member) return message.channel.send('You must select one user that is on the server!');
         hide_id = member.id;
@@ -52,8 +59,15 @@ module.exports = {
       }
 
       behaviorCounter.getDataForDay(date, message.guild.id, message, users => {
-        chartGenerator.sendChart(message, users,
-          { width: 2000, height: 1000, type: 'line', fontSize: 38, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${args[1]}`, '(Higher is better)', ' '], unit: '%' });
+        if(args.includes('-html')) {
+          levelChartHtmlTemplate.sendHTML(message, users,
+            { type: 'line', fontSize: 20, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${args[1]}`, '(Higher is better)'], unit: '%' });
+        }
+        else {
+
+          chartGenerator.sendChart(message, users,
+            { width: 2000, height: 1000, type: 'line', fontSize: 38, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${args[1]}`, '(Higher is better)', ' '], unit: '%' });
+        }
       });
     }
     else if(args[0] == 'dates') {
