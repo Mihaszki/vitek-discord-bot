@@ -83,6 +83,7 @@ module.exports = {
       \`.level today <@User>\` - Show user's level over time for today
       \`.level day <date DD-MM-YYYY format>\` - Show levels over time for the date
       \`.level day <date DD-MM-YYYY format> <@User>\` - Show user's level over time for the date
+      You can add \`-html\` parameter at the end of the command to output the chart to a html file.
       \`.level dates\` - Show available dates`);
     }
   },

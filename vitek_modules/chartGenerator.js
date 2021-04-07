@@ -4,7 +4,7 @@ module.exports = {
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 
     const dataSet = [];
-    const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff'];
+    const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff', '#ededed', '#1f633e'];
 
     if(chartData.length > bgColors.length) {
       for(let i = 0; i <= (chartData.length - bgColors.length) + 5; i++) {
