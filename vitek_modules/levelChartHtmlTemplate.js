@@ -2,7 +2,7 @@ module.exports = {
   sendHTML: function(message, chartData, { chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', showOneUser = false, showOnlyID = '' }) {
     let html = '';
     const dataSet = [];
-    const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff'];
+    const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff', '#ededed', '#1f633e'];
 
     let dataSetStr = '[';
     let labelsStr = '[';
@@ -11,26 +11,29 @@ module.exports = {
     if(chartData.length > bgColors.length) {
       for(let i = 0; i <= (chartData.length - bgColors.length) + 5; i++) {
         bgColors.push(getRandomColor());
-        bgColorsStr += `${getRandomColor()},`;
       }
     }
 
-    bgColorsStr += '],';
+    bgColors.forEach(val => bgColorsStr += `'${val}',`);
+
+    bgColorsStr += ']';
 
     if(type == 'bar') {
       for(let i = 0; i < chartLabels.length; i++) {
-        chartLabels[i] = chartLabels[i].length > 19 ? chartLabels[i].slice(0, 19) + '...' : chartLabels[i];
-        labelsStr += `'${chartLabels[i].length > 19 ? chartLabels[i].slice(0, 19) + '...' : chartLabels[i]}',`;
+        chartLabels[i] = chartLabels[i].length > 22 ? chartLabels[i].slice(0, 22) + '...' : chartLabels[i];
+        labelsStr += `'${chartLabels[i].length > 22 ? chartLabels[i].slice(0, 22) + '...' : chartLabels[i]}',`;
       }
       labelsStr += '],';
+      let d = '';
+      chartData.forEach(val => d += `'${val}',`);
       dataSetStr += `
       {
         label: 'User level',
-        data: [${chartData.forEach(val => `'${val}',`)}],
-        backgroundColor: '${bgColorsStr}',
-        borderColor: '${bgColorsStr}',
+        data: [${d}],
+        backgroundColor: ${bgColorsStr},
+        borderColor: ${bgColorsStr},
         borderWidth: 1,
-      }],`;
+      }]`;
     }
     else if(type == 'line') {
       let gotUser = false;

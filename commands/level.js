@@ -15,8 +15,15 @@ module.exports = {
     if(args[0] == 'ranking') {
       behaviorCounter.getRanking(message.guild.id, message, (data, labels) => {
         if(data.length == 0) return message.channel.send('There is no data yet!');
-        chartGenerator.sendChart(message, data,
-          { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Behavior level Top 15', '(Higher is better)', ' '], unit: '%' });
+
+        if(args.includes('-html')) {
+          levelChartHtmlTemplate.sendHTML(message, data,
+            { fontSize: 20, chartLabels: labels, chartTitle: ['Behavior level Top 15', '(Higher is better)'], unit: '%' });
+        }
+        else {
+          chartGenerator.sendChart(message, data,
+            { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Behavior level Top 15', '(Higher is better)', ' '], unit: '%' });
+        }
       });
     }
     else if(args[0] == 'today') {
