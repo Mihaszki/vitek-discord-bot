@@ -168,11 +168,20 @@ module.exports = {
 html {height: 100%;}
 body {min-height: 100%; background:#212121; color:#f7f7f7}
 .wrapper {
+  margin: 0 auto;
   height: 100%;
   width: 100%;
   left: 0;
   top: 0;
   position: fixed;
+}
+
+@media screen and (max-width: 1000px) {
+  .wrapper {
+    min-width: 1500px;
+    min-height: 1500px;
+    position: static;
+  }
 }
 
 </style>
