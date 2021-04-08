@@ -1,12 +1,22 @@
 module.exports = {
   sendHTML: function(message, chartData, { chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', showOneUser = false, showOnlyID = '' }) {
     let html = '';
-    const dataSet = [];
     const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff', '#ededed', '#1f633e'];
 
     let dataSetStr = '[';
     let labelsStr = '[';
     let bgColorsStr = '[';
+
+    const escapeCharacters = (val) => val.replace(/['\\]/g, '\\$&');
+
+    const getRandomColor = () => {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    };
 
     if(chartData.length > bgColors.length) {
       for(let i = 0; i <= (chartData.length - bgColors.length) + 5; i++) {
@@ -21,7 +31,7 @@ module.exports = {
     if(type == 'bar') {
       for(let i = 0; i < chartLabels.length; i++) {
         chartLabels[i] = chartLabels[i].length > 22 ? chartLabels[i].slice(0, 22) + '...' : chartLabels[i];
-        labelsStr += `'${chartLabels[i].length > 22 ? chartLabels[i].slice(0, 22) + '...' : chartLabels[i]}',`;
+        labelsStr += `'${chartLabels[i].length > 22 ? escapeCharacters(chartLabels[i].slice(0, 22)) + '...' : escapeCharacters(chartLabels[i])}',`;
       }
       labelsStr += '],';
       let d = '';
@@ -117,7 +127,7 @@ module.exports = {
         dataSetStr += `
         {
           fill: false,
-          label: '${i == 0 ? chartData[i].username : username}',
+          label: '${i == 0 ? escapeCharacters(chartData[i].username) : escapeCharacters(username)}',
           pointRadius: 5,
           fontSize: 30,
           spanGaps: ${i == 0 ? true : false},
@@ -137,28 +147,6 @@ module.exports = {
           ],
         },
         `;
-
-        dataSet.push({
-          fill: false,
-          label: i == 0 ? chartData[i].username : username,
-          pointRadius: 5,
-          fontSize: 30,
-          spanGaps: i == 0 ? true : false,
-          data: dataNumbers,
-          borderJoinStyle: 'miter',
-          pointBackgroundColor: i == 0 ? 'red' : color,
-          pointBorderColor: i == 0 ? 'red' : color,
-          pointBorderWidth: i == 0 ? 8 : 5,
-          borderWidth: i == 0 ? 6 : 3,
-          pointHitRadius: 10,
-          borderDash: i == 0 ? [8, 5] : [],
-          backgroundColor: [
-            i == 0 ? 'red' : color,
-          ],
-          borderColor: [
-            i == 0 ? 'red' : color,
-          ],
-        });
       }
 
       dataSetStr += ']';
@@ -267,14 +255,5 @@ var myChart = new Chart(ctx, {
     `;
 
     message.channel.send('Here\'s the chart, download and open it in a web browser:', { files: [{ attachment: Buffer.from(html, 'UTF8'), name: 'chart.html' }] });
-
-    function getRandomColor() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
   },
 };
