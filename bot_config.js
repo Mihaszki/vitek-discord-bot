@@ -2,6 +2,7 @@ module.exports = {
   'prefix': '.',
   'bot_name': 'Vitek',
   'bot_author': 'Mihaszki',
+  'bot_author_id': '236885810475958272',
   'status': '.help / .info',
   'github_link': 'https://github.com/Mihaszki/vitek-discord-bot',
   'date_timezone': 'Europe/Warsaw',
