@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const messageLogger = require('./vitek_db/messageLogger');
 const messageGenerator = require('./vitek_db/messageGenerator');
+const blockListController = require('./vitek_db/blockListController');
 const { connectToDB } = require('./vitek_db/connectToDB');
 const { prefix, status, date_locale } = require('./bot_config');
 require('dotenv').config();
@@ -10,6 +11,9 @@ require('dotenv').config();
 connectToDB();
 
 const client = new Discord.Client();
+
+// List that will contain blocked users
+client.blocklist = [];
 
 // Message counter for automatic bot responses
 const guildMessageCounter = new Map();
@@ -26,7 +30,11 @@ for(const file of commandFiles) {
 const cooldowns = new Discord.Collection();
 const getTimeNow = () => '[' + new Date().toLocaleTimeString(date_locale) + ']';
 
-client.once('ready', () => {
+client.once('ready', async () => {
+  // List that will contain blocked users
+  client.blocklist = await blockListController.getBlockedUsers();
+  console.log('\x1b[33m%s\x1b[0m', 'Blocked users:');
+  console.log(client.blocklist);
   console.log('\x1b[33m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
   for(const g of client.guilds.cache) {
     console.log('\x1b[33m%s\x1b[0m', 'Serving on:');
@@ -64,10 +72,20 @@ client.on('message', message => {
 
   const command = client.commands.get(commandName);
   if(!command) {
+    // Check is user is blocked
+    if(blockListController.isBlockedLocal(message.author.id, client.blocklist)) {
+      return message.channel.send('You are blocked! :no_entry:');
+    }
+
     messageGenerator.getMessage(message.cleanContent.slice(1), message.guild.id, response => {
       if(response !== false) message.channel.send(response);
     }, true, 2000);
     return;
+  }
+
+  // Check is user is blocked
+  if(blockListController.isBlockedLocal(message.author.id, client.blocklist)) {
+    return message.channel.send('You are blocked! :no_entry:');
   }
 
   // Check if it's guild only command
