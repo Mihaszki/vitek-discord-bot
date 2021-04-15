@@ -71,7 +71,7 @@ module.exports = {
     try {
       const items = await RepModel.aggregate([
         { $match: { server_id: server_id } },
-        { $group: { _id: { 'user_id': '$receiver.user_id' }, value: { $sum: '$value' } } },
+        { $group: { _id: { 'user_id': '$receiver.user_id' }, value: { $sum: '$value' }, username: { $last: '$receiver.username' } } },
         { $sort: { value: -1 } },
         { $limit: 15 },
       ]);

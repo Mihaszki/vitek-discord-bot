@@ -17,7 +17,8 @@ module.exports = {
         if(items.length == 0) { description += '**NONE :(**'; }
         else {
           for(let i = 0; i < items.length; i++) {
-            description += `**${i + 1}.** | <@${items[i]._id.user_id}> | ${items[i].value}\n`;
+            const member = getMention.member(`<@${items[i]._id.user_id}>`, message);
+            description += `**${i + 1}.** | ${member ? member : items[i].username} | ${items[i].value}\n`;
           }
         }
         sendEmbed(message, `Rep - Top 15 | ${message.guild.name}`, description, message.guild.iconURL());
