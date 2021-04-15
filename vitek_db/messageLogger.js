@@ -60,6 +60,7 @@ module.exports = {
         { $match: { server_id: message.guild.id, 'author.isBot': false } },
         { $group:
           { _id: { 'user_id': '$author.user_id' },
+            username: { $last: '$author.username' },
             count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 15 },
