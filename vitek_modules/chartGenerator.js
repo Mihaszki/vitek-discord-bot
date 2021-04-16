@@ -2,15 +2,10 @@ module.exports = {
   sendChart: function(message, chartData, { width, height, chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', showOneUser = false, showOnlyID = '', attachmentFileName = 'chart' }) {
     const Discord = require('discord.js');
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+    const colors = require('../vitek_modules/colors');
 
     const dataSet = [];
-    const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff', '#ededed', '#1f633e'];
-
-    if(chartData.length > bgColors.length) {
-      for(let i = 0; i <= (chartData.length - bgColors.length) + 5; i++) {
-        bgColors.push(getRandomColor());
-      }
-    }
+    const bgColors = colors.generate(chartData.length + 1);
 
     if(type == 'bar') {
       for(let i = 0; i < chartLabels.length; i++) {
@@ -226,14 +221,5 @@ module.exports = {
       const attachment = new Discord.MessageAttachment(image, `${attachmentFileName}.png`);
       message.channel.send(attachment);
     })();
-
-    function getRandomColor() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
   },
 };

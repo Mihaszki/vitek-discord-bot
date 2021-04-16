@@ -1,29 +1,13 @@
 module.exports = {
   sendHTML: function(message, chartData, { chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', showOneUser = false, showOnlyID = '' }) {
+    const colors = require('../vitek_modules/colors');
     let html = '';
-    const bgColors = ['#2fff00', '#00f2ff', '#fbff00', '#ff0000', '#ff00c3', '#ff7b00', '#001aff', '#ededed', '#1f633e'];
-
     let dataSetStr = '[';
     let labelsStr = '[';
     let bgColorsStr = '[';
 
     const escapeCharacters = (val) => val.replace(/['\\]/g, '\\$&');
-
-    const getRandomColor = () => {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    };
-
-    if(chartData.length > bgColors.length) {
-      for(let i = 0; i <= (chartData.length - bgColors.length) + 5; i++) {
-        bgColors.push(getRandomColor());
-      }
-    }
-
+    const bgColors = colors.generate(chartData.length + 1);
     bgColors.forEach(val => bgColorsStr += `'${val}',`);
 
     bgColorsStr += ']';
