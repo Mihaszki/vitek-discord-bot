@@ -13,16 +13,19 @@ module.exports = {
     if(args[0] == 'help') {
       return sendEmbed(message, 'Graph - Help', `You can type equations e.g. \`x+2, x*x\`.
       You can also use these functions:
-      \`Math.sin()\` - returns the sine of a number.
-      \`Math.cos()\` - returns the cosine of a number.
-      \`Math.tan()\` - returns the tangent of a number.
+      \`Math.sin(x)\` - returns the sine of a number.
+      \`Math.cos(x)\` - returns the cosine of a number.
+      \`Math.tan(x)\` - returns the tangent of a number.
+      \`Math.abs(x)\` - returns the absolute value of a number.
+      \`Math.log(x)\` - returns the natural logarithm (base e) of a number.
+      \`Math.random()\` - returns a floating-point, pseudo-random number.
       \`Math.PI\` - ratio of the circumference of a circle to its diameter.`);
     }
 
     const equ = args.join(' ').split(',');
     let fns = [];
     for(const e of equ) {
-      let fn = e.trim().match(/[-()\d/*+.x]|(Math\.sin)|(Math\.cos)|(Math\.tan)|(Math\.PI)/g);
+      let fn = e.trim().match(/[-()\d/*+.x]|(Math\.sin)|(Math\.cos)|(Math\.tan)|(Math\.PI)|(Math\.random)|(Math\.abs)|(Math\.log)/g);
       if(!fn) return message.channel.send('You need to provide a valid equations! e.g. `x*x, -x*x`. See help for more info.');
       fn = fn.join('');
       fns.push(fn);
@@ -134,7 +137,7 @@ module.exports = {
                 color: 'rgba(255, 255, 255, 0.2)',
               },
               ticks: {
-                fontSize: fontSize * 0.8,
+                fontSize: fontSize * 0.7,
               },
             }],
             xAxes: [{
@@ -144,8 +147,10 @@ module.exports = {
               },
               ticks: {
                 autoSkip: true,
+                maxRotation: 0,
+                minRotation: 0,
                 maxTicksLimit: parseInt(loopNum / 3),
-                fontSize: fontSize * 0.8,
+                fontSize: fontSize * 0.7,
               },
               gridLines: {
                 color: 'rgba(255, 255, 255, 0.2)',
