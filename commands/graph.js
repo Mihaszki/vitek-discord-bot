@@ -1,19 +1,30 @@
 module.exports = {
   name: 'graph',
   description: 'Generate graph based on equation',
-  usage: '<equations> e.g. x+2, x*x',
+  usage: 'help',
   cooldown: 2,
   args: true,
   guildOnly: true,
   async execute(message, args) {
     const Discord = require('discord.js');
     const colors = require('../vitek_modules/colors');
+    const { sendEmbed } = require('../vitek_modules/embed');
 
-    const equ = args.join(' ').toLowerCase().split(',');
+    if(args[0] == 'help') {
+      return sendEmbed(message, 'Graph - Help', `You can type equations e.g. \`x+2, x*x\`.
+      You can also use these functions:
+      \`Math.sin()\` - returns the sine of a number.
+      \`Math.cos()\` - returns the cosine of a number.
+      \`Math.tan()\` - returns the tangent of a number.
+      \`Math.PI\` - ratio of the circumference of a circle to its diameter.`);
+    }
+
+    const equ = args.join(' ').split(',');
     let fns = [];
     for(const e of equ) {
-      const fn = e.trim().replace(/[^-()\d/*+.x]/g, '');
-      if(!fn) return message.channel.send('You need to provide a valid equations! e.g. `x*x, -x*x`');
+      let fn = e.trim().match(/[-()\d/*+.x]|(Math\.sin)|(Math\.cos)|(Math\.tan)|(Math\.PI)/g);
+      if(!fn) return message.channel.send('You need to provide a valid equations! e.g. `x*x, -x*x`. See help for more info.');
+      fn = fn.join('');
       fns.push(fn);
     }
     fns = fns.filter((item, pos) => {
@@ -24,20 +35,23 @@ module.exports = {
     const bgColors = colors.generate(fns.length + 1);
 
     const chartDataSets = [];
+    const loopNum = 60;
+    const divider = 10;
 
     const x = [];
-    for(let i = -5; i <= 5; i++) {
-      x.push(i);
+    for(let i = -loopNum; i <= loopNum; i++) {
+      x.push(parseFloat(i / divider));
     }
 
     for(let i = 0; i < fns.length; i++) {
       const y = [];
 
       try {
-        for(let j = -5; j <= 5; j++) {
-          const num = eval(fns[i].replace(/x/g, `(${j})`));
-          if(isNaN(num)) return message.channel.send(`There was an error in function: \`${fns[i]}\`!\n\`\`\`Don't divide by zero!\`\`\``);
-          y.push(parseFloat(num));
+        for(const _x of x) {
+          const num = eval(fns[i].replace(/x/g, `(${_x})`));
+          // if(isNaN(num)) return message.channel.send(`There was an error in function: \`${fns[i]}\`!\n\`\`\`Don't divide by zero!\`\`\``);
+          if(isNaN(num)) y.push(null);
+          else y.push(parseFloat(num));
         }
       }
       catch(error) {
@@ -57,7 +71,7 @@ module.exports = {
 
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 
-    const width = 1000;
+    const width = 2000;
     const height = 1000;
     const fontSize = 35;
     const chartCallback = (ChartJS) => {
@@ -96,7 +110,7 @@ module.exports = {
         options: {
           title: {
             display: true,
-            fontSize: fontSize * 1.4,
+            fontSize: fontSize * 1.6,
             text: 'Graph',
           },
           chartArea: {
@@ -129,6 +143,8 @@ module.exports = {
                 labelString: 'x',
               },
               ticks: {
+                autoSkip: true,
+                maxTicksLimit: parseInt(loopNum / 3),
                 fontSize: fontSize * 0.8,
               },
               gridLines: {
