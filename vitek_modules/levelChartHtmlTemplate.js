@@ -117,17 +117,17 @@ module.exports = {
           spanGaps: ${i == 0 ? true : false},
           data: [${_data}],
           borderJoinStyle: 'miter',
-          pointBackgroundColor: '${i == 0 ? 'red' : color}',
-          pointBorderColor: '${i == 0 ? 'red' : color}',
+          pointBackgroundColor: '${i == 0 ? '#050505' : color}',
+          pointBorderColor: '${i == 0 ? '#050505' : color}',
           pointBorderWidth: ${i == 0 ? '8' : '5'},
           borderWidth: ${i == 0 ? '6' : '3'},
           pointHitRadius: 10,
           borderDash: ${i == 0 ? '[8, 5]' : '[]'},
           backgroundColor: [
-            '${i == 0 ? 'red' : color}',
+            '${i == 0 ? '#050505' : color}',
           ],
           borderColor: [
-            '${i == 0 ? 'red' : color}',
+            '${i == 0 ? '#050505' : color}',
           ],
         },
         `;
