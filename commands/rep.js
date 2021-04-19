@@ -13,7 +13,7 @@ module.exports = {
 
     if(args[0] == 'ranking') {
       repController.getRanking(message.guild.id, message, items => {
-        let description = `**Top 10 on** \`${message.guild.name}\`\n\n\`Place | User | Points\`\n`;
+        let description = `**Top 20 on** \`${message.guild.name}\`\n\n\`Place | User | Points\`\n`;
         if(items.length == 0) { description += '**NONE :(**'; }
         else {
           for(let i = 0; i < items.length; i++) {
@@ -21,7 +21,7 @@ module.exports = {
             description += `**${i + 1}.** | ${member ? member : items[i].username} | ${items[i].value}\n`;
           }
         }
-        sendEmbed(message, `Rep - Top 15 | ${message.guild.name}`, description, message.guild.iconURL());
+        sendEmbed(message, `Rep - Top 20 | ${message.guild.name}`, description, message.guild.iconURL());
       });
     }
     else if(args[0] == 'history') {
