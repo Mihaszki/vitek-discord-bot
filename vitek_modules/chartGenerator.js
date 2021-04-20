@@ -182,6 +182,10 @@ module.exports = {
           },
           scales: {
             yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Level',
+              },
               gridLines: {
                 color: 'rgba(255, 255, 255, 0.3)',
               },
@@ -193,6 +197,10 @@ module.exports = {
               },
             }],
             xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: type == 'line' ? 'Time' : 'Users',
+              },
               ticks: {
                 fontSize: fontSize * 0.8,
               },
