@@ -41,16 +41,15 @@ module.exports = {
       const data = await MessageModel.aggregate([
         { $match: { server_id: server_id } },
         { $group: {
-          _id: {
-            day: { $dayOfMonth: { date: '$createdAt', timezone: date_timezone } },
-          },
-          date: { $first: '$createdAt' },
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: date_timezone } },
         } },
-        { $sort: { '_id.day': -1 } },
+        { $sort: { '_id': -1 } },
       ]);
       const dates = [];
       if(!data || data.length == 0) return onSuccess([ 'No data.' ]);
-      data.forEach(item => { dates.push(item.date.toLocaleDateString(date_locale).replace(/\//g, '.')); });
+      data.forEach(item => {
+        dates.push(new Date(item._id).toLocaleDateString(date_locale).replace(/\//g, '.'));
+      });
       onSuccess(dates);
     }
     catch (error) {
