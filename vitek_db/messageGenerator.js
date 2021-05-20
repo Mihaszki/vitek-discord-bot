@@ -30,12 +30,18 @@ module.exports = {
         const count = await MessageModel.where({
           'server_id': server_id,
           'author.isBot': false,
-          'cleanContent': { $not: excludeRegex },
+          $and: [
+            { 'cleanContent': { $not: excludeRegex } },
+            { 'cleanContent': { $ne: '' } },
+          ],
         }).countDocuments();
         const msg = await MessageModel.findOne({
           'server_id': server_id,
           'author.isBot': false,
-          'cleanContent': { $not: excludeRegex },
+          $and: [
+            { 'cleanContent': { $not: excludeRegex } },
+            { 'cleanContent': { $ne: '' } },
+          ],
         }).skip(Math.floor(Math.random() * count)).exec();
         return msg.cleanContent;
       };
@@ -45,7 +51,11 @@ module.exports = {
         { $match: {
           server_id: server_id,
           'author.isBot': false,
-          $and: [{ 'cleanContent': { $regex: re, $options: 'i' } }, { 'cleanContent': { $not: excludeRegex } }],
+          $and: [
+            { 'cleanContent': { $regex: re, $options: 'i' } },
+            { 'cleanContent': { $not: excludeRegex } },
+            { 'cleanContent': { $ne: '' } },
+          ],
         } },
         { $group: {
           _id: null,
