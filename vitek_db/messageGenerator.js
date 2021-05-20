@@ -54,7 +54,6 @@ module.exports = {
           $and: [
             { 'cleanContent': { $regex: re, $options: 'i' } },
             { 'cleanContent': { $not: excludeRegex } },
-            { 'cleanContent': { $ne: '' } },
           ],
         } },
         { $group: {
