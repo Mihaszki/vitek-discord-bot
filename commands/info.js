@@ -17,18 +17,17 @@ module.exports = {
       .setThumbnail(message.guild.iconURL())
       .setImage(message.guild.iconURL({ size: 1024 }))
       .addFields(
-        { name: 'Tag', value: loadingMessage.author.tag, inline: true },
-        { name: 'ID', value: loadingMessage.author.id, inline: true },
-        { name: 'Author', value: config.bot_author, inline: true },
-        { name: 'Serving on', value: `${message.client.guilds.cache.size} servers`, inline: true },
-        { name: 'Current server', value: message.guild.name, inline: true },
-        { name: 'Region', value: message.guild.region, inline: true },
-        { name: 'Server icon', value: message.guild.iconURL({ size: 1024, dynamic: true }), inline: true },
-        { name: 'Last restart', value: message.client.botRunningUptime.toLocaleString(config.date_locale), inline: true },
-        { name: 'Uptime', value: `${uptime} minutes`, inline: true },
-        { name: 'Github', value: config.github_link, inline: true },
-        { name: 'Ping', value: `${loadingMessage.createdTimestamp - message.createdTimestamp}ms`, inline: true },
-        { name: 'API', value: `${Math.round(message.client.ws.ping)}ms`, inline: true },
+        { name: 'Bot ID', value: loadingMessage.author.id, inline: false },
+        { name: 'Author', value: config.bot_author, inline: false },
+        { name: 'Serving on', value: `${message.client.guilds.cache.size} servers`, inline: false },
+        { name: 'Current server', value: message.guild.name, inline: false },
+        { name: 'Region', value: message.guild.region, inline: false },
+        { name: 'Server icon', value: message.guild.iconURL({ size: 1024, dynamic: true }), inline: false },
+        { name: 'Last restart', value: message.client.botRunningUptime.toLocaleString(config.date_locale), inline: false },
+        { name: 'Uptime', value: `${uptime} minutes`, inline: false },
+        { name: 'Github', value: config.github_link, inline: false },
+        { name: 'Ping', value: `${loadingMessage.createdTimestamp - message.createdTimestamp}ms`, inline: false },
+        { name: 'API', value: `${Math.round(message.client.ws.ping)}ms`, inline: false },
       );
 
     loadingMessage.delete({ timeout: 1000 });
