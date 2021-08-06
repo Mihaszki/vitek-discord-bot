@@ -1,13 +1,13 @@
 module.exports = {
-  'prefix': '.',
+  'prefix': '/',
   'bot_name': 'Vitek',
   'bot_author': 'Mihaszki',
   'bot_author_id': '236885810475958272',
-  'status': '.help / .info',
+  'status': '/info',
   'github_link': 'https://github.com/Mihaszki/vitek-discord-bot',
   'date_timezone': 'Europe/Warsaw',
   'date_locale': 'pl-PL',
-  'excludeRegex': /^\.|^!|^\+|^-|^=|^\?|(https:\/\/|http:\/\/|www\.)/im,
+  'excludeRegex': /^\.|^!|^\+|^;|^\/|^>|^-|^=|^\?|(https:\/\/|http:\/\/|www\.)/im,
   'swearWordList': 'sra|fiut|skurw|cipa|cipy|cipe|cipo|cipk|pener|kurw|huj|pierd|spierd|wypierd|odpierd|cwel|gown|dupa|dupe|dupo|dupk|japa|jape|pizda|pizde|pizdy|pizdo|pedal|morda|morde|franca|frajer|mordy|szcza|rucha|debil|ciec|szmata|szmato|szmaty|szmate|kupa|kupe|kutas|jeban|jebal|dziwk|ujeb|odjeb|zajeb|wyjeb|zjeb|jeb|leszcz|suki|suka|bitch|fuck|shit|ass|cunt|slut|bastard|dick|nigg|retard|fag|idiot|caralho|paneleiro',
   'positiveRepMessages': [
     'Good job!', 'That\'s what I\'m talking about!', 'Thanks for the ride!', 'Thanks for that, tough guy!', 'All right, I feel good.', 'Thanks, doc.', 'Aw, fellas!', 'Un-freakin\'-touchable!', 'Woooooo!', 'Yeah! We did it!', 'You were good son, real good, maybe even the best.', 'Godspeed, you magnificent bastard.', 'Oktoberfest!', 'Today is a good day.', 'Outstanding!', 'And that is how you do it, men!', 'Mmph mphna mprh.', 'We did it, mate!', 'Cheers, mate!', 'I had me good eye on you the whole time!', 'Aye, that\'s the way ye do it!', 'Guts and glory, lads!', 'Bloody brilliant!', 'That\'s the spirit!', 'I am hero!', 'Who dares stand against me NOW?', 'I am credit to team.', 'Sandvich make me strong!', 'Makin\' bacon!', 'Nice goin\', pardner!', 'Thanks, mister!', 'Another satisfied customer!', 'Thanks for the ride, pardner!', 'Unicorn, erecting a dispenser!', 'Danke, Kamerad!', 'Ve did it, Kamerad!', 'Danke, mein hard-hatted friend!', 'I am fully charged.', 'I am ze Übermensch!', 'No worries!', 'God Save the Queen!', 'Preciate it.', 'Excellent.', 'Top Shelf!', 'Well played.', 'Gentlemen?', 'Thank you, laborer!', 'Cheers!', 'My pleasure.', 'You\'re a champion!', 'Good stuff!',
