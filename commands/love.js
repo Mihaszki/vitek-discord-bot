@@ -28,8 +28,6 @@ module.exports = {
 
     const member1 = interaction.options.getMember('user1');
     const member2 = interaction.options.getMember('user2');
-    // const member1 = getMention.member_interaction(args[0], interaction);
-    // const member2 = getMention.member_interaction(args[1], interaction);
 
     if(member1 == member2) return interaction.editReply({ content: 'Love with yourself? :wink:' });
 
@@ -42,8 +40,8 @@ module.exports = {
     const context = canvas.getContext('2d');
 
     const background = await Canvas.loadImage('images/love/love.png');
-    const avatar1 = await Canvas.loadImage(getMention.avatar(member1));
-    const avatar2 = await Canvas.loadImage(getMention.avatar(member2));
+    const avatar1 = await Canvas.loadImage(getMention.avatar(member1.user));
+    const avatar2 = await Canvas.loadImage(getMention.avatar(member2.user));
     context.fillStyle = '#a10004';
     context.fillRect(background, 0, 0, canvas.width, canvas.height);
     context.drawImage(avatar1, 263, 82, 116, 116);
