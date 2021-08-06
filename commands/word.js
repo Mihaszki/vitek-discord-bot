@@ -43,7 +43,7 @@ module.exports = {
     const arg1 = interaction.options.getSubcommand();
 
     if(arg1 == 'usage') {
-      interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+      await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
       const _args = interaction.options.getString('words').toLowerCase();
       let words = _args.split(',');
       words = words.filter(el => { return el !== null && el !== ''; });
@@ -56,7 +56,7 @@ module.exports = {
       });
     }
     else if(arg1 == 'ranking') {
-      interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+      await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
       const sentence = interaction.options.getString('word');
       if(!sentence) return interaction.editReply({ content: 'You must give a word/sentence!' });
       wordCounter.getRanking(sentence.toLowerCase(), interaction.guild.id, interaction, (labels, data) => {
