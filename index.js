@@ -70,19 +70,7 @@ client.on('messageCreate', async message => {
 
   if(message.author.bot) return;
 
-  if(message.content.toLowerCase() === '!deploy-create' && message.author.id == bot_author_id) {
-    const data = [];
-    client.commands.forEach((value) => {
-      data.push({
-        name: value.name,
-        description: value.description,
-        options: value.options ? value.options : undefined,
-      });
-    });
-    await client.application.commands.create(data);
-    return;
-  }
-  else if(message.content.toLowerCase() === '!deploy-set' && message.author.id == bot_author_id) {
+  if(message.content.toLowerCase() === '!deploy-set' && message.author.id == bot_author_id) {
     const data = [];
     client.commands.forEach((value) => {
       data.push({
