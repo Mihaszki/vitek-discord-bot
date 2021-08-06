@@ -22,7 +22,8 @@ const guildMessageCounter = new Map();
 client.commands = new Collection();
 client.botRunningUptime = new Date();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-for(const file of commandFiles) {
+
+for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   client.commands.set(command.name, command);
 }
@@ -40,6 +41,17 @@ client.once('ready', async () => {
     console.log('\x1b[33m%s\x1b[0m', `${g}`);
   }
   client.user.setPresence({ activity: { name: '/help' }, status: 'online' });
+
+  const data = [];
+  client.commands.forEach((value) => {
+    data.push({
+      name: value.name.replace('+', 'p').replace('-', 'n'),
+      description: value.description,
+    });
+  });
+
+  // Register slash commands
+  await client.guilds.cache.get('670258088003108894').commands.set(data);
 });
 
 client.on('messageCreate', message => {
