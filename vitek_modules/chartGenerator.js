@@ -1,6 +1,6 @@
 module.exports = {
-  sendChart: function(message, chartData, { width, height, chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', showOneUser = false, showOnlyID = '', attachmentFileName = 'chart' }) {
-    const Discord = require('discord.js');
+  sendChart: function(interaction, chartData, { width, height, chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', showOneUser = false, showOnlyID = '', attachmentFileName = 'chart' }) {
+    const { MessageAttachment } = require('discord.js');
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
     const colors = require('../vitek_modules/colors');
 
@@ -114,7 +114,7 @@ module.exports = {
       }
 
       if(showOneUser && !gotUser) {
-        return message.channel.send('There is no data for the given user!');
+        return interaction.editReply({ content: 'There is no data for the given user!' });
       }
     }
 
@@ -218,8 +218,8 @@ module.exports = {
         },
       };
       const image = await chartJSNodeCanvas.renderToBuffer(configuration);
-      const attachment = new Discord.MessageAttachment(image, `${attachmentFileName}.png`);
-      message.channel.send(attachment);
+      const attachment = new MessageAttachment(image, `${attachmentFileName}.png`);
+      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
     })();
   },
 };
