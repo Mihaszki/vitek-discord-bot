@@ -1,12 +1,17 @@
 module.exports = {
   name: 'monitor',
   description: 'Guy punches computer screen',
-  usage: '<Server emoji/@User/URL>',
+  options: [
+    {
+      name: 'image',
+      description: '@User or Server emoji or URL',
+      type: 'STRING',
+      required: true,
+    },
+  ],
   cooldown: 2,
-  args: true,
-  guildOnly: true,
-  async execute(message, args) {
-    const Discord = require('discord.js');
+  async execute(interaction) {
+    const { MessageAttachment } = require('discord.js');
     const Canvas = require('canvas');
     const getImage = require('../vitek_modules/getImage');
     const canvas = Canvas.createCanvas(334, 220);
@@ -14,9 +19,13 @@ module.exports = {
     const GIFEncoder = require('gif-encoder-2');
     const encoder = new GIFEncoder(334, 220);
 
-    getImage.getImageAndCheckSize(args[0], message, async (user_image_url) => {
-      const loadingMessage = await message.channel.send(':hourglass: Generating...');
-      const user_image = await Canvas.loadImage(user_image_url);
+    const img = interaction.options.getString('image');
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
+      if(error) {
+        return interaction.editReply({ content: error });
+      }
+      const user_image = await Canvas.loadImage(url);
       const frames = [];
 
       for(let i = 1; i <= 34; i++) {
@@ -213,9 +222,8 @@ module.exports = {
       encoder.finish();
       const buffer = encoder.out.getData();
 
-      const attachment = new Discord.MessageAttachment(buffer, 'monitor.gif');
-      message.channel.send(attachment);
-      loadingMessage.delete({ timeout: 1000 });
+      const attachment = new MessageAttachment(buffer, 'monitor.gif');
+      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
     });
   },
 };
