@@ -16,11 +16,6 @@ module.exports = {
       ],
     },
     {
-      name: 'help',
-      description: 'Shows help',
-      type: 'SUB_COMMAND',
-    },
-    {
       name: 'ranking',
       description: 'Shows ranking',
       type: 'SUB_COMMAND',
@@ -32,6 +27,11 @@ module.exports = {
           required: true,
         },
       ],
+    },
+    {
+      name: 'help',
+      description: 'Shows help',
+      type: 'SUB_COMMAND',
     },
   ],
   cooldown: 2,

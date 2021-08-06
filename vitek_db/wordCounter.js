@@ -44,6 +44,7 @@ module.exports = {
 
   getUsage: async function(words, server_id, message, onSuccess, escapeString = true) {
     try {
+      const { excludeRegex } = require('../bot_config');
       const MessageModel = require('./models/messageModel');
       const { escapeRegex } = require('../vitek_modules/escapeRegex');
       let wordsParsed = words;
@@ -54,7 +55,7 @@ module.exports = {
         { $match: { server_id: server_id,
           'author.isBot': false,
           $and: [{ 'cleanContent': { $regex: wordsParsed.join('|'), $options: 'i' } },
-            { 'cleanContent': { $not: /^\.|^!/m } }],
+            { 'cleanContent': { $not: excludeRegex } }],
         } },
         { $group: {
           _id: 'null',
