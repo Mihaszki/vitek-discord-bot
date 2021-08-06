@@ -1,15 +1,40 @@
 module.exports = {
   name: 'ascii',
   description: 'Image to ascii art',
+  options: [
+    {
+      name: 'image',
+      description: '@User or Server emoji or URL',
+      type: 'STRING',
+      required: true,
+    },
+    {
+      name: 'size',
+      description: 'Size of the ascii art',
+      type: 'STRING',
+      required: true,
+      choices: [
+        {
+          name: 'small',
+          value: 'small',
+        },
+        {
+          name: 'medium',
+          value: 'medium',
+        },
+        {
+          name: 'large',
+          value: 'large',
+        },
+      ],
+    },
+  ],
   cooldown: 2,
-  args: true,
-  guildOnly: true,
-  usage: '<Server emoji/@User/URL> <small/medium/large>',
-  async execute(message, args) {
+  async execute(interaction) {
     const imgToAscii = require('ascii-img-canvas-nodejs');
     const getImage = require('../vitek_modules/getImage');
     const { trimCanvas } = require('../vitek_modules/canvasDraw');
-    const Discord = require('discord.js');
+    const { MessageAttachment } = require('discord.js');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(3000, 3000);
     const context = canvas.getContext('2d');
@@ -19,13 +44,8 @@ module.exports = {
     let pic_height = 0;
     let msg = '';
 
-    switch (args[1]) {
-    case 'small':
-      pic_width = 80;
-      pic_height = 80;
-      msg = '**Size: small.**';
-      break;
-
+    const picSize = interaction.options.getString('size');
+    switch (picSize) {
     case 'medium':
       pic_width = 120;
       pic_height = 120;
@@ -45,11 +65,14 @@ module.exports = {
       break;
     }
 
-    console.log(pic_width, pic_height);
+    const img = interaction.options.getString('image');
+    await interaction.reply({ content: `Generating... :hourglass_flowing_sand: | ${msg}` });
 
-    getImage.getImageAndCheckSize(args[0], message, async (user_image_url) => {
-      const asciiImgHosted = await imgToAscii(user_image_url, { width: pic_width, height: pic_height });
-      const loadingMessage = await message.channel.send(`:hourglass: Generating... | ${msg}`);
+    getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
+      if(error) {
+        return interaction.editReply({ content: error });
+      }
+      const asciiImgHosted = await imgToAscii(url, { width: pic_width, height: pic_height });
 
       const lineHeight = 11;
       const lineWidth = 6;
@@ -71,9 +94,8 @@ module.exports = {
         y += lineHeight;
         x = 5;
       }
-      const attachment = new Discord.MessageAttachment(trimCanvas(canvas, 3000, 3000).toBuffer(), 'ascii.png');
-      await message.channel.send(attachment);
-      loadingMessage.delete({ timeout: 1000 });
+      const attachment = new MessageAttachment(trimCanvas(canvas, 3000, 3000).toBuffer(), 'ascii.png');
+      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
     });
   },
 };

@@ -1,21 +1,36 @@
 module.exports = {
   name: 'r',
   description: 'Add an image to the letter "R"',
+  options: [
+    {
+      name: 'num',
+      description: 'Number of tiles (1 - 2048)',
+      type: 'INTEGER',
+      required: true,
+    },
+    {
+      name: 'image',
+      description: '@User or Server emoji or URL',
+      type: 'STRING',
+      required: true,
+    },
+  ],
   cooldown: 1,
-  guildOnly: true,
-  args: true,
-  usage: '<Server emoji/@User/URL> <number 1 - 2048>',
-  execute(message, args) {
-    const Discord = require('discord.js');
+  async execute(interaction) {
+    const { MessageAttachment } = require('discord.js');
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
 
-    let num = 1;
-    if(!args[1] || !(/^\d+$/.test(args[1]))) num = 1;
-    else if(args[1] > 2048) num = 2048;
-    else num = parseInt(args[1]);
-    getImage.getImageAndCheckSize(args[0], message, async (user_image_url) => {
-      const user_image = await Canvas.loadImage(user_image_url);
+    let num = interaction.options.getInteger('num');
+    if(num > 2048) num = 2048;
+    else if(num < 1) num = 1;
+    const img = interaction.options.getString('image');
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
+      if(error) {
+        return interaction.editReply({ content: error });
+      }
+      const user_image = await Canvas.loadImage(url);
       if(num == 1) generateImage(user_image);
       else if(num % 2 == 0) generateTiles(num, user_image);
       else generateTiles(num + 1, user_image);
@@ -29,8 +44,8 @@ module.exports = {
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.drawImage(user_image, 0, 0, canvas.width, canvas.height);
       context.drawImage(background, 0, 0, canvas.width, canvas.height);
-      const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'r.png');
-      message.channel.send(attachment);
+      const attachment = new MessageAttachment(canvas.toBuffer(), 'r.png');
+      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
     }
 
     async function generateTiles(tilesNum, user_image) {
@@ -60,7 +75,6 @@ module.exports = {
         }
       }
 
-      const loadingMessage = await message.channel.send(`:hourglass: Generating... Tiles: ${tilesNum}`);
       const context = canvas.getContext('2d');
       context.fillStyle = '#000000';
       context.fillRect(0, 0, width, height);
@@ -76,9 +90,8 @@ module.exports = {
         x = 0;
         y += tileSize;
       }
-      const attachment = new Discord.MessageAttachment(canvas.toBuffer(), `r_${tilesNum}.png`);
-      message.channel.send(attachment);
-      loadingMessage.delete({ timeout: 1000 });
+      const attachment = new MessageAttachment(canvas.toBuffer(), `r_${tilesNum}.png`);
+      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
     }
 
     function median(arr) {

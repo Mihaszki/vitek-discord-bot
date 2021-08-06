@@ -2,11 +2,23 @@ module.exports = {
   name: 'poem',
   description: 'Generate poem from your messages',
   usage: '<Rhyme1> <Rhyme2>',
+  options: [
+    {
+      name: 'rhyme1',
+      description: 'First rhyme',
+      type: 'STRING',
+      required: true,
+    },
+    {
+      name: 'rhyme2',
+      description: 'Second rhyme',
+      type: 'STRING',
+      required: true,
+    },
+  ],
   cooldown: 1,
-  args: true,
-  guildOnly: true,
-  async execute(message, args) {
-    const Discord = require('discord.js');
+  async execute(interaction) {
+    const { MessageAttachment } = require('discord.js');
     const { prefix, poemTitles } = require('../bot_config');
     const { getFontSize } = require('../vitek_modules/canvasDraw');
     const rhymingMessages = require('../vitek_db/rhymingMessages');
@@ -21,24 +33,29 @@ module.exports = {
     let arg1 = '';
     let arg2 = '';
 
-    if(!args[0] || args[0] == '-') {
+    const r1 = interaction.options.getString('rhyme1');
+    const r2 = interaction.options.getString('rhyme2');
+
+    if(r1 == '-') {
       arg1 = '.';
     }
     else {
-      arg1 = `${escapeRegex(args[0])}$`;
+      arg1 = `${escapeRegex(r1)}$`;
     }
 
-    if(!args[1] || args[1] == '-') {
+    if(r2 == '-') {
       arg2 = '.';
     }
     else {
-      arg2 = `${escapeRegex(args[1])}$`;
+      arg2 = `${escapeRegex(r2)}$`;
     }
 
-    lyrics_A = await rhymingMessages.getMessages(arg1, message.guild.id);
-    lyrics_B = await rhymingMessages.getMessages(arg2, message.guild.id);
+    lyrics_A = await rhymingMessages.getMessages(arg1, interaction.guild.id);
+    lyrics_B = await rhymingMessages.getMessages(arg2, interaction.guild.id);
 
-    if(!lyrics_A || !lyrics_B) return message.channel.send(`Not enough data to create a poem for these rhymes!\nYou can run: \`${prefix}${this.name} - -\` to generate a poem without rhymes.`);
+    if(!lyrics_A || !lyrics_B) return interaction.reply({ content: `Not enough data to create a poem for these rhymes!\nYou can run: \`${prefix}${this.name} - -\` to generate a poem without rhymes.` });
+
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
 
     const lyrics_All = [];
 
@@ -76,7 +93,7 @@ module.exports = {
     context.font = getFontSize(title, canvas, 50, 40, 5);
     context.fillText(title, (canvas.width / 2) - (context.measureText(title).width / 2), 650);
 
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'poem.png');
-    message.channel.send(attachment);
+    const attachment = new MessageAttachment(canvas.toBuffer(), 'poem.png');
+    interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
   },
 };

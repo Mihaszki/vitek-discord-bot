@@ -34,7 +34,7 @@ module.exports = {
     }
   },
 
-  getAvailableDates: async function(server_id, message, onSuccess) {
+  getAvailableDates: async function(server_id, interaction, onSuccess) {
     try {
       const { date_timezone, date_locale } = require('../bot_config');
       const MessageModel = require('./models/messageModel');
@@ -54,11 +54,11 @@ module.exports = {
     }
     catch (error) {
       console.error(error);
-      return message.channel.send('Something went wrong! Try again later.');
+      return interaction.editReply({ content: 'Something went wrong! Try again later.' });
     }
   },
 
-  getDataForDay: async function(date, server_id, message, onSuccess) {
+  getDataForDay: async function(date, server_id, interaction, onSuccess) {
     try {
       const { endOfDay, startOfDay } = require('date-fns');
       const { date_timezone } = require('../bot_config');
@@ -95,7 +95,7 @@ module.exports = {
         } },
       ]);
 
-      if(!data || data.length == 0) return message.channel.send('There is no data for your date!');
+      if(!data || data.length == 0) return interaction.editReply({ content: 'There is no data for your date!' });
 
       const users = [];
       for(const d of data) {
@@ -108,7 +108,7 @@ module.exports = {
             value: this.calculate(hour.count, hour.swears, hour.words),
           });
         });
-        const member = getMention.member(`<@${d._id.user_id}>`, message);
+        const member = getMention.member_interaction(`<@${d._id.user_id}>`, interaction);
         users.push({
           user_id: d._id.user_id,
           username: !member ? sorted[sorted.length - 1].username : getMention.username(member),
@@ -120,7 +120,7 @@ module.exports = {
     }
     catch (error) {
       console.error(error);
-      return message.channel.send('Something went wrong! Try again later.');
+      return interaction.editReply({ content: 'Something went wrong! Try again later.' });
     }
   },
 

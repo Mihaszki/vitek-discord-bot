@@ -2,13 +2,32 @@ module.exports = {
   name: 'keanu',
   description: 'Johnny Silverhand with your image and quote',
   cooldown: 0.1,
-  args: true,
-  guildOnly: true,
-  usage: '<Server emoji/@User/URL> <Upper text\\Bottom text>',
-  async execute(message, args) {
+  options: [
+    {
+      name: 'line1',
+      description: 'Enter a top line of text',
+      type: 'STRING',
+      required: true,
+    },
+    {
+      name: 'line2',
+      description: 'Enter a bottom line of text',
+      type: 'STRING',
+      required: true,
+    },
+    {
+      name: 'image',
+      description: '@User or Server emoji or URL',
+      type: 'STRING',
+      required: true,
+    },
+  ],
+  async execute(interaction) {
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
-    const Discord = require('discord.js');
+    const { MessageAttachment } = require('discord.js');
+
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
 
     const applyText = (canvas, text, startFontSize) => {
       const ctx = canvas.getContext('2d');
@@ -20,7 +39,13 @@ module.exports = {
       return ctx.font;
     };
 
-    getImage.getImageAndCheckSize(args[0], message, async (user_image_url) => {
+    const line1 = interaction.options.getString('line1');
+    const line2 = interaction.options.getString('line2');
+    const img = interaction.options.getString('image');
+    getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
+      if(error) {
+        return interaction.editReply({ content: error });
+      }
       const canvas = Canvas.createCanvas(1495, 841);
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#ffffff';
@@ -29,13 +54,7 @@ module.exports = {
       ctx.shadowBlur = 3;
       ctx.shadowColor = '#000000';
 
-      args.shift();
-      const text = args.join(' ').split('\\');
-      if(text.length < 1 || !text[0] || !text[1]) {
-        return message.channel.send('Text must be in this format:\n``Upper text\\Bottom text``');
-      }
-
-      const user_image = await Canvas.loadImage(user_image_url);
+      const user_image = await Canvas.loadImage(url);
       const bg = await Canvas.loadImage('images/keanu/keanu.png');
       const x = 657;
       const y = 143;
@@ -53,21 +72,20 @@ module.exports = {
 
       ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
-      ctx.font = applyText(canvas, text[0], 65);
+      ctx.font = applyText(canvas, line1, 65);
       ctx.fillStyle = '#000000';
-      ctx.fillText(text[0], (canvas.width / 2) - (ctx.measureText(text[0]).width / 2), 65);
+      ctx.fillText(line1, (canvas.width / 2) - (ctx.measureText(line1).width / 2), 65);
       ctx.fillStyle = '#ffffff';
-      ctx.fillText(text[0], (canvas.width / 2) - (ctx.measureText(text[0]).width / 2), 65);
+      ctx.fillText(line1, (canvas.width / 2) - (ctx.measureText(line1).width / 2), 65);
 
-      ctx.font = applyText(canvas, text[1], 65);
+      ctx.font = applyText(canvas, line2, 65);
       ctx.fillStyle = '#000000';
-      ctx.fillText(text[1], (canvas.width / 2) - (ctx.measureText(text[1]).width / 2), 776);
+      ctx.fillText(line2, (canvas.width / 2) - (ctx.measureText(line2).width / 2), 776);
       ctx.fillStyle = '#ffffff';
-      ctx.fillText(text[1], (canvas.width / 2) - (ctx.measureText(text[1]).width / 2), 776);
+      ctx.fillText(line2, (canvas.width / 2) - (ctx.measureText(line2).width / 2), 776);
 
-      const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'keanu.png');
-
-      message.channel.send(attachment);
+      const attachment = new MessageAttachment(canvas.toBuffer(), 'keanu.png');
+      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
     });
   },
 };

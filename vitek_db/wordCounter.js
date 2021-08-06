@@ -1,5 +1,5 @@
 module.exports = {
-  getRanking: async function(word, server_id, message, onSuccess, escapeString = true) {
+  getRanking: async function(word, server_id, interaction, onSuccess, escapeString = true) {
     try {
       const getMention = require('../vitek_modules/getMention');
       const { escapeRegex } = require('../vitek_modules/escapeRegex');
@@ -20,13 +20,13 @@ module.exports = {
         } },
       ]);
 
-      if(!data || data.length == 0) return message.channel.send('There is no data for the words!');
+      if(!data || data.length == 0) return interaction.editReply({ content: 'There is no data for the words!' });
 
       const counted_data = [];
 
       for(const d of data) {
         const str = d.cleanContent.join().toLowerCase();
-        const member = getMention.member(`<@${d._id}>`, message);
+        const member = getMention.member_interaction(`<@${d._id}>`, interaction);
         counted_data.push({
           username: !member ? d.username : getMention.username(member),
           number: str.split(word).length - 1,
@@ -38,12 +38,12 @@ module.exports = {
     }
     catch (error) {
       console.error(error);
-      return message.channel.send('Something went wrong! Try again later.');
     }
   },
 
-  getUsage: async function(words, server_id, message, onSuccess, escapeString = true) {
+  getUsage: async function(words, server_id, interaction, onSuccess, escapeString = true) {
     try {
+      const { excludeRegex } = require('../bot_config');
       const MessageModel = require('./models/messageModel');
       const { escapeRegex } = require('../vitek_modules/escapeRegex');
       let wordsParsed = words;
@@ -54,7 +54,7 @@ module.exports = {
         { $match: { server_id: server_id,
           'author.isBot': false,
           $and: [{ 'cleanContent': { $regex: wordsParsed.join('|'), $options: 'i' } },
-            { 'cleanContent': { $not: /^\.|^!/m } }],
+            { 'cleanContent': { $not: excludeRegex } }],
         } },
         { $group: {
           _id: 'null',
@@ -62,7 +62,7 @@ module.exports = {
         } },
       ]);
 
-      if(!data || data.length == 0) return message.channel.send('There is no data for the words!');
+      if(!data || data.length == 0) return interaction.editReply({ content: 'There is no data for the words!' });
 
       const str = data[0].cleanContent.join().toLowerCase();
 
@@ -79,7 +79,6 @@ module.exports = {
     }
     catch (error) {
       console.error(error);
-      return message.channel.send('Something went wrong! Try again later.');
     }
   },
 };

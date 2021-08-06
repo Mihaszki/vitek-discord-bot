@@ -1,12 +1,17 @@
 module.exports = {
   name: 'scifun',
   description: 'Scifun animation',
-  usage: '<Server emoji/@User/URL>',
+  options: [
+    {
+      name: 'image',
+      description: '@User or Server emoji or URL',
+      type: 'STRING',
+      required: true,
+    },
+  ],
   cooldown: 5,
-  args: true,
-  guildOnly: true,
-  execute(message, args) {
-    const Discord = require('discord.js');
+  async execute(interaction) {
+    const { MessageAttachment } = require('discord.js');
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(290, 280);
@@ -14,9 +19,13 @@ module.exports = {
     const GIFEncoder = require('gif-encoder-2');
     const encoder = new GIFEncoder(290, 280);
     ctx.fillStyle = '#e26861';
-    getImage.getImageAndCheckSize(args[0], message, async (user_image_url) => {
-      const loadingMessage = await message.channel.send(':hourglass: Generating...');
-      const user_image = await Canvas.loadImage(user_image_url);
+    const img = interaction.options.getString('image');
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
+      if(error) {
+        return interaction.editReply({ content: error });
+      }
+      const user_image = await Canvas.loadImage(url);
 
       const x = 77;
       const y = 153;
@@ -33,7 +42,7 @@ module.exports = {
 
       for(let i = 1; i <= 167; i++) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const img = await Canvas.loadImage(`images/scifun/frame(${i}).png`);
+        const usrImg = await Canvas.loadImage(`images/scifun/frame(${i}).png`);
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(rotation * deg);
@@ -41,14 +50,13 @@ module.exports = {
         rotation = rotation + (i / 2);
         ctx.drawImage(user_image, x, y, w, h);
         ctx.restore();
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(usrImg, 0, 0, canvas.width, canvas.height);
         encoder.addFrame(ctx);
       }
       encoder.finish();
       const buffer = encoder.out.getData();
-      const attachment = new Discord.MessageAttachment(buffer, 'scifun.gif');
-      message.channel.send(attachment);
-      loadingMessage.delete({ timeout: 1000 });
+      const attachment = new MessageAttachment(buffer, 'scifun.gif');
+      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
     });
   },
 };

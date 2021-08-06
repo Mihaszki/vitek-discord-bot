@@ -1,23 +1,30 @@
 module.exports = {
   name: 'worldgen',
   description: 'Generate a simple 2D world',
-  usage: '<seed>',
+  options: [
+    {
+      name: 'seed',
+      description: 'Seed',
+      type: 'STRING',
+      required: true,
+    },
+  ],
   cooldown: 2,
-  args: true,
-  guildOnly: true,
-  async execute(message) {
-    const Discord = require('discord.js');
+  async execute(interaction) {
+    const { MessageAttachment } = require('discord.js');
     const cleanText = require('../vitek_modules/cleanText');
     const Canvas = require('canvas');
     const SimplexNoise = require('simplex-noise');
+
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+
     const worldSize = 3072;
     const canvas = Canvas.createCanvas(worldSize, worldSize);
     const ctx = canvas.getContext('2d');
     const treeCanvas = Canvas.createCanvas(worldSize, worldSize);
     const treeCtx = canvas.getContext('2d');
-    const { prefix } = require('../bot_config');
 
-    const seed = cleanText.emojis(message.cleanContent.slice(prefix.length + this.name.length + 1));
+    const seed = cleanText.emojis(interaction.options.getString('seed'));
 
     const grass = await Canvas.loadImage('images/worldgen/grass.png');
     const snow = await Canvas.loadImage('images/worldgen/snow.png');
@@ -76,7 +83,7 @@ module.exports = {
       }
     }
     ctx.drawImage(treeCanvas, 0, 0);
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'world.png');
-    message.channel.send(attachment);
+    const attachment = new MessageAttachment(canvas.toBuffer(), 'world.png');
+    interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
   },
 };
