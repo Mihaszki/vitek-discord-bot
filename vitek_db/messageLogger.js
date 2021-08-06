@@ -17,7 +17,7 @@ module.exports = {
     if(!member) username = message.author.username;
     else username = getMention.username(member);
 
-    // Save message to DB
+    // Save message to the database
     try {
       const newMessage = new MessageModel({
         server_id: message.guild.id,
@@ -44,6 +44,7 @@ module.exports = {
     }
   },
 
+  // Get interesting statistics from the database
   count: async function(message, onSuccess) {
     const MessageModel = require('../vitek_db/models/messageModel');
     try {

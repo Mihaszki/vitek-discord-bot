@@ -1,7 +1,7 @@
 module.exports = {
   member: function(arg, message) {
     const mentioned_user1 = arg.match(/<@!?(\d+)>/);
-    if(!mentioned_user1 || !message.guild.member(mentioned_user1[1])) return false;
+    if(!mentioned_user1) return false;
     else return message.guild.members.cache.get(mentioned_user1[1]);
   },
 
