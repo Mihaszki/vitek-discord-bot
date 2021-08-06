@@ -1,24 +1,37 @@
 module.exports = {
   name: 'love',
   description: 'Love card',
-  usage: '<@User1> <@User2>',
+  options: [
+    {
+      name: 'user1',
+      description: 'First user',
+      type: 'USER',
+      required: true,
+    },
+    {
+      name: 'user2',
+      description: 'Second user',
+      type: 'USER',
+      required: true,
+    },
+  ],
   cooldown: 2,
-  args: true,
-  guildOnly: true,
-  async execute(message, args) {
-    const Discord = require('discord.js');
+  async execute(interaction) {
+    const { MessageAttachment } = require('discord.js');
     const getMention = require('../vitek_modules/getMention');
     const canvasDraw = require('../vitek_modules/canvasDraw');
     const Canvas = require('canvas');
     const { loveQuotes } = require('../bot_config');
 
-    if(!args[0] || !args[1]) return message.channel.send('You must tag two users!');
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
 
-    const member1 = getMention.member(args[0], message);
-    const member2 = getMention.member(args[1], message);
 
-    if(!member1 || !member2) return message.channel.send('You must select two users that are on the server!');
-    else if(member1 == member2) return message.channel.send('Love with yourself? :wink:');
+    const member1 = interaction.options.getMember('user1');
+    const member2 = interaction.options.getMember('user2');
+    // const member1 = getMention.member_interaction(args[0], interaction);
+    // const member2 = getMention.member_interaction(args[1], interaction);
+
+    if(member1 == member2) return interaction.editReply({ content: 'Love with yourself? :wink:' });
 
     const quote = `„${loveQuotes[Math.floor(Math.random() * loveQuotes.length)]}”`;
 
@@ -56,7 +69,7 @@ module.exports = {
     const messageText = `${username1} + ${username2} = ♥`;
     context.font = canvasDraw.getFontSize(messageText, canvas);
     context.fillText(messageText, canvas.width / 2, canvas.height - 5 - parseInt(context.font));
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'love.png');
-    message.channel.send(`${member1} + ${member2} = ❤️`, attachment);
+    const attachment = new MessageAttachment(canvas.toBuffer(), 'love.png');
+    interaction.editReply({ content: `${member1} + ${member2} = ❤️`, files: [attachment] });
   },
 };
