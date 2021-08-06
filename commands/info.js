@@ -3,10 +3,10 @@ module.exports = {
   cooldown: 1,
   description: 'Shows information about the bot',
   async execute(interaction) {
-    const Discord = require('discord.js');
+    const { MessageEmbed } = require('discord.js');
     const config = require('../bot_config');
     console.log(interaction.guild.memberCount);
-    const embed = new Discord.MessageEmbed()
+    const embed = new MessageEmbed()
       .setColor('#00aeff')
       .setDescription(':heart: **Special thanks to: Jojczak#7487** :heart:')
       .setAuthor(interaction.client.user.tag, interaction.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }))
