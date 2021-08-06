@@ -28,7 +28,7 @@ module.exports = {
 
     const embed = new MessageEmbed()
       .setColor(color)
-      .setAuthor(randomMessage, avatar(member))
+      .setAuthor(randomMessage, avatar(member.user))
       .setThumbnail(interaction.guild.iconURL())
       .addFields(
         { name: 'Your points:', value: allPoints.toString(), inline: true },

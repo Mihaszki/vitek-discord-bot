@@ -25,11 +25,11 @@ module.exports = {
 
     await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
 
-
     const member1 = interaction.options.getMember('user1');
     const member2 = interaction.options.getMember('user2');
 
-    if(member1 == member2) return interaction.editReply({ content: 'Love with yourself? :wink:' });
+    if(!member1 || !member2) return interaction.editReply({ content: 'You must enter a user who is on the server!' });
+    else if(member1 == member2) return interaction.editReply({ content: 'Love with yourself? :wink:' });
 
     const quote = `„${loveQuotes[Math.floor(Math.random() * loveQuotes.length)]}”`;
 

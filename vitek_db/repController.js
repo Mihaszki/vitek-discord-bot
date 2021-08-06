@@ -22,7 +22,6 @@ module.exports = {
           tag: interaction.user.tag,
         },
       });
-      console.log(newRep);
       await newRep.save();
 
       const allPoints = await this.getAllUserPoints(member.id, interaction);
@@ -37,7 +36,8 @@ module.exports = {
   newRep: function(interaction, member, reason, repValue) {
     const getMention = require('../vitek_modules/getMention');
 
-    if(member.id == interaction.user.id) return interaction.reply({ content: 'You can\'t rep yourself!' });
+    if(!member) return interaction.reply({ content: 'You must enter a user who is on the server!' });
+    else if(member.id == interaction.user.id) return interaction.reply({ content: 'You can\'t rep yourself!' });
 
     const username = getMention.username(member);
     if(!reason) {
@@ -50,7 +50,7 @@ module.exports = {
     this.sendToDB(interaction, member, username, reason, repValue);
   },
 
-  getUserHistory: async function(user_id, server_id, message, onSuccess, limit = 10) {
+  getUserHistory: async function(user_id, server_id, interaction, onSuccess, limit = 10) {
     const RepModel = require('../vitek_db/models/repModel');
     try {
       const items = await RepModel
@@ -58,17 +58,17 @@ module.exports = {
         .sort({ field: 'asc', _id: -1 })
         .limit(limit);
 
-      const pointsOnServer = await this.getUserPointsOnServer(server_id, user_id, message);
-      const allPoints = await this.getAllUserPoints(user_id, message);
+      const pointsOnServer = await this.getUserPointsOnServer(server_id, user_id, interaction);
+      const allPoints = await this.getAllUserPoints(user_id, interaction);
 
       onSuccess(items, allPoints, pointsOnServer);
     }
     catch (error) {
-      this.sendError(error, message);
+      this.sendError(error, interaction);
     }
   },
 
-  getRanking: async function(server_id, message, onSuccess) {
+  getRanking: async function(server_id, interaction, onSuccess) {
     const RepModel = require('../vitek_db/models/repModel');
 
     try {
@@ -81,11 +81,11 @@ module.exports = {
       onSuccess(items);
     }
     catch (error) {
-      this.sendError(error, message);
+      this.sendError(error, interaction);
     }
   },
 
-  getUserPointsOnServer: async function(server_id, user_id, message) {
+  getUserPointsOnServer: async function(server_id, user_id, interaction) {
     try {
       const RepModel = require('../vitek_db/models/repModel');
       const pointsOnServer = await RepModel.aggregate([
@@ -96,11 +96,11 @@ module.exports = {
       return pointsOnServer.length == 0 ? 0 : pointsOnServer[0].value;
     }
     catch (error) {
-      this.sendError(error, message);
+      this.sendError(error, interaction);
     }
   },
 
-  getAllUserPoints: async function(user_id, message) {
+  getAllUserPoints: async function(user_id, interaction) {
     try {
       const RepModel = require('../vitek_db/models/repModel');
       const allPoints = await RepModel.aggregate([
@@ -111,12 +111,11 @@ module.exports = {
       return allPoints.length == 0 ? 0 : allPoints[0].value;
     }
     catch (error) {
-      this.sendError(error, message);
+      this.sendError(error, interaction);
     }
   },
 
-  sendError: function(error, message) {
+  sendError: function(error) {
     console.error(error);
-    return message.channel.send('Something went wrong! Try again later.');
   },
 };
