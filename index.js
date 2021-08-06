@@ -40,7 +40,7 @@ client.once('ready', async () => {
     console.log('\x1b[33m%s\x1b[0m', 'Serving on:');
     console.log('\x1b[33m%s\x1b[0m', `${g}`);
   }
-  client.user.setPresence({ activity: { name: '/help' }, status: 'online' });
+  client.user.setActivity('/info', { type: 'WATCHING' });
 
   const data = [];
   client.commands.forEach((value) => {

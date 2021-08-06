@@ -14,9 +14,9 @@ module.exports = {
     const { MessageAttachment } = require('discord.js');
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
-    const img = interaction.options.getString('image');
     const canvas = Canvas.createCanvas(2137, 2137);
     const ctx = canvas.getContext('2d');
+    const img = interaction.options.getString('image');
     await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
       if(error) {
