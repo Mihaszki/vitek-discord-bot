@@ -4,7 +4,7 @@ const messageLogger = require('./vitek_db/messageLogger');
 const messageGenerator = require('./vitek_db/messageGenerator');
 const blockListController = require('./vitek_db/blockListController');
 const { connectToDB } = require('./vitek_db/connectToDB');
-const { prefix, date_locale } = require('./bot_config');
+const { prefix, date_locale, status } = require('./bot_config');
 require('dotenv').config();
 
 // Connect to mongoDB
@@ -40,12 +40,12 @@ client.once('ready', async () => {
     console.log('\x1b[33m%s\x1b[0m', 'Serving on:');
     console.log('\x1b[33m%s\x1b[0m', `${g}`);
   }
-  client.user.setActivity('/info', { type: 'WATCHING' });
+  client.user.setActivity(status, { type: 'WATCHING' });
 
   const data = [];
   client.commands.forEach((value) => {
     data.push({
-      name: value.name.replace('+', 'p').replace('-', 'n'),
+      name: value.name,
       description: value.description,
       options: value.options ? value.options : undefined,
     });
