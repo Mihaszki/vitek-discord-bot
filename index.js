@@ -4,7 +4,7 @@ const messageLogger = require('./vitek_db/messageLogger');
 const messageGenerator = require('./vitek_db/messageGenerator');
 const blockListController = require('./vitek_db/blockListController');
 const { connectToDB } = require('./vitek_db/connectToDB');
-const { prefix, date_locale, status } = require('./bot_config');
+const { prefix, bot_author_id, date_locale, status } = require('./bot_config');
 require('dotenv').config();
 
 // Connect to mongoDB
@@ -51,11 +51,11 @@ client.once('ready', async () => {
     });
   });
 
-  // Register slash commands
+  // Update slash commands
   await client.application.commands.set(data);
 });
 
-client.on('messageCreate', message => {
+client.on('messageCreate', async message => {
   // Save the message to the database
   messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
@@ -69,6 +69,31 @@ client.on('messageCreate', message => {
   }
 
   if(message.author.bot) return;
+
+  if(message.content.toLowerCase() === '!deploy-create' && message.author.id == bot_author_id) {
+    const data = [];
+    client.commands.forEach((value) => {
+      data.push({
+        name: value.name,
+        description: value.description,
+        options: value.options ? value.options : undefined,
+      });
+    });
+    await client.application.commands.create(data);
+    return;
+  }
+  else if(message.content.toLowerCase() === '!deploy-set' && message.author.id == bot_author_id) {
+    const data = [];
+    client.commands.forEach((value) => {
+      data.push({
+        name: value.name,
+        description: value.description,
+        options: value.options ? value.options : undefined,
+      });
+    });
+    await client.application.commands.set(data);
+    return;
+  }
 
   if(!message.content.startsWith(prefix)) {
     guildMessageCounter['_' + message.guild.id] = (guildMessageCounter['_' + message.guild.id] + 1) || 1;
