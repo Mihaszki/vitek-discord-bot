@@ -52,7 +52,7 @@ client.once('ready', async () => {
   });
 
   // Register slash commands
-  await client.guilds.cache.get('670258088003108894').commands.set(data);
+  await client.application.commands.set(data);
 });
 
 client.on('messageCreate', message => {
