@@ -1,26 +1,32 @@
 module.exports = {
   name: 'cmm',
   description: 'Change My Mind',
+  options: [
+    {
+      name: 'text',
+      description: 'Enter a short text',
+      type: 'STRING',
+      required: true,
+    },
+  ],
   cooldown: 0.5,
-  args: true,
-  guildOnly: true,
-  usage: '<text>',
-  async execute(message) {
+  async execute(interaction) {
     const Canvas = require('canvas');
-    const Discord = require('discord.js');
+    const { MessageAttachment } = require('discord.js');
     const canvas = Canvas.createCanvas(979, 835);
     const ctx = canvas.getContext('2d');
     const cleanText = require('../vitek_modules/cleanText');
-    const { prefix } = require('../bot_config');
 
-    const msgtext = cleanText.emojis(message.cleanContent.slice(this.name.length + prefix.length + 1).replace(/\s+/g, ' '));
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+
+    const msgtext = cleanText.emojis(interaction.options.getString('text').replace(/\s+/g, ' '));
     const words = msgtext.split(' ');
     let lineHeight = 45;
     let fontSize = 45;
     let widthOffset = 4;
     let y = 597;
 
-    if(msgtext.length > 261) { return message.channel.send('The text is too long!'); }
+    if(msgtext.length > 261) { return interaction.editReply({ content: 'The text is too long!' }); }
     else if(msgtext.length > 150) {
       lineHeight = 18;
       fontSize = 18;
@@ -46,7 +52,7 @@ module.exports = {
       y = 587;
     }
 
-    const avatar = await Canvas.loadImage(message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 }) || 'https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png');
+    const avatar = await Canvas.loadImage(interaction.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }) || 'https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png');
     const background = await Canvas.loadImage('images/changemymind/changemymind.png');
 
     ctx.fillStyle = '#FFFFFF';
@@ -102,7 +108,7 @@ module.exports = {
     ctx.fillText(line, 0, 0);
     ctx.restore();
 
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'changemymind.png');
-    message.channel.send(attachment);
+    const attachment = new MessageAttachment(canvas.toBuffer(), 'changemymind.png');
+    interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
   },
 };
