@@ -3,12 +3,12 @@ module.exports = {
     return reason.length > limit ? reason.slice(0, limit) + '...' : reason;
   },
 
-  sendToDB: async function(message, member, username, reason, repValue) {
+  sendToDB: async function(interaction, member, username, reason, repValue) {
     const RepModel = require('../vitek_db/models/repModel');
     const { sendRepEmbed } = require('../vitek_modules/embed');
     try {
       const newRep = new RepModel({
-        server_id: message.guild.id,
+        server_id: interaction.guild.id,
         reason: reason,
         value: repValue,
         receiver: {
@@ -17,34 +17,37 @@ module.exports = {
           tag: member.user.tag,
         },
         sender: {
-          user_id: message.author.id,
-          username: message.author.username,
-          tag: message.author.tag,
+          user_id: interaction.user.id,
+          username: interaction.user.username,
+          tag: interaction.user.tag,
         },
       });
+      console.log(newRep);
       await newRep.save();
 
-      const allPoints = await this.getAllUserPoints(member.id, message);
+      const allPoints = await this.getAllUserPoints(member.id, interaction);
 
-      sendRepEmbed(message, member, this.sliceReason(reason), repValue, allPoints);
+      sendRepEmbed(interaction, member, this.sliceReason(reason, 150), repValue, allPoints);
     }
     catch (error) {
-      this.sendError(error, message);
+      this.sendError(error, interaction);
     }
   },
 
-  newRep: function(message, args, repValue, commandName) {
+  newRep: function(interaction, member, reason, repValue) {
     const getMention = require('../vitek_modules/getMention');
-    const { prefix } = require('../bot_config');
 
-    const member = getMention.member(args[0], message);
-    if(!member) return message.channel.send('You must select one user that is on the server!');
-    else if(member.id == message.author.id) return message.channel.send('You can\'t rep yourself!');
+    if(member.id == interaction.user.id) return interaction.reply({ content: 'You can\'t rep yourself!' });
 
     const username = getMention.username(member);
-    const reason = message.cleanContent.slice(commandName.length + prefix.length + username.length + 3).trim().replace(/\s+/g, ' ');
+    if(!reason) {
+      reason = 'None';
+    }
+    else {
+      reason = reason.trim().replace(/\s+/g, ' ');
+    }
 
-    this.sendToDB(message, member, username, reason.length == 0 ? 'None' : reason, repValue);
+    this.sendToDB(interaction, member, username, reason, repValue);
   },
 
   getUserHistory: async function(user_id, server_id, message, onSuccess, limit = 10) {
