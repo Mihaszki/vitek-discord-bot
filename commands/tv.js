@@ -1,20 +1,24 @@
 module.exports = {
   name: 'tv',
   description: 'Television news',
-  usage: '<text>',
+  options: [
+    {
+      name: 'text',
+      description: 'Enter a short text',
+      type: 'STRING',
+      required: true,
+    },
+  ],
   cooldown: 1,
-  args: true,
-  guildOnly: true,
-  async execute(message) {
-    const Discord = require('discord.js');
+  async execute(interaction) {
+    const { MessageAttachment } = require('discord.js');
     const cleanText = require('../vitek_modules/cleanText');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(1016, 565);
     const context = canvas.getContext('2d');
-    const { prefix } = require('../bot_config');
 
-    const text = cleanText.emojis(message.cleanContent.replace(/\s/g, ' ').slice(prefix.length + this.name.length + 1)).toUpperCase();
-    if(text.length > 60) return message.channel.send('The text is too long!');
+    const text = cleanText.emojis(interaction.options.getString('text').replace(/\s/g, ' ')).toUpperCase();
+    if(text.length > 60) return interaction.reply({ content: 'The text is too long!', ephemeral: true });
 
     const images = [
       'images/tv/tv1.png',
@@ -45,7 +49,7 @@ module.exports = {
 
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
     context.fillText(text, x, y);
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'tv.png');
-    message.channel.send(attachment);
+    const attachment = new MessageAttachment(canvas.toBuffer(), 'tv.png');
+    interaction.reply({ files: [attachment] });
   },
 };

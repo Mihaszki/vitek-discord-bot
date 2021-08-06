@@ -2,10 +2,8 @@ module.exports = {
   name: 'szur',
   description: 'Generator-korwinator',
   cooldown: 0.1,
-  guildOnly: true,
-  args: false,
-  async execute(message) {
-    const Discord = require('discord.js');
+  async execute(interaction) {
+    const { MessageAttachment } = require('discord.js');
     const { wrapText } = require('../vitek_modules/canvasDraw');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(1280, 720);
@@ -168,7 +166,7 @@ module.exports = {
       x: 30, maxWidth: 734, fontColor: '#cf0aa1',
     });
 
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'szur.png');
-    message.channel.send(attachment);
+    const attachment = new MessageAttachment(canvas.toBuffer(), 'szur.png');
+    interaction.reply({ files: [attachment] });
   },
 };
