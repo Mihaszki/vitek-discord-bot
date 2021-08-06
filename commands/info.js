@@ -1,8 +1,7 @@
 module.exports = {
   name: 'info',
   cooldown: 1,
-  description: 'Information about the bot',
-  guildOnly: true,
+  description: 'Shows information about the bot',
   async execute(interaction) {
     const Discord = require('discord.js');
     const config = require('../bot_config');
