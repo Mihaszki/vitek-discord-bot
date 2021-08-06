@@ -1,15 +1,15 @@
 module.exports = {
-  sendEmbed: function(message, title, description, thumbnail = null) {
+  sendEmbed: function(interaction, title, description, thumbnail = null) {
     const Discord = require('discord.js');
     const embed = new Discord.MessageEmbed()
       .setColor('#fff200')
       .setTitle(title)
-      .setThumbnail(thumbnail == null ? message.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }) : thumbnail)
+      .setThumbnail(thumbnail == null ? interaction.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }) : thumbnail)
       .setDescription(description);
-    message.channel.send(embed);
+    interaction.reply({ embeds: [embed] });
   },
 
-  sendRepEmbed: function(message, member, reason, repValue, allPoints) {
+  sendRepEmbed: function(interaction, member, reason, repValue, allPoints) {
     const Discord = require('discord.js');
     const { avatar } = require('../vitek_modules/getMention');
     const { positiveRepMessages, negativeRepMessages } = require('../bot_config');
@@ -29,13 +29,13 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setColor(color)
       .setAuthor(randomMessage, avatar(member))
-      .setThumbnail(message.guild.iconURL())
+      .setThumbnail(interaction.guild.iconURL())
       .addFields(
         { name: 'Your points:', value: allPoints, inline: true },
-        { name: 'From:', value: message.author, inline: true },
+        { name: 'From:', value: interaction.author, inline: true },
         { name: 'To:', value: member, inline: true },
         { name: 'Reason:', value: reason, inline: true },
       );
-    message.channel.send(embed);
+    interaction.reply({ embeds: [embed] });
   },
 };
