@@ -27,7 +27,6 @@
     "dotenv": "^8.2.0",
     "gif-encoder-2": "^1.0.5",
     "imagesize": "^1.0.0",
-    "mathjs": "^9.3.2",
     "mongoose": "^5.11.15",
     "simplex-noise": "^2.4.0"
   },
