@@ -42,7 +42,7 @@ client.once('ready', async () => {
   }
   client.user.setActivity(status, { type: 'WATCHING' });
 
-  const _dev = true;
+  const _dev = false;
   if(_dev) {
     const data = [];
     client.commands.forEach((value) => {
