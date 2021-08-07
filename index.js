@@ -42,17 +42,20 @@ client.once('ready', async () => {
   }
   client.user.setActivity(status, { type: 'WATCHING' });
 
-  const data = [];
-  client.commands.forEach((value) => {
-    data.push({
-      name: value.name,
-      description: value.description,
-      options: value.options ? value.options : undefined,
+  const _dev = true;
+  if(_dev) {
+    const data = [];
+    client.commands.forEach((value) => {
+      data.push({
+        name: value.name,
+        description: value.description,
+        options: value.options ? value.options : undefined,
+      });
     });
-  });
 
-  // Update slash commands
-  await client.application.commands.set(data);
+    // Update slash commands on local server
+    await client.guilds.cache.get('670258088003108894').commands.set(data);
+  }
 });
 
 client.on('messageCreate', async message => {
@@ -70,8 +73,9 @@ client.on('messageCreate', async message => {
 
   if(message.author.bot) return;
 
-  if(message.content.toLowerCase() === '!deploy-set' && message.author.id == bot_author_id) {
+  if(message.content.toLowerCase() === '!deploy-vitek' && message.author.id == bot_author_id) {
     const data = [];
+    await message.channel.send({ content: 'Loading...' });
     client.commands.forEach((value) => {
       data.push({
         name: value.name,
@@ -79,7 +83,9 @@ client.on('messageCreate', async message => {
         options: value.options ? value.options : undefined,
       });
     });
-    await client.application.commands.set(data);
+    const x = await client.application.commands.set(data);
+    console.log(x);
+    await message.channel.send({ content: 'Deployed!' });
     return;
   }
 

@@ -6,6 +6,7 @@ module.exports = {
     const Discord = require('discord.js');
     const messageLogger = require('../vitek_db/messageLogger');
     const getMention = require('../vitek_modules/getMention');
+    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
     messageLogger.count(interaction, (allMessages, messagesNoBots, userRanking, channelRanking) => {
       let description = '**Most active users:**\n`Place | User | Messages`\n';
       for(let i = 0; i < userRanking.length; i++) {
@@ -25,7 +26,7 @@ module.exports = {
         .setTitle(`Logged messages - ${interaction.guild.name}`)
         .setThumbnail(interaction.guild.iconURL())
         .setDescription(description);
-      interaction.reply({ embeds: [embed] });
+      interaction.editReply({ content: null, embeds: [embed] });
     });
   },
 };
