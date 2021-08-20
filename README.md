@@ -1,6 +1,5 @@
 # Vitek
-Vitek is a discord bot created for entertainment and statistical purposes. It uses Node.js, Discord.js library and MongoDB.
-[Invite Link](https://discord.com/oauth2/authorize?client_id=670248278130163722&scope=bot+applications.commands&permissions=1544027328)
+Vitek is a discord bot created for entertainment and statistical purposes. It uses Node.js, Discord.js library and MongoDB. The repository is archived now, because I had to stop the development of the bot. The code still works if you run it on your machine, but I'm not planning on adding new features in the near future.
 
 ## Main features
 
@@ -32,3 +31,4 @@ BOT_TOKEN=Your_bot_token
 MONGODB=mongodb://localhost:27017/your_database
 ```
 * Run it with `node index.js`
+* The bot uses slash commands, you can load them by using ```!deploy-vitek``` command
