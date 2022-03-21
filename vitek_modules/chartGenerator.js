@@ -1,5 +1,5 @@
 module.exports = {
-  sendChart: function(interaction, chartData, { width, height, chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#fafafa', chartAreaBgColor = '#35383e', showOneUser = false, showOnlyID = '', attachmentFileName = 'chart' }) {
+  sendChart: function(interaction, chartData, { width, height, chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#ffffff', chartAreaBgColor = '#35383e', showOneUser = false, showOnlyID = '', attachmentFileName = 'chart' }) {
     const { MessageAttachment } = require('discord.js');
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
     const colors = require('../vitek_modules/colors');
@@ -117,55 +117,47 @@ module.exports = {
         return interaction.editReply({ content: 'There is no data for the given user!' });
       }
     }
-
-    const chartCallback = (ChartJS) => {
-      // Global config example: https://www.chartjs.org/docs/latest/configuration/
-      ChartJS.defaults.global.defaultFontColor = fgColor;
-      ChartJS.defaults.global.defaultFontSize = fontSize;
-      // Global plugin example: https://www.chartjs.org/docs/latest/developers/plugins.html
-      ChartJS.plugins.register({
-        // plugin implementation
-        beforeDraw: function(chart) {
-          if (chart.config.options.chartArea && chart.config.options.chartArea.backgroundColor) {
-            const ctx = chart.chart.ctx;
-            const chartArea = chart.chartArea;
-            ctx.save();
-            ctx.fillStyle = chart.config.options.chartArea.backgroundColor;
-            ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
-            ctx.restore();
+    const plugin = {
+      id: 'custom_canvas_background_color',
+      beforeDraw: (chart) => {
+        const ctx = chart.canvas.getContext('2d');
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = chartAreaBgColor;
+        ctx.fillRect(0, 0, chart.width, chart.height);
+        ctx.restore();
+      },
+      afterDatasetsDraw: function(chart) {
+        const ctx = chart.canvas.getContext('2d');
+        chart.data.datasets.forEach(function(dataset, i) {
+          const meta = chart.getDatasetMeta(i);
+          if(!meta.hidden && type == 'bar') {
+            meta.data.forEach(function(element, index) {
+              ctx.font = `${Math.round(fontSize * 0.8)}px sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              const position = element.tooltipPosition();
+              const posY = height / 2;
+              ctx.shadowBlur = 2;
+              ctx.lineWidth = 5;
+              ctx.shadowColor = '#000000';
+              ctx.fillStyle = '#ffffff';
+              ctx.strokeStyle = '#000000';
+              ctx.shadowBlur = 0;
+              ctx.strokeText(chartData[index] + unit, position.x, posY);
+              ctx.fillText(chartData[index] + unit, position.x, posY);
+            });
           }
-        },
-        afterDatasetsDraw: function(chartInstance) {
-          const ctx = chartInstance.chart.ctx;
-          chartInstance.data.datasets.forEach(function(dataset, i) {
-            const meta = chartInstance.getDatasetMeta(i);
-            if(!meta.hidden && type == 'bar') {
-              meta.data.forEach(function(element, index) {
-                ctx.font = `${Math.round(fontSize * 0.8)}px sans-serif`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                const position = element.tooltipPosition();
-                const posY = height / 2;
-                ctx.shadowBlur = 2;
-                ctx.lineWidth = 5;
-                ctx.shadowColor = '#000000';
-                ctx.fillStyle = '#ffffff';
-                ctx.strokeStyle = '#000000';
-                ctx.shadowBlur = 0;
-                ctx.strokeText(chartData[index] + unit, position.x, posY);
-                ctx.fillText(chartData[index] + unit, position.x, posY);
-              });
-            }
-          });
-        },
-      });
-      // New chart type example: https://www.chartjs.org/docs/latest/developers/charts.html
-      ChartJS.controllers.MyType = ChartJS.DatasetController.extend({
-        // chart implementation
-      });
+        });
+      },
+    };
+    const chartCallback = (ChartJS) => {
+      ChartJS.defaults.color = fgColor;
+      ChartJS.defaults.font.size = fontSize;
     };
 
-    const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback });
+    const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback, plugins: { modern: [plugin] },
+    });
 
     (async () => {
       const configuration = {
@@ -175,34 +167,42 @@ module.exports = {
           datasets: dataSet,
         },
         options: {
-          title: {
-            display: true,
-            fontSize: fontSize * 1.3,
-            text: chartTitle,
+          plugins: {
+            title: {
+              display: true,
+              font: {
+                color: fgColor,
+                size: fontSize * 1.3,
+              },
+              text: chartTitle,
+            },
           },
           scales: {
-            yAxes: [{
-              gridLines: {
-                color: 'rgba(255, 255, 255, 0.3)',
+            y: {
+              beginAtZero: true,
+              grid: {
+                borderColor: 'rgba(255, 255, 255, 0.3)',
               },
               ticks: {
                 stepSize: stepSize,
-                beginAtZero: true,
                 callback: (value) => value + unit,
-                fontSize: fontSize * 0.8,
+                font: {
+                  color: fgColor,
+                  size: fontSize * 0.8,
+                },
               },
-            }],
-            xAxes: [{
+            },
+            x: {
               ticks: {
-                fontSize: fontSize * 0.8,
+                font: {
+                  color: fgColor,
+                  size: fontSize * 0.8,
+                },
               },
-              gridLines: {
-                color: 'rgba(255, 255, 255, 0.3)',
+              grid: {
+                borderColor: 'rgba(255, 255, 255, 0.3)',
               },
-            }],
-          },
-          chartArea: {
-            backgroundColor: chartAreaBgColor,
+            },
           },
           legend: {
             display: type == 'line' ? true : false,
