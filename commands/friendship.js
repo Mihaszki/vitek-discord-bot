@@ -1,27 +1,21 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'friendship',
-  description: 'Friendship ended with X, now Y is my best friend',
-  cooldown: 1,
-  options: [
-    {
-      name: 'word1',
-      description: 'Enter a first word',
-      type: 'STRING',
-      required: true,
-    },
-    {
-      name: 'word2',
-      description: 'Enter a second word',
-      type: 'STRING',
-      required: true,
-    },
-    {
-      name: 'image',
-      description: '@User or Server emoji or URL',
-      type: 'STRING',
-      required: true,
-    },
-  ],
+  data: new SlashCommandBuilder()
+    .setName('friendship')
+    .setDescription('Friendship ended with X, now Y is my best friend')
+    .addStringOption(option =>
+      option.setName('word1')
+        .setDescription('Enter a first word')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('word2')
+        .setDescription('Enter a second word')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('image')
+        .setDescription('@User or Server emoji or URL')
+        .setRequired(true)),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const getImage = require('../vitek_modules/getImage');
@@ -34,7 +28,7 @@ module.exports = {
     const word1 = interaction.options.getString('word1').trim().split(' ')[0];
     const word2 = interaction.options.getString('word2').trim().split(' ')[0];
 
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
 
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
       if(error) {
@@ -76,7 +70,7 @@ module.exports = {
       drawTextInBox(context, word2, 'sans-serif', 195, 85, 110, 50);
 
       const attachment = new MessageAttachment(canvas.toBuffer(), 'friendship.png');
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      interaction.editReply({ files: [attachment] });
     });
   },
 };

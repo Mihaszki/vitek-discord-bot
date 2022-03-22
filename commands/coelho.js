@@ -1,22 +1,20 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'coelho',
-  description: 'Paulo Coelho quote generator',
-  cooldown: 3,
-  options: [
-    {
-      name: 'text',
-      description: 'Enter a quote',
-      type: 'STRING',
-      required: true,
-    },
-  ],
+  data: new SlashCommandBuilder()
+    .setName('coelho')
+    .setDescription('Paulo Coelho quote generator')
+    .addStringOption(option =>
+      option.setName('text')
+        .setDescription('Enter a quote')
+        .setRequired(true)),
   async execute(interaction) {
     const Discord = require('discord.js');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(1280, 720);
     const context = canvas.getContext('2d');
     const canvasDraw = require('../vitek_modules/canvasDraw');
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
 
     const msg = interaction.options.getString('text');
     const background = await Canvas.loadImage('images/coelho/coelho.png');
@@ -25,6 +23,6 @@ module.exports = {
       x: 475, maxWidth: 800, fontColor: '#FFFFFF', quoteAuthor: '~ Paulo Coelho',
     });
     const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'coelho.png');
-    interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+    interaction.editReply({ files: [attachment] });
   },
 };
