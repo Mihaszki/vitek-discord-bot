@@ -35,7 +35,9 @@ TEST_GUILD_ID=Optional_guild_for_testing
 ```
 * Run it with `node index.js`
 * The bot uses slash commands, there are 4 deployment scripts:
-`node deploy-commands.js` - deploy commands (test guild)
-`node deploy-commands-global.js` - deploy commands (global)
-`node deploy-commands-remove.js` - remove commands (test guild)
-`node deploy-commands-remove-global.js` - remove commands (global)
+```
+node deploy-commands.js - deploy commands (test guild)
+node deploy-commands-global.js - deploy commands (global)
+node deploy-commands-remove.js - remove commands (test guild)
+node deploy-commands-remove-global.js - remove commands (global)
+```
