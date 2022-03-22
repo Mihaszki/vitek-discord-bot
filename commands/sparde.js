@@ -1,15 +1,13 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'sparde',
-  description: 'Say something in spurdo sparde language (image version)',
-  options: [
-    {
-      name: 'text',
-      description: 'Enter a text',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 3,
+  data: new SlashCommandBuilder()
+    .setName('sparde')
+    .setDescription('Say something in spurdo sparde language (image version)')
+    .addStringOption(option =>
+      option.setName('text')
+        .setDescription('Enter a text')
+        .setRequired(true)),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const Canvas = require('canvas');
@@ -17,13 +15,13 @@ module.exports = {
     const context = canvas.getContext('2d');
     const spurdoTranslator = require('../vitek_modules/spurdoTranslator');
     const canvasDraw = require('../vitek_modules/canvasDraw');
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
 
     const background = await Canvas.loadImage('images/spurdo/spurdo.png');
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
     canvasDraw.wrapText(context, spurdoTranslator.translate(interaction.options.getString('text')), { x: 375, maxWidth: 900 });
 
     const attachment = new MessageAttachment(canvas.toBuffer(), 'sparde.png');
-    interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+    interaction.editReply({ files: [attachment] });
   },
 };

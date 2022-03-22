@@ -1,15 +1,13 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'stone',
-  description: 'John Paul II holding a stone',
-  options: [
-    {
-      name: 'image',
-      description: '@User or Server emoji or URL',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 2,
+  data: new SlashCommandBuilder()
+    .setName('stone')
+    .setDescription('John Paul II holding a stone')
+    .addStringOption(option =>
+      option.setName('image')
+        .setDescription('@User or Server emoji or URL')
+        .setRequired(true)),
   async execute(interaction) {
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
@@ -18,7 +16,7 @@ module.exports = {
     const ctx = canvas.getContext('2d');
 
     const img = interaction.options.getString('image');
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
       if(error) {
         return interaction.editReply({ content: error });
@@ -30,7 +28,7 @@ module.exports = {
       ctx.drawImage(user_image, 144, 33, 150, 110);
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
       const attachment = new MessageAttachment(canvas.toBuffer(), 'stone.png');
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      interaction.editReply({ files: [attachment] });
     });
   },
 };
