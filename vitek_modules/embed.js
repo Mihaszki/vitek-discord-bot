@@ -11,7 +11,7 @@ module.exports = {
 
   sendRepEmbed: function(interaction, member, reason, repValue, allPoints) {
     const { MessageEmbed } = require('discord.js');
-    const { avatar } = require('../vitek_modules/getMention');
+    const { avatar, guildIcon } = require('../vitek_modules/getMention');
     const { positiveRepMessages, negativeRepMessages } = require('../bot_config');
 
     let color = '';
@@ -28,8 +28,10 @@ module.exports = {
 
     const embed = new MessageEmbed()
       .setColor(color)
-      .setAuthor(randomMessage, avatar(member.user))
-      .setThumbnail(interaction.guild.iconURL())
+      .setAuthor({
+        text: randomMessage, iconURL: avatar(member.user),
+      })
+      .setThumbnail(guildIcon(interaction))
       .addFields(
         { name: 'Your points:', value: allPoints.toString(), inline: true },
         { name: 'From:', value: interaction.user.toString(), inline: true },
