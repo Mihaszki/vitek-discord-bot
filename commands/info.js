@@ -14,6 +14,7 @@ module.exports = {
 
     const embed = new MessageEmbed()
       .setColor('#00aeff')
+      .setDescription(':heart: **Special thanks to: Jojczak#7487** :heart:')
       .setAuthor({
         name: interaction.client.user.tag,
         iconURL: interaction.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }),
