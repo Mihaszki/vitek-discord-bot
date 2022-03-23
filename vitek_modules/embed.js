@@ -15,7 +15,7 @@ module.exports = {
     const { positiveRepMessages, negativeRepMessages } = require('../bot_config');
 
     let color = '';
-    let randomMessage = '';
+    let randomMessage = 'Thanks!';
 
     if(repValue == 1) {
       color = '#04ff00';
@@ -25,11 +25,10 @@ module.exports = {
       color = '#ff0000';
       randomMessage = negativeRepMessages[Math.floor(Math.random() * negativeRepMessages.length)];
     }
-
     const embed = new MessageEmbed()
       .setColor(color)
       .setAuthor({
-        text: randomMessage, iconURL: avatar(member.user),
+        name: randomMessage, iconURL: avatar(member.user),
       })
       .setThumbnail(guildIcon(interaction))
       .addFields(
