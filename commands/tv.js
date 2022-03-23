@@ -1,21 +1,20 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'tv',
-  description: 'Television news',
-  options: [
-    {
-      name: 'text',
-      description: 'Enter a short text',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 1,
+  data: new SlashCommandBuilder()
+    .setName('tv')
+    .setDescription('Polish propaganda tv news')
+    .addStringOption(option =>
+      option.setName('text')
+        .setDescription('Enter a short text')
+        .setRequired(true)),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const cleanText = require('../vitek_modules/cleanText');
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(1016, 565);
     const context = canvas.getContext('2d');
+    await interaction.deferReply();
 
     const text = cleanText.emojis(interaction.options.getString('text').replace(/\s/g, ' ')).toUpperCase();
     if(text.length > 60) return interaction.reply({ content: 'The text is too long!', ephemeral: true });
@@ -50,6 +49,6 @@ module.exports = {
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
     context.fillText(text, x, y);
     const attachment = new MessageAttachment(canvas.toBuffer(), 'tv.png');
-    interaction.reply({ files: [attachment] });
+    interaction.editReply({ files: [attachment] });
   },
 };
