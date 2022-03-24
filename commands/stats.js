@@ -1,12 +1,15 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'stats',
-  description: 'Number of logged messages',
-  cooldown: 3,
+  data: new SlashCommandBuilder()
+    .setName('stats')
+    .setDescription('Number of logged messages'),
   async execute(interaction) {
     const Discord = require('discord.js');
     const messageLogger = require('../vitek_db/messageLogger');
     const getMention = require('../vitek_modules/getMention');
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    const { guildIcon } = require('../vitek_modules/getMention');
+    await interaction.deferReply();
     messageLogger.count(interaction, (allMessages, messagesNoBots, userRanking, channelRanking) => {
       let description = '**Most active users:**\n`Place | User | Messages`\n';
       for(let i = 0; i < userRanking.length; i++) {
@@ -24,9 +27,9 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor('#fc9803')
         .setTitle(`Logged messages - ${interaction.guild.name}`)
-        .setThumbnail(interaction.guild.iconURL())
+        .setThumbnail(guildIcon(interaction))
         .setDescription(description);
-      interaction.editReply({ content: null, embeds: [embed] });
+      interaction.editReply({ embeds: [embed] });
     });
   },
 };

@@ -219,7 +219,7 @@ module.exports = {
       };
       const image = await chartJSNodeCanvas.renderToBuffer(configuration);
       const attachment = new MessageAttachment(image, `${attachmentFileName}.png`);
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      interaction.editReply({ files: [attachment] });
     })();
   },
 };

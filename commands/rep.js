@@ -40,7 +40,6 @@ module.exports = {
     const repController = require('../vitek_db/repController');
     const getMention = require('../vitek_modules/getMention');
     const { sendEmbed } = require('../vitek_modules/embed');
-    const { prefix } = require('../bot_config');
 
     const option = interaction.options.getSubcommand();
 
@@ -99,13 +98,13 @@ module.exports = {
       }, null);
     }
     else if(option == 'help') {
-      sendEmbed(interaction, 'Rep - Help', `\`${prefix}rep add <@User> <reason>\` - Give a positive point to the user
-      \`${prefix}rep remove <@User> <reason>\` - Give a negative point to the user
-      \`${prefix}rep history\` - Your rep history
-      \`${prefix}rep history <@User>\` - User's rep history
-      \`${prefix}rep history-full\` - Your full rep history
-      \`${prefix}rep history-full <@User>\` - User's full rep history
-      \`${prefix}rep ranking\` - Ranking`);
+      sendEmbed(interaction, 'Rep - Help', `\`/rep add <@User> <reason>\` - Give a positive point to the user
+      \`/rep remove <@User> <reason>\` - Give a negative point to the user
+      \`/rep history\` - Your rep history
+      \`/rep history <@User>\` - User's rep history
+      \`/rep history-full\` - Your full rep history
+      \`/rep history-full <@User>\` - User's full rep history
+      \`/rep ranking\` - Ranking`);
     }
   },
 };
