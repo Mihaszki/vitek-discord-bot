@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('ai')
-    .setDescription('Talk with bot!')
+    .setDescription('Talk with bot. You can also use .<text>')
     .addStringOption(option =>
       option.setName('text')
         .setDescription('Enter a text')

@@ -47,6 +47,14 @@ client.on('messageCreate', async message => {
   // Save the message to the database
   messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
+
+  if(message.content[0] == '.' && message.content.length > 1 && !message.author.bot) {
+    console.log(message.cleanContent.slice(1));
+    return messageGenerator.getMessage(message.cleanContent.slice(1), message.guild.id, response => {
+      if(response !== false) message.channel.send(response);
+    }, true, 2000);
+  }
+
   // Emoji reaction on a private server
   if(message.guild.id === '771628652533514251' && message.channel.id === '771689939875790868') {
     if(message.attachments.first()) {
