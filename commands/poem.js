@@ -1,25 +1,18 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'poem',
-  description: 'Generate poem from your messages',
-  usage: '<Rhyme1> <Rhyme2>',
-  options: [
-    {
-      name: 'rhyme1',
-      description: 'First rhyme',
-      type: 'STRING',
-      required: true,
-    },
-    {
-      name: 'rhyme2',
-      description: 'Second rhyme',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 1,
+  data: new SlashCommandBuilder()
+    .setName('poem')
+    .setDescription('Generate poem from your messages')
+    .addStringOption(option =>
+      option.setName('rhyme1')
+        .setDescription('First rhyme'))
+    .addStringOption(option =>
+      option.setName('rhyme2')
+        .setDescription('Second rhyme')),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
-    const { prefix, poemTitles } = require('../bot_config');
+    const { poemTitles } = require('../bot_config');
     const { getFontSize } = require('../vitek_modules/canvasDraw');
     const rhymingMessages = require('../vitek_db/rhymingMessages');
     const { escapeRegex } = require('../vitek_modules/escapeRegex');
@@ -27,6 +20,7 @@ module.exports = {
     const canvas = Canvas.createCanvas(1280, 720);
     const context = canvas.getContext('2d');
 
+    await interaction.deferReply();
     let lyrics_A = [];
     let lyrics_B = [];
 
@@ -36,15 +30,17 @@ module.exports = {
     const r1 = interaction.options.getString('rhyme1');
     const r2 = interaction.options.getString('rhyme2');
 
-    if(r1 == '-') {
-      arg1 = '.';
+    const sampleRhymes = ['fa', 'ba', 'ana', 'aba', 'ara', 'aha', 'asa', 'cia', 'cie', 'ble', 'ha', 'wa', 'na', 'ma', 'pa', 'da', 'de', 'wy', 'ni', 'ec', 'ac', 'we', 'wu', 'ne', 'er', 'pe', 'al', 'ga'];
+
+    if(!r1) {
+      arg1 = sampleRhymes[Math.floor(Math.random() * sampleRhymes.length)];
     }
     else {
       arg1 = `${escapeRegex(r1)}$`;
     }
 
-    if(r2 == '-') {
-      arg2 = '.';
+    if(!r2) {
+      arg2 = sampleRhymes[Math.floor(Math.random() * sampleRhymes.length)];
     }
     else {
       arg2 = `${escapeRegex(r2)}$`;
@@ -53,9 +49,13 @@ module.exports = {
     lyrics_A = await rhymingMessages.getMessages(arg1, interaction.guild.id);
     lyrics_B = await rhymingMessages.getMessages(arg2, interaction.guild.id);
 
-    if(!lyrics_A || !lyrics_B) return interaction.reply({ content: `Not enough data to create a poem for these rhymes!\nYou can run: \`${prefix}${this.name} - -\` to generate a poem without rhymes.` });
+    if(!lyrics_A) {
+      lyrics_A = await rhymingMessages.getMessages('.', interaction.guild.id);
+    }
 
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    if(!lyrics_B) {
+      lyrics_B = await rhymingMessages.getMessages('.', interaction.guild.id);
+    }
 
     const lyrics_All = [];
 
@@ -94,6 +94,6 @@ module.exports = {
     context.fillText(title, (canvas.width / 2) - (context.measureText(title).width / 2), 650);
 
     const attachment = new MessageAttachment(canvas.toBuffer(), 'poem.png');
-    interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+    interaction.editReply({ files: [attachment] });
   },
 };

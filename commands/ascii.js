@@ -1,35 +1,20 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'ascii',
-  description: 'Image to ascii art',
-  options: [
-    {
-      name: 'image',
-      description: '@User or Server emoji or URL',
-      type: 'STRING',
-      required: true,
-    },
-    {
-      name: 'size',
-      description: 'Size of the ascii art',
-      type: 'STRING',
-      required: true,
-      choices: [
-        {
-          name: 'small',
-          value: 'small',
-        },
-        {
-          name: 'medium',
-          value: 'medium',
-        },
-        {
-          name: 'large',
-          value: 'large',
-        },
-      ],
-    },
-  ],
-  cooldown: 2,
+  data: new SlashCommandBuilder()
+    .setName('ascii')
+    .setDescription('Image to ascii art')
+    .addStringOption(option =>
+      option.setName('image')
+        .setDescription('@User or Server emoji or URL')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('size')
+        .setDescription('Size of the ascii art')
+        .setRequired(true)
+        .addChoice('small', 'small')
+        .addChoice('medium', 'medium')
+        .addChoice('large', 'large')),
   async execute(interaction) {
     const imgToAscii = require('ascii-img-canvas-nodejs');
     const getImage = require('../vitek_modules/getImage');
@@ -39,34 +24,31 @@ module.exports = {
     const canvas = Canvas.createCanvas(3000, 3000);
     const context = canvas.getContext('2d');
 
+    await interaction.deferReply();
+
     const fontSize = 10;
     let pic_width = 0;
     let pic_height = 0;
-    let msg = '';
 
     const picSize = interaction.options.getString('size');
     switch (picSize) {
     case 'medium':
       pic_width = 120;
       pic_height = 120;
-      msg = '**Size: medium.**';
       break;
 
     case 'large':
       pic_width = 220;
       pic_height = 220;
-      msg = '**Size: large.**';
       break;
 
     default:
       pic_width = 80;
       pic_height = 80;
-      msg = '**Size: small.**';
       break;
     }
 
     const img = interaction.options.getString('image');
-    await interaction.reply({ content: `Generating... :hourglass_flowing_sand: | ${msg}` });
 
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
       if(error) {

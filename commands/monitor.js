@@ -1,15 +1,13 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'monitor',
-  description: 'Guy punches computer screen',
-  options: [
-    {
-      name: 'image',
-      description: '@User or Server emoji or URL',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 2,
+  data: new SlashCommandBuilder()
+    .setName('monitor')
+    .setDescription('Guy punches computer screen animation')
+    .addStringOption(option =>
+      option.setName('image')
+        .setDescription('@User or Server emoji or URL')
+        .setRequired(true)),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const Canvas = require('canvas');
@@ -20,7 +18,7 @@ module.exports = {
     const encoder = new GIFEncoder(334, 220);
 
     const img = interaction.options.getString('image');
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
       if(error) {
         return interaction.editReply({ content: error });
@@ -223,7 +221,7 @@ module.exports = {
       const buffer = encoder.out.getData();
 
       const attachment = new MessageAttachment(buffer, 'monitor.gif');
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      interaction.editReply({ files: [attachment] });
     });
   },
 };

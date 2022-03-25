@@ -1,5 +1,6 @@
 # Vitek
-Vitek is a discord bot created for entertainment and statistical purposes. It uses Node.js, Discord.js library and MongoDB. The repository is archived now, because I had to stop the development of the bot. The code still works if you run it on your machine, but I'm not planning on adding new features in the near future.
+Vitek is a discord bot created for entertainment and statistical purposes. It uses Node.js, Discord.js library and MongoDB.
+Works with slash commands.
 
 ## Main features
 
@@ -29,6 +30,14 @@ The bot can analyse profanities in your messages and generate "levels". The less
 ```
 BOT_TOKEN=Your_bot_token
 MONGODB=mongodb://localhost:27017/your_database
+CLIENT_ID=Bot_client_id
+TEST_GUILD_ID=Optional_guild_for_testing
 ```
 * Run it with `node index.js`
-* The bot uses slash commands, you can load them by using ```!deploy-vitek``` command
+* The bot uses slash commands, there are 4 deployment scripts:
+```
+node deploy-commands.js - deploy commands (test guild)
+node deploy-commands-global.js - deploy commands (global)
+node deploy-commands-remove.js - remove commands (test guild)
+node deploy-commands-remove-global.js - remove commands (global)
+```

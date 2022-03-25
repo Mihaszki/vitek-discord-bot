@@ -4,7 +4,7 @@ const messageLogger = require('./vitek_db/messageLogger');
 const messageGenerator = require('./vitek_db/messageGenerator');
 const blockListController = require('./vitek_db/blockListController');
 const { connectToDB } = require('./vitek_db/connectToDB');
-const { prefix, bot_author_id, date_locale, status } = require('./bot_config');
+const { prefix, date_locale, status } = require('./bot_config');
 require('dotenv').config();
 
 // Connect to mongoDB
@@ -20,14 +20,14 @@ const guildMessageCounter = new Map();
 
 // Load commands from the commands folder
 client.commands = new Collection();
-client.botRunningUptime = new Date();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
-  client.commands.set(command.name, command);
+  client.commands.set(command.data.name, command);
 }
 
+client.botRunningUptime = new Date();
 const getTimeNow = () => '[' + new Date().toLocaleTimeString(date_locale) + ']';
 
 client.once('ready', async () => {
@@ -35,59 +35,36 @@ client.once('ready', async () => {
   client.blocklist = await blockListController.getBlockedUsers();
   console.log('\x1b[33m%s\x1b[0m', 'Blocked users:');
   console.log(client.blocklist);
-  console.log('\x1b[33m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
+  console.log('\x1b[32m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
   for(const g of client.guilds.cache) {
     console.log('\x1b[33m%s\x1b[0m', 'Serving on:');
     console.log('\x1b[33m%s\x1b[0m', `${g}`);
   }
   client.user.setActivity(status, { type: 'WATCHING' });
-
-  const _dev = false;
-  if(_dev) {
-    const data = [];
-    client.commands.forEach((value) => {
-      data.push({
-        name: value.name,
-        description: value.description,
-        options: value.options ? value.options : undefined,
-      });
-    });
-
-    // Update slash commands on local server
-    await client.guilds.cache.get('670258088003108894').commands.set(data);
-  }
 });
 
 client.on('messageCreate', async message => {
   // Save the message to the database
   messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
+
+  if(message.content[0] == '.' && message.content.length > 1 && !message.author.bot) {
+    console.log(message.cleanContent.slice(1));
+    return messageGenerator.getMessage(message.cleanContent.slice(1), message.guild.id, response => {
+      if(response !== false) message.channel.send(response);
+    }, true, 2000);
+  }
+
   // Emoji reaction on a private server
   if(message.guild.id === '771628652533514251' && message.channel.id === '771689939875790868') {
     if(message.attachments.first()) {
-      message.react('771685520455368705')
-        .then(() => message.react('771685939013222411'))
+      message.react('955857577151954964')
+        .then(() => message.react('955857577151954964'))
         .catch(() => console.error('One of the emojis failed to react.'));
     }
   }
 
   if(message.author.bot) return;
-
-  if(message.content.toLowerCase() === '!deploy-vitek' && message.author.id == bot_author_id) {
-    const data = [];
-    await message.channel.send({ content: 'Loading...' });
-    client.commands.forEach((value) => {
-      data.push({
-        name: value.name,
-        description: value.description,
-        options: value.options ? value.options : undefined,
-      });
-    });
-    const x = await client.application.commands.set(data);
-    console.log(x);
-    await message.channel.send({ content: 'Deployed!' });
-    return;
-  }
 
   if(!message.content.startsWith(prefix)) {
     guildMessageCounter['_' + message.guild.id] = (guildMessageCounter['_' + message.guild.id] + 1) || 1;
@@ -103,14 +80,17 @@ client.on('messageCreate', async message => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
 
-  if (!client.commands.has(interaction.commandName)) return;
+  const command = client.commands.get(interaction.commandName);
+
+  if (!command) return;
 
   try {
-    await client.commands.get(interaction.commandName).execute(interaction);
+    console.log('\x1b[36m%s\x1b[0m', `${getTimeNow()} ${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`);
+    await command.execute(interaction);
   }
   catch (error) {
     console.error(error);
-    return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
 

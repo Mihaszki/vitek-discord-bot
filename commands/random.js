@@ -1,27 +1,28 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'random',
-  description: 'Random number generator',
-  options: [
-    {
-      name: 'min',
-      description: 'Enter a min number',
-      type: 'INTEGER',
-    },
-    {
-      name: 'max',
-      description: 'Enter a max number',
-      type: 'INTEGER',
-    },
-  ],
-  usage: '<min> <max>',
-  cooldown: 0.5,
-  execute(interaction) {
+  data: new SlashCommandBuilder()
+    .setName('random')
+    .setDescription('Random number generator')
+    .addIntegerOption(option =>
+      option.setName('min')
+        .setDescription('Enter a min number'))
+    .addIntegerOption(option =>
+      option.setName('max')
+        .setDescription('Enter a max number')),
+  async execute(interaction) {
     let min = interaction.options.getInteger('min');
     let max = interaction.options.getInteger('max');
 
-    if(!min || !max) {
-      min = Math.floor(Math.random() * 10) + 1;
-      max = Math.floor(Math.random() * 10) + 1;
+    if(!min && !max) {
+      min = 0;
+      max = 10;
+    }
+    else if(min === null) {
+      min = max * 2;
+    }
+    else if(max === null) {
+      max = min * 2;
     }
 
     if(min > max) max = [min, min = max][0];

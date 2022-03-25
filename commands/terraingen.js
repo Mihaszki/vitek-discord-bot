@@ -1,22 +1,24 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'worldgen',
-  description: 'Generate a simple 2D world',
-  options: [
-    {
-      name: 'seed',
-      description: 'Seed',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 2,
+  data: new SlashCommandBuilder()
+    .setName('terraingen')
+    .setDescription('Generate a simple 2D terrain')
+    .addStringOption(option =>
+      option.setName('type')
+        .setDescription('Type')
+        .setRequired(true)
+        .addChoice('snow', 'snow')
+        .addChoice('sand', 'sand'))
+    .addStringOption(option =>
+      option.setName('seed')
+        .setDescription('seed')),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const cleanText = require('../vitek_modules/cleanText');
     const Canvas = require('canvas');
     const SimplexNoise = require('simplex-noise');
-
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
 
     const worldSize = 3072;
     const canvas = Canvas.createCanvas(worldSize, worldSize);
@@ -24,24 +26,35 @@ module.exports = {
     const treeCanvas = Canvas.createCanvas(worldSize, worldSize);
     const treeCtx = canvas.getContext('2d');
 
-    const seed = cleanText.emojis(interaction.options.getString('seed'));
+    const seedParam = interaction.options.getString('seed');
+    const seed = seedParam ? cleanText.emojis(seedParam) : Math.random();
+
+    const type = interaction.options.getString('type');
 
     const grass = await Canvas.loadImage('images/worldgen/grass.png');
-    const snow = await Canvas.loadImage('images/worldgen/snow.png');
     const water = await Canvas.loadImage('images/worldgen/water.png');
+    let snow = null;
     const tree_green = await Canvas.loadImage('images/worldgen/tree_grass.png');
     const tree_snow = await Canvas.loadImage('images/worldgen/tree_snow.png');
+
+    const weight = {
+      snow: 50,
+      grass: -10,
+    };
+
+    if(type == 'sand') {
+      snow = await Canvas.loadImage('images/worldgen/sand.png');
+    }
+    else {
+      snow = await Canvas.loadImage('images/worldgen/snow.png');
+    }
+
     let img = null;
     let treeImg = null;
     let lastValue = 0;
 
     const simplex = new SimplexNoise(seed);
     const tileSize = 32;
-
-    const weight = {
-      snow: 50,
-      grass: -10,
-    };
 
     const data = [];
     let tmpArray = [];
@@ -56,7 +69,7 @@ module.exports = {
         }
         else if(v > weight.snow) {
           img = snow;
-          if(v % 5 == 0 && lastValue != 0) treeImg = tree_snow;
+          if(v % 5 == 0 && lastValue != 0 && type == 'snow') treeImg = tree_snow;
           else treeImg = null;
           lastValue = 1;
         }
@@ -84,6 +97,6 @@ module.exports = {
     }
     ctx.drawImage(treeCanvas, 0, 0);
     const attachment = new MessageAttachment(canvas.toBuffer(), 'world.png');
-    interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+    interaction.editReply({ files: [attachment] });
   },
 };

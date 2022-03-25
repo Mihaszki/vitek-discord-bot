@@ -1,54 +1,30 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'level',
-  description: 'Behaviour level stats',
-  options: [
-    {
-      name: 'today',
-      description: 'Shows today\'s level',
-      type: 'SUB_COMMAND',
-      options: [
-        {
-          name: 'user',
-          description: 'Select one user',
-          type: 'USER',
-        },
-      ],
-    },
-    {
-      name: 'day',
-      description: 'Shows level for your date',
-      type: 'SUB_COMMAND',
-      options: [
-        {
-          name: 'date',
-          description: 'Enter a date in DD.MM.YYYY format',
-          type: 'STRING',
-          required: true,
-        },
-        {
-          name: 'user',
-          description: 'Select one user',
-          type: 'USER',
-        },
-      ],
-    },
-    {
-      name: 'ranking',
-      description: 'Shows ranking',
-      type: 'SUB_COMMAND',
-    },
-    {
-      name: 'dates',
-      description: 'Shows available dates',
-      type: 'SUB_COMMAND',
-    },
-    {
-      name: 'help',
-      description: 'Shows help',
-      type: 'SUB_COMMAND',
-    },
-  ],
-  cooldown: 2,
+  data: new SlashCommandBuilder()
+    .setName('level')
+    .setDescription('Behaviour level stats')
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('today')
+        .setDescription('Shows today\'s level'))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('day')
+        .setDescription('Shows level for your date')
+        .addStringOption(option => option.setName('date').setRequired(true).setDescription('Enter a date in DD.MM.YYYY format')))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('ranking')
+        .setDescription('Shows ranking'))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('dates-list')
+        .setDescription('Shows available dates'))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('help')
+        .setDescription('Shows help')),
   async execute(interaction) {
     const behaviorCounter = require('../vitek_db/behaviorCounter');
     const chartGenerator = require('../vitek_modules/chartGenerator');
@@ -57,7 +33,7 @@ module.exports = {
     const option = interaction.options.getSubcommand();
 
     if(option == 'ranking') {
-      await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+      await interaction.deferReply();
       behaviorCounter.getRanking(interaction.guild.id, interaction, (data, labels) => {
         if(data.length == 0) return interaction.editReply({ content: 'There is no data yet!' });
 
@@ -66,7 +42,7 @@ module.exports = {
       });
     }
     else if(option == 'today') {
-      await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+      await interaction.deferReply();
 
       const now = new Date();
       const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -90,7 +66,7 @@ module.exports = {
       const date = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
       if(!date.toLocaleString()) return interaction.reply({ content: 'Invalid date!' });
 
-      await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+      await interaction.deferReply();
 
       let hide_id = '';
       let showOneUser = false;
@@ -105,7 +81,7 @@ module.exports = {
           { width: 2000, height: 1000, type: 'line', fontSize: 38, showOneUser: showOneUser, showOnlyID: hide_id, chartTitle: [`Behavior level over time | ${userDate}`, '(Higher is better)', ' '], unit: '%' });
       });
     }
-    else if(option == 'dates') {
+    else if(option == 'dates-list') {
       const checkMessageLength = require('../vitek_modules/checkMessageLength');
       behaviorCounter.getAvailableDates(interaction.guild.id, interaction, dateList => {
         checkMessageLength.send(`**Available dates:** \`\`\`${dateList.join(', ')}\`\`\``, interaction);
@@ -113,13 +89,10 @@ module.exports = {
     }
     else if(option == 'help') {
       sendEmbed(interaction, 'Level - Help', `Level is a command that can show your "behavior level" based on the messages you send.
-      \`.level ranking\` - Ranking
-      \`.level today\` - Show levels over time for today
-      \`.level today <@User>\` - Show user's level over time for today
-      \`.level day <date DD-MM-YYYY format>\` - Show levels over time for the date
-      \`.level day <date DD-MM-YYYY format> <@User>\` - Show user's level over time for the date
-      You can add \`-html\` parameter at the end of the command to output the chart to a html file.
-      \`.level dates\` - Show available dates`);
+      \`/level ranking\` - Ranking
+      \`/level today\` - Show levels over time for today
+      \`/level day <date DD-MM-YYYY format>\` - Show levels over time for the date
+      \`/level dates\` - Show available dates`);
     }
   },
 };

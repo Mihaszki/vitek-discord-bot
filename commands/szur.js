@@ -1,7 +1,9 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'szur',
-  description: 'Generator-korwinator',
-  cooldown: 0.1,
+  data: new SlashCommandBuilder()
+    .setName('szur')
+    .setDescription('Generator-korwinator'),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const { wrapText } = require('../vitek_modules/canvasDraw');
@@ -9,6 +11,7 @@ module.exports = {
     const canvas = Canvas.createCanvas(1280, 720);
     const context = canvas.getContext('2d');
 
+    await interaction.deferReply();
     const background = await Canvas.loadImage('images/szur/szur.png');
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
@@ -167,6 +170,6 @@ module.exports = {
     });
 
     const attachment = new MessageAttachment(canvas.toBuffer(), 'szur.png');
-    interaction.reply({ files: [attachment] });
+    interaction.editReply({ files: [attachment] });
   },
 };

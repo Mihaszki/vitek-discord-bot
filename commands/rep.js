@@ -1,84 +1,45 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'rep',
-  description: 'Reputation points',
-  options: [
-    {
-      name: 'add',
-      description: 'Give a positive point to the user',
-      type: 'SUB_COMMAND',
-      options: [
-        {
-          name: 'user',
-          description: 'Enter a user',
-          type: 'USER',
-          required: true,
-        },
-        {
-          name: 'reason',
-          description: 'Enter a reason',
-          type: 'STRING',
-        },
-      ],
-    },
-    {
-      name: 'remove',
-      description: 'Give a negative point to the user',
-      type: 'SUB_COMMAND',
-      options: [
-        {
-          name: 'user',
-          description: 'Enter a user',
-          type: 'USER',
-          required: true,
-        },
-        {
-          name: 'reason',
-          description: 'Enter a reason',
-          type: 'STRING',
-        },
-      ],
-    },
-    {
-      name: 'ranking',
-      description: 'Shows ranking',
-      type: 'SUB_COMMAND',
-    },
-    {
-      name: 'history',
-      description: 'Shows user\'s history',
-      type: 'SUB_COMMAND',
-      options: [
-        {
-          name: 'user',
-          description: 'Enter a user',
-          type: 'USER',
-        },
-      ],
-    },
-    {
-      name: 'history-full',
-      description: 'Shows user\'s full history in html file',
-      type: 'SUB_COMMAND',
-      options: [
-        {
-          name: 'user',
-          description: 'Enter a user',
-          type: 'USER',
-        },
-      ],
-    },
-    {
-      name: 'help',
-      description: 'Shows help',
-      type: 'SUB_COMMAND',
-    },
-  ],
-  cooldown: 2,
+  data: new SlashCommandBuilder()
+    .setName('rep')
+    .setDescription('Reputation points')
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('add')
+        .setDescription('Give a positive point to the user')
+        .addUserOption(option => option.setName('user').setDescription('Enter a user').setRequired(true))
+        .addStringOption(option => option.setName('reason').setDescription('Enter a reason')),
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('remove')
+        .setDescription('Give a negative point to the user')
+        .addUserOption(option => option.setName('user').setDescription('Enter a user').setRequired(true))
+        .addStringOption(option => option.setName('reason').setDescription('Enter a reason')),
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('ranking')
+        .setDescription('Rep ranking'))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('history')
+        .setDescription('Shows user\'s history')
+        .addUserOption(option => option.setName('user').setDescription('Enter a user')))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('history-full')
+        .setDescription('Saves the user\'s history to a html file')
+        .addUserOption(option => option.setName('user').setDescription('Enter a user')))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('help')
+        .setDescription('Shows help')),
   async execute(interaction) {
     const repController = require('../vitek_db/repController');
     const getMention = require('../vitek_modules/getMention');
     const { sendEmbed } = require('../vitek_modules/embed');
-    const { prefix } = require('../bot_config');
 
     const option = interaction.options.getSubcommand();
 
@@ -98,7 +59,7 @@ module.exports = {
             description += `**${i + 1}.** | ${member ? member : items[i].username} | ${items[i].value}\n`;
           }
         }
-        sendEmbed(interaction, `Rep - Top 20 | ${interaction.guild.name}`, description, interaction.guild.iconURL());
+        sendEmbed(interaction, `Rep - Top 20 | ${interaction.guild.name}`, description, getMention.guildIcon(interaction));
       });
     }
     else if(option == 'history') {
@@ -114,7 +75,7 @@ module.exports = {
         else {
           description += '``Value | Reason | Sender``\n';
           for(const item of items) {
-            description += `**${item.value}** | *${repController.sliceReason(item.reason)}* | <@${item.sender.user_id}>\n`;
+            description += `**${item.value}** | \`${repController.sliceReason(item.reason).replace(/`/g, '\'')}\` | <@${item.sender.user_id}>\n`;
           }
         }
 
@@ -137,13 +98,13 @@ module.exports = {
       }, null);
     }
     else if(option == 'help') {
-      sendEmbed(interaction, 'Rep - Help', `\`${prefix}rep add <@User> <reason>\` - Give a positive point to the user
-      \`${prefix}rep remove <@User> <reason>\` - Give a negative point to the user
-      \`${prefix}rep history\` - Your rep history
-      \`${prefix}rep history <@User>\` - User's rep history
-      \`${prefix}rep history-full\` - Your full rep history
-      \`${prefix}rep history-full <@User>\` - User's full rep history
-      \`${prefix}rep ranking\` - Ranking`);
+      sendEmbed(interaction, 'Rep - Help', `\`/rep add <@User> <reason>\` - Give a positive point to the user
+      \`/rep remove <@User> <reason>\` - Give a negative point to the user
+      \`/rep history\` - Your rep history
+      \`/rep history <@User>\` - User's rep history
+      \`/rep history-full\` - Your full rep history
+      \`/rep history-full <@User>\` - User's full rep history
+      \`/rep ranking\` - Ranking`);
     }
   },
 };

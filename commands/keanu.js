@@ -1,33 +1,26 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'keanu',
-  description: 'Johnny Silverhand with your image and quote',
-  cooldown: 0.1,
-  options: [
-    {
-      name: 'line1',
-      description: 'Enter a top line of text',
-      type: 'STRING',
-      required: true,
-    },
-    {
-      name: 'line2',
-      description: 'Enter a bottom line of text',
-      type: 'STRING',
-      required: true,
-    },
-    {
-      name: 'image',
-      description: '@User or Server emoji or URL',
-      type: 'STRING',
-      required: true,
-    },
-  ],
+  data: new SlashCommandBuilder()
+    .setName('keanu')
+    .setDescription('Johnny Silverhand with your image and quote')
+    .addStringOption(option =>
+      option.setName('line1')
+        .setDescription('Enter a top line of text')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('line2')
+        .setDescription('Enter a bottom line of text')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('image')
+        .setDescription('@User or Server emoji or URL')
+        .setRequired(true)),
   async execute(interaction) {
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
     const { MessageAttachment } = require('discord.js');
-
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
 
     const applyText = (canvas, text, startFontSize) => {
       const ctx = canvas.getContext('2d');
@@ -85,7 +78,7 @@ module.exports = {
       ctx.fillText(line2, (canvas.width / 2) - (ctx.measureText(line2).width / 2), 776);
 
       const attachment = new MessageAttachment(canvas.toBuffer(), 'keanu.png');
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      interaction.editReply({ files: [attachment] });
     });
   },
 };

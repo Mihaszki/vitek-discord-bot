@@ -1,21 +1,17 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'love',
-  description: 'Love card',
-  options: [
-    {
-      name: 'user1',
-      description: 'First user',
-      type: 'USER',
-      required: true,
-    },
-    {
-      name: 'user2',
-      description: 'Second user',
-      type: 'USER',
-      required: true,
-    },
-  ],
-  cooldown: 2,
+  data: new SlashCommandBuilder()
+    .setName('love')
+    .setDescription('Love card')
+    .addUserOption(option =>
+      option.setName('user1')
+        .setDescription('First user')
+        .setRequired(true))
+    .addUserOption(option =>
+      option.setName('user2')
+        .setDescription('Second user')
+        .setRequired(true)),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const getMention = require('../vitek_modules/getMention');
@@ -23,7 +19,7 @@ module.exports = {
     const Canvas = require('canvas');
     const { loveQuotes } = require('../bot_config');
 
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
 
     const member1 = interaction.options.getMember('user1');
     const member2 = interaction.options.getMember('user2');

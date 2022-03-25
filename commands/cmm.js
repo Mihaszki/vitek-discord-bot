@@ -1,15 +1,13 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'cmm',
-  description: 'Change My Mind',
-  options: [
-    {
-      name: 'text',
-      description: 'Enter a short text',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 0.5,
+  data: new SlashCommandBuilder()
+    .setName('cmm')
+    .setDescription('Change My Mind')
+    .addStringOption(option =>
+      option.setName('text')
+        .setDescription('Enter a short text')
+        .setRequired(true)),
   async execute(interaction) {
     const Canvas = require('canvas');
     const { MessageAttachment } = require('discord.js');
@@ -17,7 +15,7 @@ module.exports = {
     const ctx = canvas.getContext('2d');
     const cleanText = require('../vitek_modules/cleanText');
 
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
 
     const msgtext = cleanText.emojis(interaction.options.getString('text').replace(/\s+/g, ' '));
     const words = msgtext.split(' ');
@@ -109,6 +107,6 @@ module.exports = {
     ctx.restore();
 
     const attachment = new MessageAttachment(canvas.toBuffer(), 'changemymind.png');
-    interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+    interaction.editReply({ files: [attachment] });
   },
 };

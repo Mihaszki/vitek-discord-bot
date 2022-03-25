@@ -1,40 +1,23 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'word',
-  description: 'Words usage stats',
-  options: [
-    {
-      name: 'usage',
-      description: 'Get words usage',
-      type: 'SUB_COMMAND',
-      options: [
-        {
-          name: 'words',
-          description: 'Enter the words separated by a comma',
-          type: 'STRING',
-          required: true,
-        },
-      ],
-    },
-    {
-      name: 'ranking',
-      description: 'Shows ranking',
-      type: 'SUB_COMMAND',
-      options: [
-        {
-          name: 'word',
-          description: 'Enter one word',
-          type: 'STRING',
-          required: true,
-        },
-      ],
-    },
-    {
-      name: 'help',
-      description: 'Shows help',
-      type: 'SUB_COMMAND',
-    },
-  ],
-  cooldown: 2,
+  data: new SlashCommandBuilder()
+    .setName('word')
+    .setDescription('Words usage stats')
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('usage')
+        .setDescription('Get words\' usage')
+        .addStringOption(option => option.setName('words').setRequired(true).setDescription('Enter the words separated by a comma')))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('ranking')
+        .setDescription('Shows ranking')
+        .addStringOption(option => option.setName('word').setRequired(true).setDescription('Enter one word')))
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('help')
+        .setDescription('Shows help')),
   async execute(interaction) {
     const wordCounter = require('../vitek_db/wordCounter');
     const chartGenerator = require('../vitek_modules/chartGenerator');
@@ -43,7 +26,7 @@ module.exports = {
     const arg1 = interaction.options.getSubcommand();
 
     if(arg1 == 'usage') {
-      await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+      await interaction.deferReply();
       const _args = interaction.options.getString('words').toLowerCase();
       let words = _args.split(',');
       words = words.filter(el => { return el !== null && el !== ''; });
@@ -56,7 +39,7 @@ module.exports = {
       });
     }
     else if(arg1 == 'ranking') {
-      await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+      await interaction.deferReply();
       const sentence = interaction.options.getString('word');
       if(!sentence) return interaction.editReply({ content: 'You must give a word/sentence!' });
       wordCounter.getRanking(sentence.toLowerCase(), interaction.guild.id, interaction, (labels, data) => {
@@ -65,8 +48,8 @@ module.exports = {
       });
     }
     else {
-      sendEmbed(interaction, 'Word - Help', `\`.word usage <Word1, Word2, Word3 [...]>\` - Check usage of the specified words
-      \`.word ranking <Word>\` - Show the word use for each user`);
+      sendEmbed(interaction, 'Word - Help', `\`/word usage <Word1, Word2, Word3 [...]>\` - Check usage of the specified words
+      \`/word ranking <Word>\` - Show the word use for each user`);
     }
   },
 };

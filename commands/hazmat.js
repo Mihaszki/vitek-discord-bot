@@ -1,15 +1,13 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'hazmat',
-  description: 'Image in the hazmat suit',
-  options: [
-    {
-      name: 'image',
-      description: '@User or Server emoji or URL',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 1,
+  data: new SlashCommandBuilder()
+    .setName('hazmat')
+    .setDescription('Image in a hazmat suit')
+    .addStringOption(option =>
+      option.setName('image')
+        .setDescription('@User or Server emoji or URL')
+        .setRequired(true)),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const getImage = require('../vitek_modules/getImage');
@@ -17,7 +15,7 @@ module.exports = {
     const canvas = Canvas.createCanvas(1316, 1316);
     const ctx = canvas.getContext('2d');
     const img = interaction.options.getString('image');
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
       if(error) {
         return interaction.editReply({ content: error });
@@ -31,7 +29,7 @@ module.exports = {
       ctx.clearRect(1024, 794, 124, 224);
       ctx.drawImage(hazmat, 0, 0, canvas.width, canvas.height);
       const attachment = new MessageAttachment(canvas.toBuffer(), 'hazmat.png');
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      interaction.editReply({ files: [attachment] });
     });
   },
 };

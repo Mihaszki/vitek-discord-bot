@@ -1,31 +1,26 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-  name: 'r',
-  description: 'Add an image to the letter "R"',
-  options: [
-    {
-      name: 'num',
-      description: 'Number of tiles (1 - 2048)',
-      type: 'INTEGER',
-      required: true,
-    },
-    {
-      name: 'image',
-      description: '@User or Server emoji or URL',
-      type: 'STRING',
-      required: true,
-    },
-  ],
-  cooldown: 1,
+  data: new SlashCommandBuilder()
+    .setName('r')
+    .setDescription('Add an image to the letter "R"')
+    .addIntegerOption(option =>
+      option.setName('num')
+        .setDescription('Number of tiles (1 - 2048)')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('image')
+        .setDescription('@User or Server emoji or URL')
+        .setRequired(true)),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
-
     let num = interaction.options.getInteger('num');
     if(num > 2048) num = 2048;
     else if(num < 1) num = 1;
     const img = interaction.options.getString('image');
-    await interaction.reply({ content: 'Generating... :hourglass_flowing_sand:' });
+    await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
       if(error) {
         return interaction.editReply({ content: error });
@@ -45,7 +40,7 @@ module.exports = {
       context.drawImage(user_image, 0, 0, canvas.width, canvas.height);
       context.drawImage(background, 0, 0, canvas.width, canvas.height);
       const attachment = new MessageAttachment(canvas.toBuffer(), 'r.png');
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      return interaction.editReply({ files: [attachment] });
     }
 
     async function generateTiles(tilesNum, user_image) {
@@ -91,7 +86,7 @@ module.exports = {
         y += tileSize;
       }
       const attachment = new MessageAttachment(canvas.toBuffer(), `r_${tilesNum}.png`);
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      return interaction.editReply({ files: [attachment] });
     }
 
     function median(arr) {
