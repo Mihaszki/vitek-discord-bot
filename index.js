@@ -67,8 +67,8 @@ client.on('messageCreate', async message => {
   // Emoji reaction on a private server
   if(message.guild.id === '771628652533514251' && message.channel.id === '771689939875790868') {
     if(message.attachments.first()) {
-      message.react('957255284248690708')
-        .then(() => message.react('957255284248690708'))
+      message.react('955484551818395719')
+        .then(() => message.react('953313703745421363'))
         .catch(() => console.error('One of the emojis failed to react.'));
     }
   }
