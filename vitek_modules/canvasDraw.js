@@ -1,5 +1,5 @@
 module.exports = {
-  wrapText: function(context, text, { x, maxWidth, quoteAuthor, shadowColor, y = 180, fontColor = '#000000' }) {
+  wrapText: function(context, text, { x, maxWidth, quoteAuthor, shadowColor, forceFontSize = 0, forceY = 0, y = 180, fontColor = '#000000' }) {
     const cleanText = require('../vitek_modules/cleanText');
     const words = cleanText.emojis(text.replace(/\s+/g, ' ')).split(' ');
     let line = '';
@@ -7,15 +7,24 @@ module.exports = {
     let metrics = '';
     let fontSize = 50;
 
-    if(text.length >= 1900) { y = 70; fontSize = 22; }
-    else if(text.length >= 1800) { y = 60; fontSize = 24; }
-    else if(text.length >= 1500) { y = 80; fontSize = 24; }
-    else if(text.length >= 1000) { y = 130; fontSize = 24; }
-    else if(text.length >= 600) { y = 180; fontSize = 25; }
-    else if(text.length >= 500) { y = 150; fontSize = 30; }
-    else if(text.length >= 400) { y = 140; fontSize = 39; }
-    else if(text.length >= 300) { y = 150; fontSize = 40; }
-    else if(text.length >= 200) { y = 130; fontSize = 40; }
+    if(forceY == 0) {
+      if(text.length >= 1900) { y = 70; fontSize = 22; }
+      else if(text.length >= 1800) { y = 60; fontSize = 24; }
+      else if(text.length >= 1500) { y = 80; fontSize = 24; }
+      else if(text.length >= 1000) { y = 130; fontSize = 24; }
+      else if(text.length >= 600) { y = 180; fontSize = 25; }
+      else if(text.length >= 500) { y = 150; fontSize = 30; }
+      else if(text.length >= 400) { y = 140; fontSize = 39; }
+      else if(text.length >= 300) { y = 150; fontSize = 40; }
+      else if(text.length >= 200) { y = 130; fontSize = 40; }
+    }
+    else {
+      y = forceY;
+    }
+
+    if(forceFontSize != 0) {
+      fontSize = forceFontSize;
+    }
 
     if(shadowColor) {
       context.shadowColor = shadowColor;
