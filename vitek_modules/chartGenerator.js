@@ -97,6 +97,7 @@ module.exports = {
           fontSize: 30,
           spanGaps: i == 0 ? true : false,
           data: dataNumbers,
+          tension: 0.4,
           borderJoinStyle: 'miter',
           pointBackgroundColor: i == 0 ? '#050505' : color,
           pointBorderColor: i == 0 ? '#050505' : color,
@@ -181,6 +182,7 @@ module.exports = {
             y: {
               beginAtZero: true,
               grid: {
+                color: 'rgba(255, 255, 255, 0.3)',
                 borderColor: 'rgba(255, 255, 255, 0.3)',
               },
               ticks: {
@@ -200,6 +202,7 @@ module.exports = {
                 },
               },
               grid: {
+                color: 'rgba(255, 255, 255, 0.3)',
                 borderColor: 'rgba(255, 255, 255, 0.3)',
               },
             },

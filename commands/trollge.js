@@ -11,7 +11,13 @@ module.exports = {
     .addStringOption(option =>
       option.setName('text2')
         .setDescription('Enter a second text')
-        .setRequired(true)),
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('direction')
+        .setDescription('Animation direction')
+        .setRequired(false)
+        .addChoice('sad->happy', 'sad->happy')
+        .addChoice('happy->sad', 'happy->sad')),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const Canvas = require('canvas');
@@ -26,6 +32,8 @@ module.exports = {
 
     const text1 = interaction.options.getString('text1');
     const text2 = interaction.options.getString('text2');
+    let direction = interaction.options.getString('direction');
+    if(!direction) {direction = 'sad->happy';}
 
     if(text1.length > 148) {
       return interaction.editReply({ content: 'The first text is too long!' });
@@ -38,12 +46,27 @@ module.exports = {
     encoder.setDelay(100);
     encoder.start();
 
+    let firstFrame = 1;
+    let lastFrame = 44;
+
+    if(direction == 'sad->happy') {
+      firstFrame = 1;
+      lastFrame = 44;
+    }
+    else if(direction == 'happy->sad') {
+      firstFrame = 44;
+      lastFrame = 1;
+    }
+
+    let animate = true;
+    const increment = (firstFrame < lastFrame) ? 1 : -1;
+    let x = firstFrame;
     let opacityText1 = 1;
     let opacityText2 = 0;
 
     for(let i = 0; i < 10; i++) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const frameImg = await Canvas.loadImage('images/trollge/frame (1).jpg');
+      const frameImg = await Canvas.loadImage(`images/trollge/frame (${increment == 1 ? firstFrame : lastFrame}).jpg`);
       ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
 
       canvasDraw.wrapText(ctx, text1, {
@@ -51,9 +74,9 @@ module.exports = {
       });
     }
 
-    for(let i = 1; i <= 44; i++) {
+    while(animate) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const frameImg = await Canvas.loadImage(`images/trollge/frame (${i}).jpg`);
+      const frameImg = await Canvas.loadImage(`images/trollge/frame (${x}).jpg`);
       ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
 
       if(opacityText1 - 0.045 > 0) {
@@ -70,11 +93,14 @@ module.exports = {
       }
 
       encoder.addFrame(ctx);
+
+      x += increment;
+      if((increment == 1 && x > lastFrame) || (increment == -1 && x < lastFrame)) {animate = false;}
     }
 
     for(let i = 0; i < 10; i++) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const frameImg = await Canvas.loadImage('images/trollge/frame (44).jpg');
+      const frameImg = await Canvas.loadImage(`images/trollge/frame (${increment == 1 ? lastFrame : firstFrame}).jpg`);
       ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
 
       canvasDraw.wrapText(ctx, text2, {

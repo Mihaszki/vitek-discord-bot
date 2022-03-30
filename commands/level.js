@@ -38,7 +38,7 @@ module.exports = {
         if(data.length == 0) return interaction.editReply({ content: 'There is no data yet!' });
 
         chartGenerator.sendChart(interaction, data,
-          { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Behavior level Top 15', '(Higher is better)', ' '], unit: '%' });
+          { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Behavior level ranking', '(Higher is better)', ' '], unit: '%' });
       });
     }
     else if(option == 'today') {
