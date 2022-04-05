@@ -2,6 +2,7 @@ module.exports = {
   getMessages: async function(rhyme, server_id) {
     try {
       const { excludeRegex } = require('../bot_config');
+      const cleanText = require('../vitek_modules/cleanText');
 
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
@@ -21,7 +22,7 @@ module.exports = {
       const elements = data[0].cleanContent.filter((item, index) => data[0].cleanContent.indexOf(item) === index);
       if(elements.length < 4) return false;
       const messages = getRandom(elements, 4);
-      return messages.map(str => str.trim().replace(/\s+/g, ' '));
+      return messages.map(str => cleanText.emojis(str.trim().replace(/\s+/g, ' ')));
     }
     catch (error) {
       console.error(error);

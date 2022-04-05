@@ -9,7 +9,12 @@ module.exports = {
         .setDescription('First rhyme'))
     .addStringOption(option =>
       option.setName('rhyme2')
-        .setDescription('Second rhyme')),
+        .setDescription('Second rhyme'))
+    .addStringOption(option =>
+      option.setName('search-type')
+        .setDescription('Search type')
+        .addChoice('line-end', 'line-end')
+        .addChoice('global', 'global')),
   async execute(interaction) {
     const { MessageAttachment } = require('discord.js');
     const { poemTitles } = require('../bot_config');
@@ -29,21 +34,28 @@ module.exports = {
 
     const r1 = interaction.options.getString('rhyme1');
     const r2 = interaction.options.getString('rhyme2');
+    const searchType = interaction.options.getString('search-type') == 'global' ? 'global' : 'line-end';
 
-    const sampleRhymes = ['fa', 'ba', 'ana', 'aba', 'ara', 'aha', 'asa', 'cia', 'cie', 'ble', 'ha', 'wa', 'na', 'ma', 'pa', 'da', 'de', 'wy', 'ni', 'ec', 'ac', 'we', 'wu', 'ne', 'er', 'pe', 'al', 'ga'];
+    const sampleRhymes = ['fa', 'ba', 'ana', 'aba', 'ara', 'aha', 'asa', 'cia', 'cie', 'ble', 'ha', 'wa', 'na', 'ma', 'pa', 'da', 'de', 'dy', 'ka', 'ki', 'xa', 'wy', 'ni', 'ec', 'ac', 'we', 'wu', 'ne', 'er', 'pe', 'al', 'ga'];
 
     if(!r1) {
-      arg1 = sampleRhymes[Math.floor(Math.random() * sampleRhymes.length)];
+      arg1 = `${sampleRhymes[Math.floor(Math.random() * sampleRhymes.length)]}$`;
     }
     else {
-      arg1 = `${escapeRegex(r1)}$`;
+      arg1 = escapeRegex(r1);
+      if(searchType == 'line-end') {
+        arg1 += '$';
+      }
     }
 
     if(!r2) {
-      arg2 = sampleRhymes[Math.floor(Math.random() * sampleRhymes.length)];
+      arg2 = `${sampleRhymes[Math.floor(Math.random() * sampleRhymes.length)]}$`;
     }
     else {
-      arg2 = `${escapeRegex(r2)}$`;
+      arg2 = escapeRegex(r2);
+      if(searchType == 'line-end') {
+        arg2 += '$';
+      }
     }
 
     lyrics_A = await rhymingMessages.getMessages(arg1, interaction.guild.id);
