@@ -79,6 +79,12 @@ module.exports = {
       }
     }
 
+    for(let i = 0; i <= lyrics_All.length - 1; i++) {
+      if(lyrics_All[i].length > 70) {
+        lyrics_All[i] = lyrics_All[i].slice(lyrics_All[i].length - 70);
+      }
+    }
+
     const randWord = lyrics_All[Math.floor(Math.random() * lyrics_All.length)].split(' ')[0].replace(/,/g, ' ');
     const title = `„${poemTitles[Math.floor(Math.random() * poemTitles.length)].replace('@', randWord)}”`.toUpperCase().replace(/\\n/g, '').replace(/\n/g, '');
 
