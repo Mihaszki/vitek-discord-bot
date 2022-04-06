@@ -17,6 +17,7 @@ let blocklist = [];
 
 // Message counter for automatic bot responses
 const guildMessageCounter = new Map();
+const guildMessageCounterLimits = new Map();
 
 // Load commands from the commands folder
 client.commands = new Collection();
@@ -57,7 +58,11 @@ client.on('messageCreate', async message => {
     console.log(blocklist);
     return;
   }
-  else if(!blockListController.isBlockedLocal(message.author.id, blocklist) && message.content[0] == '.' && message.content.length > 1 && !message.author.bot) {
+  else if(message.author.id === bot_author_id && message.content.split(' ')[0] === './talkmode') {
+    guildMessageCounterLimits['_' + message.guild.id] = guildMessageCounterLimits['_' + message.guild.id] ? false : true;
+    return;
+  }
+  else if(!blockListController.isBlockedLocal(message.author.id, blocklist) && message.content[0] === '.' && message.content.length > 1 && !message.author.bot) {
     console.log(message.cleanContent.slice(1));
     return messageGenerator.getMessage(message.cleanContent.slice(1), message.guild.id, response => {
       if(response !== false) message.channel.send(response);
@@ -77,7 +82,7 @@ client.on('messageCreate', async message => {
 
   if(!message.content.startsWith(prefix)) {
     guildMessageCounter['_' + message.guild.id] = (guildMessageCounter['_' + message.guild.id] + 1) || 1;
-    if(guildMessageCounter['_' + message.guild.id] % 100 === 0) {
+    if(guildMessageCounter['_' + message.guild.id] % 100 === 0 || guildMessageCounterLimits['_' + message.guild.id] === true) {
       messageGenerator.getMessage(message.cleanContent, message.guild.id, response => {
         if(response !== false) message.channel.send(response);
         guildMessageCounter['_' + message.guild.id] = 1;
