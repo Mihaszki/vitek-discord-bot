@@ -169,6 +169,9 @@ module.exports = {
         },
         options: {
           plugins: {
+            legend: {
+              display: type == 'line' ? true : false,
+            },
             title: {
               display: true,
               font: {
@@ -206,9 +209,6 @@ module.exports = {
                 borderColor: 'rgba(255, 255, 255, 0.3)',
               },
             },
-          },
-          legend: {
-            display: type == 'line' ? true : false,
           },
           layout: {
             padding: {
