@@ -14,7 +14,12 @@ module.exports = {
         .setRequired(true)
         .addChoice('small', 'small')
         .addChoice('medium', 'medium')
-        .addChoice('large', 'large')),
+        .addChoice('large', 'large'))
+    .addStringOption(option =>
+      option.setName('output')
+        .setDescription('Output type')
+        .addChoice('image', 'image')
+        .addChoice('text', 'text')),
   async execute(interaction) {
     const imgToAscii = require('ascii-img-canvas-nodejs');
     const getImage = require('../vitek_modules/getImage');
@@ -56,6 +61,11 @@ module.exports = {
       }
       const asciiImgHosted = await imgToAscii(url, { width: pic_width, height: pic_height });
 
+      if(interaction.options.getString('output') == 'text') {
+        console.log(asciiImgHosted);
+        return interaction.editReply({ files: [{ attachment: Buffer.from(asciiImgHosted, 'UTF8'), name: 'ascii.txt' }] });
+      }
+
       const lineHeight = 11;
       const lineWidth = 6;
       let x = 5;
@@ -77,7 +87,7 @@ module.exports = {
         x = 5;
       }
       const attachment = new MessageAttachment(trimCanvas(canvas, 3000, 3000).toBuffer(), 'ascii.png');
-      interaction.editReply({ content: 'Done! :hourglass:', files: [attachment] });
+      interaction.editReply({ files: [attachment] });
     });
   },
 };
