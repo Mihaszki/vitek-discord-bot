@@ -1,12 +1,12 @@
 module.exports = {
   'prefix': '/',
-  'bot_name': 'Vitek',
-  'bot_author': 'Mihaszki',
-  'bot_author_id': '236885810475958272',
+  'botName': 'Vitek',
+  'botAuthor': 'Mihaszki',
+  'botAuthorId': '236885810475958272',
   'status': '/info',
-  'github_link': 'https://github.com/Mihaszki/vitek-discord-bot',
-  'date_timezone': 'Europe/Warsaw',
-  'date_locale': 'pl-PL',
+  'githubLink': 'https://github.com/Mihaszki/vitek-discord-bot',
+  'dateTimezone': 'Europe/Warsaw',
+  'dateLocale': 'pl-PL',
   'excludeRegex': /^\.|^!|^\+|^;|^\/|^>|^-|^=|^\?|(https:\/\/|http:\/\/|www\.)/im,
   'swearWordList': 'sra|fiut|skurw|cipa|cipy|cipe|cipo|cipk|pener|kurw|huj|pierd|spierd|wypierd|odpierd|cwel|gown|dupa|dupe|dupo|dupk|japa|jape|pizda|pizde|pizdy|pizdo|pedal|morda|morde|franca|frajer|mordy|szcza|rucha|debil|ciec|szmata|szmato|szmaty|szmate|kupa|kupe|kutas|jeban|jebal|dziwk|ujeb|odjeb|zajeb|wyjeb|zjeb|jeb|leszcz|suki|suka|bitch|fuck|shit|ass|cunt|slut|bastard|dick|nigg|retard|fag|idiot|caralho|paneleiro',
   'positiveRepMessages': [

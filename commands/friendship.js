@@ -31,15 +31,15 @@ module.exports = {
     await interaction.deferReply();
 
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
       const background = await Canvas.loadImage('images/friendship/friendship.png');
       const foreground = await Canvas.loadImage('images/friendship/x.png');
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
       context.drawImage(background, 0, 0, canvas.width, canvas.height);
-      context.drawImage(user_image, 0, 207, 106, 165);
-      context.drawImage(user_image, 361, 225, 139, 147);
+      context.drawImage(userImage, 0, 207, 106, 165);
+      context.drawImage(userImage, 361, 225, 139, 147);
       context.drawImage(foreground, 0, 0, canvas.width, canvas.height);
 
       context.fillStyle = '#a10004';

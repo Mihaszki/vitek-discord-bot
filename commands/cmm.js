@@ -24,26 +24,26 @@ module.exports = {
     let widthOffset = 4;
     let y = 597;
 
-    if(msgtext.length > 261) { return interaction.editReply({ content: 'The text is too long!' }); }
-    else if(msgtext.length > 150) {
+    if (msgtext.length > 261) { return interaction.editReply({ content: 'The text is too long!' }); }
+    else if (msgtext.length > 150) {
       lineHeight = 18;
       fontSize = 18;
       widthOffset = 0.3;
       y = 557;
     }
-    else if(msgtext.length > 85) {
+    else if (msgtext.length > 85) {
       lineHeight = 23;
       fontSize = 23;
       widthOffset = 0.5;
       y = 567;
     }
-    else if(msgtext.length > 50) {
+    else if (msgtext.length > 50) {
       lineHeight = 28;
       fontSize = 28;
       widthOffset = 3;
       y = 557;
     }
-    else if(msgtext.length > 21) {
+    else if (msgtext.length > 21) {
       lineHeight = 36;
       fontSize = 36;
       widthOffset = 4;

@@ -36,11 +36,11 @@ module.exports = {
   newRep: function(interaction, member, reason, repValue) {
     const getMention = require('../vitek_modules/getMention');
 
-    if(!member) return interaction.reply({ content: 'You must enter a user who is on the server!' });
-    else if(member.id == interaction.user.id) return interaction.reply({ content: 'You can\'t rep yourself!' });
+    if (!member) return interaction.reply({ content: 'You must enter a user who is on the server!' });
+    else if (member.id == interaction.user.id) return interaction.reply({ content: 'You can\'t rep yourself!' });
 
     const username = getMention.username(member);
-    if(!reason) {
+    if (!reason) {
       reason = 'None';
     }
     else {
@@ -50,16 +50,16 @@ module.exports = {
     this.sendToDB(interaction, member, username, reason, repValue);
   },
 
-  getUserHistory: async function(user_id, server_id, interaction, onSuccess, limit = 10) {
+  getUserHistory: async function(userId, serverId, interaction, onSuccess, limit = 10) {
     const RepModel = require('../vitek_db/models/repModel');
     try {
       const items = await RepModel
-        .find({ server_id: server_id, 'receiver.user_id': user_id })
+        .find({ server_id: serverId, 'receiver.user_id': userId })
         .sort({ field: 'asc', _id: -1 })
         .limit(limit);
 
-      const pointsOnServer = await this.getUserPointsOnServer(server_id, user_id, interaction);
-      const allPoints = await this.getAllUserPoints(user_id, interaction);
+      const pointsOnServer = await this.getUserPointsOnServer(serverId, userId, interaction);
+      const allPoints = await this.getAllUserPoints(userId, interaction);
 
       onSuccess(items, allPoints, pointsOnServer);
     }
@@ -68,12 +68,12 @@ module.exports = {
     }
   },
 
-  getRanking: async function(server_id, interaction, onSuccess) {
+  getRanking: async function(serverId, interaction, onSuccess) {
     const RepModel = require('../vitek_db/models/repModel');
 
     try {
       const items = await RepModel.aggregate([
-        { $match: { server_id: server_id } },
+        { $match: { server_id: serverId } },
         { $group: { _id: { 'user_id': '$receiver.user_id' }, value: { $sum: '$value' }, username: { $last: '$receiver.tag' } } },
         { $sort: { value: -1 } },
         { $limit: 20 },
@@ -85,11 +85,11 @@ module.exports = {
     }
   },
 
-  getUserPointsOnServer: async function(server_id, user_id, interaction) {
+  getUserPointsOnServer: async function(serverId, userId, interaction) {
     try {
       const RepModel = require('../vitek_db/models/repModel');
       const pointsOnServer = await RepModel.aggregate([
-        { $match: { server_id: server_id, 'receiver.user_id': user_id } },
+        { $match: { server_id: serverId, 'receiver.user_id': userId } },
         { $group: { _id: null, value: { $sum: '$value' } } },
         { $project: { _id: 0, value: 1 } },
       ]);
@@ -100,11 +100,11 @@ module.exports = {
     }
   },
 
-  getAllUserPoints: async function(user_id, interaction) {
+  getAllUserPoints: async function(userId, interaction) {
     try {
       const RepModel = require('../vitek_db/models/repModel');
       const allPoints = await RepModel.aggregate([
-        { $match: { 'receiver.user_id': user_id } },
+        { $match: { 'receiver.user_id': userId } },
         { $group: { _id: null, value: { $sum: '$value' } } },
         { $project: { _id: 0, value: 1 } },
       ]);

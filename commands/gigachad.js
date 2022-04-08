@@ -20,10 +20,10 @@ module.exports = {
     const img = interaction.options.getString('image');
     await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
       const p1 = await Canvas.loadImage('images/gigachad/p1.png');
       const p2 = await Canvas.loadImage('images/gigachad/p2.png');
       const p3 = await Canvas.loadImage('images/gigachad/p3.png');
@@ -36,7 +36,7 @@ module.exports = {
       const greyScaleCanvas = Canvas.createCanvas(500, 500);
       const greyScaleCtx = greyScaleCanvas.getContext('2d');
 
-      greyScaleCtx.drawImage(user_image, 0, 0, greyScaleCanvas.width, greyScaleCanvas.height);
+      greyScaleCtx.drawImage(userImage, 0, 0, greyScaleCanvas.width, greyScaleCanvas.height);
       const imageData = greyScaleCtx.getImageData(0, 0, greyScaleCanvas.width, greyScaleCanvas.height);
       const data = imageData.data;
       for (let i = 0; i < data.length; i += 4) {
@@ -63,7 +63,7 @@ module.exports = {
       encoder.setDelay(85);
       encoder.start();
 
-      for(let i = 0; i < framesPerLoop; i++) {
+      for (let i = 0; i < framesPerLoop; i++) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(greyScaleCanvas, userX, userY, userImgW, userImgH);
         ctx.drawImage(mask1, x, y, imgW, imgH);
@@ -82,7 +82,7 @@ module.exports = {
       userImgW = 133;
       userImgH = 153;
 
-      for(let i = 0; i < framesPerLoop; i++) {
+      for (let i = 0; i < framesPerLoop; i++) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(greyScaleCanvas, userX, userY, userImgW, userImgH);
         ctx.drawImage(mask2, x, y, imgW, imgH);
@@ -101,7 +101,7 @@ module.exports = {
       userImgW = 132;
       userImgH = 194;
 
-      for(let i = 0; i < framesPerLoop; i++) {
+      for (let i = 0; i < framesPerLoop; i++) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(greyScaleCanvas, userX, userY, userImgW, userImgH);
         ctx.drawImage(mask3, x, y, imgW, imgH);
@@ -120,7 +120,7 @@ module.exports = {
       userImgW = 138;
       userImgH = 203;
 
-      for(let i = 0; i < framesPerLoop; i++) {
+      for (let i = 0; i < framesPerLoop; i++) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(greyScaleCanvas, userX, userY, userImgW, userImgH);
         ctx.drawImage(mask4, x, y, imgW, imgH);

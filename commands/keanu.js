@@ -36,7 +36,7 @@ module.exports = {
     const line2 = interaction.options.getString('line2');
     const img = interaction.options.getString('image');
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
       const canvas = Canvas.createCanvas(1495, 841);
@@ -47,7 +47,7 @@ module.exports = {
       ctx.shadowBlur = 3;
       ctx.shadowColor = '#000000';
 
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
       const bg = await Canvas.loadImage('images/keanu/keanu.png');
       const x = 657;
       const y = 143;
@@ -60,7 +60,7 @@ module.exports = {
       ctx.translate(cx, cy);
       ctx.rotate(20 * deg);
       ctx.translate(-cx, -cy);
-      ctx.drawImage(user_image, x, y, w, h);
+      ctx.drawImage(userImage, x, y, w, h);
       ctx.restore();
 
       ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);

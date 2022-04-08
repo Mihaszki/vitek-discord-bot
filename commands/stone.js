@@ -18,14 +18,14 @@ module.exports = {
     const img = interaction.options.getString('image');
     await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
       const background = await Canvas.loadImage('images/stone/stone.png');
       ctx.fillStyle = '#1c171e';
       ctx.fillRect(144, 33, 150, 110);
-      ctx.drawImage(user_image, 144, 33, 150, 110);
+      ctx.drawImage(userImage, 144, 33, 150, 110);
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
       const attachment = new MessageAttachment(canvas.toBuffer(), 'stone.png');
       interaction.editReply({ files: [attachment] });

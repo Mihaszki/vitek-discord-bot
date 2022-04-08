@@ -20,10 +20,10 @@ module.exports = {
     const img = interaction.options.getString('image');
     await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
       const triggered = await Canvas.loadImage('images/triggered/triggered.png');
       const overlay = await Canvas.loadImage('images/triggered/overlay.png');
 
@@ -34,9 +34,9 @@ module.exports = {
       const triggeredHeight = 100;
       const add = 30;
 
-      for(let i = 0; i < 15; i++) {
+      for (let i = 0; i < 15; i++) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(user_image, rand() - 15, rand() - 15, add + canvas.width, add + canvas.height - triggeredHeight / 1.5);
+        ctx.drawImage(userImage, rand() - 15, rand() - 15, add + canvas.width, add + canvas.height - triggeredHeight / 1.5);
         ctx.drawImage(triggered, rand() - 15, canvas.height - triggeredHeight - rand() - 15, add + canvas.width, add + triggeredHeight);
         ctx.drawImage(overlay, 0, 0, canvas.width, canvas.height);
         encoder.addFrame(ctx);

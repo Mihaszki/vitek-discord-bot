@@ -17,47 +17,47 @@ module.exports = {
     const getImage = require('../vitek_modules/getImage');
     const Canvas = require('canvas');
     let num = interaction.options.getInteger('num');
-    if(num > 2048) num = 2048;
-    else if(num < 1) num = 1;
+    if (num > 2048) num = 2048;
+    else if (num < 1) num = 1;
     const img = interaction.options.getString('image');
     await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
-      if(num == 1) generateImage(user_image);
-      else if(num % 2 == 0) generateTiles(num, user_image);
-      else generateTiles(num + 1, user_image);
+      const userImage = await Canvas.loadImage(url);
+      if (num == 1) generateImage(userImage);
+      else if (num % 2 == 0) generateTiles(num, userImage);
+      else generateTiles(num + 1, userImage);
     });
 
-    async function generateImage(user_image) {
+    async function generateImage(userImage) {
       const canvas = Canvas.createCanvas(648, 667);
       const context = canvas.getContext('2d');
       const background = await Canvas.loadImage('images/r/r.png');
       context.fillStyle = '#fafafa';
       context.fillRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(user_image, 0, 0, canvas.width, canvas.height);
+      context.drawImage(userImage, 0, 0, canvas.width, canvas.height);
       context.drawImage(background, 0, 0, canvas.width, canvas.height);
       const attachment = new MessageAttachment(canvas.toBuffer(), 'r.png');
       return interaction.editReply({ files: [attachment] });
     }
 
-    async function generateTiles(tilesNum, user_image) {
+    async function generateTiles(tilesNum, userImage) {
       const tiles = [];
-      for(let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 10; i++) {
         tiles.push(await Canvas.loadImage(`images/r/r_tiles/r_tile${i}.png`));
       }
 
       const divider = getDivider(tilesNum);
       let tileSize = Math.round(642 / divider);
-      if(tileSize < 1) tileSize = 1;
+      if (tileSize < 1) tileSize = 1;
       let canvas;
       let err = true;
       let width = (tilesNum / divider) * tileSize;
       let height = divider * tileSize;
 
-      while(err) {
+      while (err) {
         try {
           canvas = Canvas.createCanvas(width, height);
           err = false;
@@ -76,9 +76,9 @@ module.exports = {
       let x = 0;
       let y = 0;
 
-      for(let i = 0; i < height / tileSize; i++) {
-        for(let j = 0; j < width / tileSize; j++) {
-          context.drawImage(user_image, x, y, tileSize, tileSize);
+      for (let i = 0; i < height / tileSize; i++) {
+        for (let j = 0; j < width / tileSize; j++) {
+          context.drawImage(userImage, x, y, tileSize, tileSize);
           context.drawImage(tiles[Math.floor(Math.random() * tiles.length)], x, y, tileSize, tileSize);
           x += tileSize;
         }
@@ -96,14 +96,14 @@ module.exports = {
     }
 
     function getDivider(tilesNum) {
-      if(tilesNum == 1) return 1;
+      if (tilesNum == 1) return 1;
       let d = 1;
       const nums = [];
-      while(d != tilesNum + 1) {
-        if(tilesNum % d == 0 && tilesNum != d) nums.push(d);
+      while (d != tilesNum + 1) {
+        if (tilesNum % d == 0 && tilesNum != d) nums.push(d);
         d++;
       }
-      if(nums.length % 2 == 0) nums.push(d);
+      if (nums.length % 2 == 0) nums.push(d);
       return median(nums);
     }
   },

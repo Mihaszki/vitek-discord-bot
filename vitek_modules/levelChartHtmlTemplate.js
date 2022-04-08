@@ -12,8 +12,8 @@ module.exports = {
 
     bgColorsStr += ']';
 
-    if(type == 'bar') {
-      for(let i = 0; i < chartLabels.length; i++) {
+    if (type == 'bar') {
+      for (let i = 0; i < chartLabels.length; i++) {
         chartLabels[i] = chartLabels[i].length > 22 ? chartLabels[i].slice(0, 22) + '...' : chartLabels[i];
         labelsStr += `'${chartLabels[i].length > 22 ? escapeCharacters(chartLabels[i].slice(0, 22)) + '...' : escapeCharacters(chartLabels[i])}',`;
       }
@@ -29,13 +29,13 @@ module.exports = {
         borderWidth: 1,
       }]`;
     }
-    else if(type == 'line') {
+    else if (type == 'line') {
       let gotUser = false;
       const serverLevels = [];
       const hours = [];
-      for(let i = 0; i < chartData.length; i++) {
+      for (let i = 0; i < chartData.length; i++) {
         chartData[i].hours.forEach(item => {
-          if(!hours.includes(item.hour)) {
+          if (!hours.includes(item.hour)) {
             hours.push(item.hour);
           }
         });
@@ -49,11 +49,11 @@ module.exports = {
 
       labelsStr += '],';
 
-      for(let i = 0; i < hours.length; i++) {
+      for (let i = 0; i < hours.length; i++) {
         let value = 0;
         let counter = 0;
-        for(let j = 0; j < chartData.length; j++) {
-          if(chartData[j].hours.some(item => item.hour == hours[i])) {
+        for (let j = 0; j < chartData.length; j++) {
+          if (chartData[j].hours.some(item => item.hour == hours[i])) {
             value += chartData[j].hours.filter(item => item.hour == hours[i])[0].value;
             counter++;
           }
@@ -66,14 +66,14 @@ module.exports = {
         hours: serverLevels,
       });
 
-      for(let i = 0; i < chartData.length; i++) {
+      for (let i = 0; i < chartData.length; i++) {
         const dataNumbers = [];
-        let last_index = 0;
+        let lastIndex = 0;
         chartData[i].hours.forEach(item => {
-          for(let j = last_index; j < hours.length; j++) {
-            if(hours[j] == item.hour) {
+          for (let j = lastIndex; j < hours.length; j++) {
+            if (hours[j] == item.hour) {
               dataNumbers.push(item.value);
-              last_index = j + 1;
+              lastIndex = j + 1;
               break;
             }
             else {
@@ -82,8 +82,8 @@ module.exports = {
           }
         });
         const _diff = hours.length - dataNumbers.length;
-        if(_diff > 0) {
-          for(let j = 0; j < _diff; j++) {
+        if (_diff > 0) {
+          for (let j = 0; j < _diff; j++) {
             dataNumbers.push(null);
           }
         }
@@ -91,11 +91,11 @@ module.exports = {
         let color = '';
         let username = '';
 
-        if(!showOneUser) {
+        if (!showOneUser) {
           color = bgColors[i - 1];
           username = chartData[i].username;
         }
-        else if(showOneUser && showOnlyID == chartData[i].user_id) {
+        else if (showOneUser && showOnlyID == chartData[i].user_id) {
           color = bgColors[i - 1];
           username = chartData[i].username;
           gotUser = true;
@@ -135,7 +135,7 @@ module.exports = {
 
       dataSetStr += ']';
 
-      if(showOneUser && !gotUser) {
+      if (showOneUser && !gotUser) {
         return message.channel.send('There is no data for the given user!');
       }
     }

@@ -12,7 +12,7 @@ module.exports = {
     await interaction.deferReply();
     const messageGenerator = require('../vitek_db/messageGenerator');
     messageGenerator.getMessage(interaction.options.getString('text'), interaction.guild.id, response => {
-      if(response !== false) interaction.editReply({ content: response });
+      if (response !== false) interaction.editReply({ content: response });
     }, true, 2000);
   },
 };

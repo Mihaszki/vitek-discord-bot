@@ -20,13 +20,13 @@ module.exports = {
     const img = interaction.options.getString('image');
     await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
       const frames = [];
 
-      for(let i = 1; i <= 34; i++) {
+      for (let i = 1; i <= 34; i++) {
         frames.push(await Canvas.loadImage(`images/monitor/frame${i}.png`));
       }
 
@@ -61,139 +61,139 @@ module.exports = {
 
       // 7
       ctx.fillRect(62, 60, 71, 94);
-      ctx.drawImage(user_image, 62, 60, 71, 94);
+      ctx.drawImage(userImage, 62, 60, 71, 94);
       ctx.drawImage(frames[6], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 8
       ctx.fillRect(62, 60, 71, 94);
-      ctx.drawImage(user_image, 62, 60, 71, 94);
+      ctx.drawImage(userImage, 62, 60, 71, 94);
       ctx.drawImage(frames[7], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 9
       ctx.fillRect(62, 61, 71, 94);
-      ctx.drawImage(user_image, 62, 61, 71, 94);
+      ctx.drawImage(userImage, 62, 61, 71, 94);
       ctx.drawImage(frames[8], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 10
       ctx.fillRect(62, 61, 71, 94);
-      ctx.drawImage(user_image, 62, 61, 71, 94);
+      ctx.drawImage(userImage, 62, 61, 71, 94);
       ctx.drawImage(frames[9], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 11
       ctx.fillRect(62, 61, 71, 94);
-      ctx.drawImage(user_image, 62, 61, 71, 94);
+      ctx.drawImage(userImage, 62, 61, 71, 94);
       ctx.drawImage(frames[10], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 12
       ctx.fillRect(62, 61, 71, 94);
-      ctx.drawImage(user_image, 62, 61, 71, 94);
+      ctx.drawImage(userImage, 62, 61, 71, 94);
       ctx.drawImage(frames[11], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 13
       ctx.fillRect(62, 63, 71, 94);
-      ctx.drawImage(user_image, 62, 63, 71, 94);
+      ctx.drawImage(userImage, 62, 63, 71, 94);
       ctx.drawImage(frames[12], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 14
       ctx.fillRect(62, 62, 71, 94);
-      ctx.drawImage(user_image, 62, 62, 71, 94);
+      ctx.drawImage(userImage, 62, 62, 71, 94);
       ctx.drawImage(frames[13], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 15
       ctx.fillRect(62, 66, 71, 94);
-      ctx.drawImage(user_image, 62, 66, 71, 94);
+      ctx.drawImage(userImage, 62, 66, 71, 94);
       ctx.drawImage(frames[14], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 16
       ctx.fillRect(62, 67, 71, 94);
-      ctx.drawImage(user_image, 62, 67, 71, 94);
+      ctx.drawImage(userImage, 62, 67, 71, 94);
       ctx.drawImage(frames[15], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 17
       ctx.fillRect(60, 69, 71, 94);
-      ctx.drawImage(user_image, 60, 69, 71, 94);
+      ctx.drawImage(userImage, 60, 69, 71, 94);
       ctx.drawImage(frames[16], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 18
       ctx.fillRect(58, 69, 71, 94);
-      ctx.drawImage(user_image, 58, 69, 71, 94);
+      ctx.drawImage(userImage, 58, 69, 71, 94);
       ctx.drawImage(frames[17], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 19
       ctx.fillRect(57, 69, 71, 94);
-      ctx.drawImage(user_image, 57, 69, 71, 94);
+      ctx.drawImage(userImage, 57, 69, 71, 94);
       ctx.drawImage(frames[18], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 20
       ctx.fillRect(57, 69, 71, 94);
-      ctx.drawImage(user_image, 57, 69, 71, 94);
+      ctx.drawImage(userImage, 57, 69, 71, 94);
       ctx.drawImage(frames[19], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 21
       ctx.fillRect(56, 69, 71, 94);
-      ctx.drawImage(user_image, 56, 69, 71, 94);
+      ctx.drawImage(userImage, 56, 69, 71, 94);
       ctx.drawImage(frames[20], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 22
       ctx.fillRect(55, 70, 71, 94);
-      ctx.drawImage(user_image, 55, 70, 71, 94);
+      ctx.drawImage(userImage, 55, 70, 71, 94);
       ctx.drawImage(frames[21], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 23
       ctx.fillRect(54, 71, 71, 94);
-      ctx.drawImage(user_image, 54, 71, 71, 94);
+      ctx.drawImage(userImage, 54, 71, 71, 94);
       ctx.drawImage(frames[22], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 24
       ctx.fillRect(53, 73, 71, 94);
-      ctx.drawImage(user_image, 53, 73, 71, 94);
+      ctx.drawImage(userImage, 53, 73, 71, 94);
       ctx.drawImage(frames[23], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 25
       ctx.fillRect(53, 74, 71, 94);
-      ctx.drawImage(user_image, 53, 74, 71, 94);
+      ctx.drawImage(userImage, 53, 74, 71, 94);
       ctx.drawImage(frames[24], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 26
       ctx.fillRect(52, 73, 71, 94);
-      ctx.drawImage(user_image, 52, 73, 71, 94);
+      ctx.drawImage(userImage, 52, 73, 71, 94);
       ctx.drawImage(frames[25], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 27
       ctx.fillRect(52, 73, 71, 94);
-      ctx.drawImage(user_image, 52, 73, 71, 94);
+      ctx.drawImage(userImage, 52, 73, 71, 94);
       ctx.drawImage(frames[26], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 28
       ctx.fillRect(52, 73, 71, 94);
-      ctx.drawImage(user_image, 52, 73, 71, 94);
+      ctx.drawImage(userImage, 52, 73, 71, 94);
       ctx.drawImage(frames[27], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 
       // 29
       ctx.fillRect(52, 73, 71, 94);
-      ctx.drawImage(user_image, 52, 73, 71, 94);
+      ctx.drawImage(userImage, 52, 73, 71, 94);
       ctx.drawImage(frames[28], 0, 0, canvas.width, canvas.height);
       encoder.addFrame(ctx);
 

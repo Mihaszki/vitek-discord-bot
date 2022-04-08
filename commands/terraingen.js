@@ -34,15 +34,15 @@ module.exports = {
     const grass = await Canvas.loadImage('images/worldgen/grass.png');
     const water = await Canvas.loadImage('images/worldgen/water.png');
     let snow = null;
-    const tree_green = await Canvas.loadImage('images/worldgen/tree_grass.png');
-    const tree_snow = await Canvas.loadImage('images/worldgen/tree_snow.png');
+    const treeGreen = await Canvas.loadImage('images/worldgen/tree_grass.png');
+    const treeSnow = await Canvas.loadImage('images/worldgen/tree_snow.png');
 
     const weight = {
       snow: 50,
       grass: -10,
     };
 
-    if(type == 'sand') {
+    if (type == 'sand') {
       snow = await Canvas.loadImage('images/worldgen/sand.png');
     }
     else {
@@ -62,20 +62,20 @@ module.exports = {
     for (let y = 0; y < tiles; y += 1) {
       for (let x = 0; x < tiles; x += 1) {
         const v = parseInt(simplex.noise2D(9 * x / 100, 9 * y / 100) * 100);
-        if((y >= 0 && y <= 5) || (y == 6 && x % 5 == 0) || (y >= tiles - 5 && y <= tiles - 1) || (y == tiles - 6 && x % 5 == 0) || (x >= 0 && x <= 5) || (x == 6 && y % 5 == 0) || (x >= tiles - 5 && x <= tiles) || (x == tiles - 6 && y % 5 == 0)) {
+        if ((y >= 0 && y <= 5) || (y == 6 && x % 5 == 0) || (y >= tiles - 5 && y <= tiles - 1) || (y == tiles - 6 && x % 5 == 0) || (x >= 0 && x <= 5) || (x == 6 && y % 5 == 0) || (x >= tiles - 5 && x <= tiles) || (x == tiles - 6 && y % 5 == 0)) {
           img = water;
           lastValue = 0;
           treeImg = null;
         }
-        else if(v > weight.snow) {
+        else if (v > weight.snow) {
           img = snow;
-          if(v % 5 == 0 && lastValue != 0 && type == 'snow') treeImg = tree_snow;
+          if (v % 5 == 0 && lastValue != 0 && type == 'snow') treeImg = treeSnow;
           else treeImg = null;
           lastValue = 1;
         }
-        else if(v > weight.grass) {
+        else if (v > weight.grass) {
           img = grass;
-          if(v % 5 == 0 && lastValue != 0) treeImg = tree_green;
+          if (v % 5 == 0 && lastValue != 0) treeImg = treeGreen;
           else treeImg = null;
           lastValue = 1;
         }
@@ -92,7 +92,7 @@ module.exports = {
     }
     for (let y = 0; y < tiles; y += 1) {
       for (let x = 0; x < tiles; x += 1) {
-        if(data[x][y]) treeCtx.drawImage(data[x][y], y * tileSize, x * tileSize - tileSize, 24, 48);
+        if (data[x][y]) treeCtx.drawImage(data[x][y], y * tileSize, x * tileSize - tileSize, 24, 48);
       }
     }
     ctx.drawImage(treeCanvas, 0, 0);

@@ -20,10 +20,10 @@ module.exports = {
     const img = interaction.options.getString('image');
     await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
 
       const x = 77;
       const y = 153;
@@ -38,7 +38,7 @@ module.exports = {
       encoder.setDelay(40);
       encoder.start();
 
-      for(let i = 1; i <= 167; i++) {
+      for (let i = 1; i <= 167; i++) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const usrImg = await Canvas.loadImage(`images/scifun/frame(${i}).png`);
         ctx.save();
@@ -46,7 +46,7 @@ module.exports = {
         ctx.rotate(rotation * deg);
         ctx.translate(-cx, -cy);
         rotation = rotation + (i / 2);
-        ctx.drawImage(user_image, x, y, w, h);
+        ctx.drawImage(userImage, x, y, w, h);
         ctx.restore();
         ctx.drawImage(usrImg, 0, 0, canvas.width, canvas.height);
         encoder.addFrame(ctx);

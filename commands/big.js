@@ -17,11 +17,11 @@ module.exports = {
     const img = interaction.options.getString('image');
     await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
-      ctx.drawImage(user_image, 0, 0, canvas.width, canvas.height);
+      const userImage = await Canvas.loadImage(url);
+      ctx.drawImage(userImage, 0, 0, canvas.width, canvas.height);
       const attachment = new MessageAttachment(canvas.toBuffer(), 'big.png');
       interaction.editReply({ files: [attachment] });
     });

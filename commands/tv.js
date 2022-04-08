@@ -17,7 +17,7 @@ module.exports = {
     await interaction.deferReply();
 
     const text = cleanText.emojis(interaction.options.getString('text').replace(/\s/g, ' ')).toUpperCase();
-    if(text.length > 60) return interaction.reply({ content: 'The text is too long!', ephemeral: true });
+    if (text.length > 60) return interaction.reply({ content: 'The text is too long!', ephemeral: true });
 
     const images = [
       'images/tv/tv1.png',
@@ -43,7 +43,7 @@ module.exports = {
       context.font = `${fontSize -= 1}px sans-serif`;
       offset += 1;
     } while (context.measureText(text).width > 760);
-    if(fontSize > 30) y += 6;
+    if (fontSize > 30) y += 6;
     y += offset + fontSize;
 
     context.drawImage(background, 0, 0, canvas.width, canvas.height);

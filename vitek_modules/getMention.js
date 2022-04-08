@@ -1,18 +1,18 @@
 module.exports = {
   member: function(arg, message) {
-    const mentioned_user1 = arg.match(/<@!?(\d+)>/);
-    if(!mentioned_user1 || !message.guild.members.cache.get(mentioned_user1[1])) return false;
-    else return message.guild.members.cache.get(mentioned_user1[1]);
+    const mentionedUser1 = arg.match(/<@!?(\d+)>/);
+    if (!mentionedUser1 || !message.guild.members.cache.get(mentionedUser1[1])) return false;
+    else return message.guild.members.cache.get(mentionedUser1[1]);
   },
 
-  member_interaction: function(arg, interaction) {
-    const mentioned_user1 = arg.match(/<@!?(\d+)>/);
-    if(!mentioned_user1 || !interaction.guild.members.cache.get(mentioned_user1[1])) return false;
-    else return interaction.guild.members.cache.get(mentioned_user1[1]);
+  memberInteraction: function(arg, interaction) {
+    const mentionedUser1 = arg.match(/<@!?(\d+)>/);
+    if (!mentionedUser1 || !interaction.guild.members.cache.get(mentionedUser1[1])) return false;
+    else return interaction.guild.members.cache.get(mentionedUser1[1]);
   },
 
   username: function(member) {
-    if(member.displayName) return member.displayName;
+    if (member.displayName) return member.displayName;
     else return member.username;
   },
 

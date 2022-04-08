@@ -32,36 +32,36 @@ module.exports = {
     await interaction.deferReply();
 
     const fontSize = 10;
-    let pic_width = 0;
-    let pic_height = 0;
+    let picWidth = 0;
+    let picHeight = 0;
 
     const picSize = interaction.options.getString('size');
     switch (picSize) {
     case 'medium':
-      pic_width = 120;
-      pic_height = 120;
+      picWidth = 120;
+      picHeight = 120;
       break;
 
     case 'large':
-      pic_width = 220;
-      pic_height = 220;
+      picWidth = 220;
+      picHeight = 220;
       break;
 
     default:
-      pic_width = 80;
-      pic_height = 80;
+      picWidth = 80;
+      picHeight = 80;
       break;
     }
 
     const img = interaction.options.getString('image');
 
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const asciiImgHosted = await imgToAscii(url, { width: pic_width, height: pic_height });
+      const asciiImgHosted = await imgToAscii(url, { width: picWidth, height: picHeight });
 
-      if(interaction.options.getString('output') == 'text') {
+      if (interaction.options.getString('output') == 'text') {
         console.log(asciiImgHosted);
         return interaction.editReply({ files: [{ attachment: Buffer.from(asciiImgHosted, 'UTF8'), name: 'ascii.txt' }] });
       }
@@ -75,8 +75,8 @@ module.exports = {
       context.patternQuality = 'best';
 
       const ascii = asciiImgHosted.split('\n');
-      for(let i = 0; i < ascii.length; i++) {
-        for(let j = 0; j < ascii[i].length; j++) {
+      for (let i = 0; i < ascii.length; i++) {
+        for (let j = 0; j < ascii[i].length; j++) {
           context.fillStyle = '#000000';
           context.fillRect(x, y - 8, 10, 16);
           context.fillStyle = '#FFFFFF';

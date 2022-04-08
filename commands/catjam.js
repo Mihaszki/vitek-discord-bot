@@ -22,19 +22,19 @@ module.exports = {
     await interaction.deferReply();
 
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
 
       encoder.setQuality(30);
       encoder.setDelay(40);
       encoder.start();
 
-      for(let i = 1; i <= 151; i++) {
+      for (let i = 1; i <= 151; i++) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         const frame = await Canvas.loadImage(`images/catjam/frame (${i}).png`);
-        ctx.drawImage(user_image, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(userImage, 0, 0, canvas.width, canvas.height);
         ctx.drawImage(frame, 0, 0, 280, 190);
         encoder.addFrame(ctx);
       }

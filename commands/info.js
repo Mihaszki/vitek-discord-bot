@@ -21,7 +21,7 @@ module.exports = {
       })
       .setThumbnail(guildIcon(interaction))
       .addFields(
-        { name: 'Author', value: config.bot_author, inline: true },
+        { name: 'Author', value: config.botAuthor, inline: true },
         { name: 'Current server', value: interaction.guild.name, inline: true },
         { name: 'Total members', value: interaction.guild.memberCount.toString(), inline: true },
         { name: 'Server count', value: interaction.client.guilds.cache.size.toString(), inline: true },
@@ -31,7 +31,7 @@ module.exports = {
     const row = new MessageActionRow()
       .addComponents(
         new MessageButton()
-          .setURL(config.github_link)
+          .setURL(config.githubLink)
           .setLabel('Github')
           .setStyle('LINK'),
         new MessageButton()

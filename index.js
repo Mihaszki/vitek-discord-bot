@@ -4,7 +4,7 @@ const messageLogger = require('./vitek_db/messageLogger');
 const messageGenerator = require('./vitek_db/messageGenerator');
 const blockListController = require('./vitek_db/blockListController');
 const { connectToDB } = require('./vitek_db/connectToDB');
-const { prefix, date_locale, bot_author_id, status } = require('./bot_config');
+const { prefix, dateLocale, botAuthorId, status } = require('./bot_config');
 require('dotenv').config();
 
 // Connect to mongoDB
@@ -29,7 +29,7 @@ for (const file of commandFiles) {
 }
 
 client.botRunningUptime = new Date();
-const getTimeNow = () => '[' + new Date().toLocaleTimeString(date_locale) + ']';
+const getTimeNow = () => '[' + new Date().toLocaleTimeString(dateLocale) + ']';
 
 client.once('ready', async () => {
   // Get blocked users to the block list
@@ -37,7 +37,7 @@ client.once('ready', async () => {
   console.log('\x1b[33m%s\x1b[0m', 'Blocked users:');
   console.log(blocklist);
   console.log('\x1b[32m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
-  for(const g of client.guilds.cache) {
+  for (const g of client.guilds.cache) {
     console.log('\x1b[33m%s\x1b[0m', 'Serving on:');
     console.log('\x1b[33m%s\x1b[0m', `${g}`);
   }
@@ -50,41 +50,41 @@ client.on('messageCreate', async message => {
   messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
 
-  if(message.author.id == bot_author_id && message.content.split(' ')[0] == './blockuser') {
-    console.log(message.author.bot, bot_author_id, message.content.split(' ')[1]);
+  if (message.author.id == botAuthorId && message.content.split(' ')[0] == './blockuser') {
+    console.log(message.author.bot, botAuthorId, message.content.split(' ')[1]);
     await blockListController.toggleBlock(message.author.id, message.guild.id);
     blocklist = await blockListController.getBlockedUsers();
     console.log('\x1b[33m%s\x1b[0m', 'Blocked users:');
     console.log(blocklist);
     return;
   }
-  else if(message.author.id === bot_author_id && message.content.split(' ')[0] === './talkmode') {
+  else if (message.author.id === botAuthorId && message.content.split(' ')[0] === './talkmode') {
     guildMessageCounterLimits['_' + message.guild.id] = guildMessageCounterLimits['_' + message.guild.id] ? false : true;
     return;
   }
-  else if(!blockListController.isBlockedLocal(message.author.id, blocklist) && message.content[0] === '.' && message.content.length > 1 && !message.author.bot) {
+  else if (!blockListController.isBlockedLocal(message.author.id, blocklist) && message.content[0] === '.' && message.content.length > 1 && !message.author.bot) {
     console.log(message.cleanContent.slice(1));
     return messageGenerator.getMessage(message.cleanContent.slice(1), message.guild.id, response => {
-      if(response !== false) message.channel.send(response);
+      if (response !== false) message.channel.send(response);
     }, true, 2000);
   }
 
   // Emoji reaction on a private server
-  if(message.guild.id === '771628652533514251' && message.channel.id === '771689939875790868') {
-    if(message.attachments.first()) {
+  if (message.guild.id === '771628652533514251' && message.channel.id === '771689939875790868') {
+    if (message.attachments.first()) {
       message.react('955484551818395719')
         .then(() => message.react('953313703745421363'))
         .catch(() => console.error('One of the emojis failed to react.'));
     }
   }
 
-  if(message.author.bot) return;
+  if (message.author.bot) return;
 
-  if(!message.content.startsWith(prefix)) {
+  if (!message.content.startsWith(prefix)) {
     guildMessageCounter['_' + message.guild.id] = (guildMessageCounter['_' + message.guild.id] + 1) || 1;
-    if(guildMessageCounter['_' + message.guild.id] % 100 === 0 || guildMessageCounterLimits['_' + message.guild.id] === true) {
+    if (guildMessageCounter['_' + message.guild.id] % 100 === 0 || guildMessageCounterLimits['_' + message.guild.id] === true) {
       messageGenerator.getMessage(message.cleanContent, message.guild.id, response => {
-        if(response !== false) message.channel.send(response);
+        if (response !== false) message.channel.send(response);
         guildMessageCounter['_' + message.guild.id] = 1;
       });
     }
@@ -94,7 +94,7 @@ client.on('messageCreate', async message => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
 
-  if(blockListController.isBlockedLocal(interaction.user.id, blocklist)) {
+  if (blockListController.isBlockedLocal(interaction.user.id, blocklist)) {
     return await interaction.reply({ content: 'You are blocked!', ephemeral: true });
   }
 

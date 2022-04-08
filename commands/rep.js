@@ -43,18 +43,18 @@ module.exports = {
 
     const option = interaction.options.getSubcommand();
 
-    if(option == 'add') {
+    if (option == 'add') {
       repController.newRep(interaction, interaction.options.getMember('user'), interaction.options.getString('reason'), 1, '+rep');
     }
-    else if(option == 'remove') {
+    else if (option == 'remove') {
       repController.newRep(interaction, interaction.options.getMember('user'), interaction.options.getString('reason'), -1, '-rep');
     }
-    else if(option == 'ranking') {
+    else if (option == 'ranking') {
       repController.getRanking(interaction.guild.id, interaction, items => {
         let description = `**Top 20 on** \`${interaction.guild.name}\`\n\n\`Place | User | Points\`\n`;
-        if(items.length == 0) { description += '**NONE :(**'; }
+        if (items.length == 0) { description += '**NONE :(**'; }
         else {
-          for(let i = 0; i < items.length; i++) {
+          for (let i = 0; i < items.length; i++) {
             const member = getMention.member(`<@${items[i]._id.user_id}>`, interaction);
             description += `**${i + 1}.** | ${member ? member : items[i].username} | ${items[i].value}\n`;
           }
@@ -62,19 +62,19 @@ module.exports = {
         sendEmbed(interaction, `Rep - Top 20 | ${interaction.guild.name}`, description, getMention.guildIcon(interaction));
       });
     }
-    else if(option == 'history') {
+    else if (option == 'history') {
       let member = null;
       const usr = interaction.options.getMember('user');
-      if(!usr) member = interaction.user;
+      if (!usr) member = interaction.user;
       else member = usr.user;
 
       repController.getUserHistory(member.id, interaction.guild.id, interaction, (items, allPoints, pointsOnServer) => {
         let description = `All points: ${allPoints}\nPoints on \`${interaction.guild.name}\`: ${pointsOnServer}\n\n**Last 10 reps:**\n`;
 
-        if(items.length == 0) { description += '**NONE :(**'; }
+        if (items.length == 0) { description += '**NONE :(**'; }
         else {
           description += '``Value | Reason | Sender``\n';
-          for(const item of items) {
+          for (const item of items) {
             description += `**${item.value}** | \`${repController.sliceReason(item.reason).replace(/`/g, '\'')}\` | <@${item.sender.user_id}>\n`;
           }
         }
@@ -82,22 +82,22 @@ module.exports = {
         sendEmbed(interaction, `Rep - History | ${getMention.username(member)}`, description, getMention.avatar(member));
       });
     }
-    else if(option == 'history-full') {
+    else if (option == 'history-full') {
       let member = null;
       const usr = interaction.options.getMember('user');
-      if(!usr) member = interaction.user;
+      if (!usr) member = interaction.user;
       else member = usr.user;
 
       repController.getUserHistory(member.id, interaction.guild.id, interaction, (items, allPoints, pointsOnServer) => {
         const repHistoryHtmlTemplate = require('../vitek_modules/repHistoryHtmlTemplate');
 
-        if(items.length == 0) { return interaction.reply({ content: 'Not enough data!' }); }
+        if (items.length == 0) { return interaction.reply({ content: 'Not enough data!' }); }
         else {
           repHistoryHtmlTemplate.sendHTML(getMention.username(member), getMention.avatar(member), member.id, items, allPoints, pointsOnServer, interaction);
         }
       }, null);
     }
-    else if(option == 'help') {
+    else if (option == 'help') {
       sendEmbed(interaction, 'Rep - Help', `\`/rep add <@User> <reason>\` - Give a positive point to the user
       \`/rep remove <@User> <reason>\` - Give a negative point to the user
       \`/rep history\` - Your rep history

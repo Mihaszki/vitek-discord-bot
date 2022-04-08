@@ -17,12 +17,12 @@ module.exports = {
     const img = interaction.options.getString('image');
     await interaction.deferReply();
     getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-      if(error) {
+      if (error) {
         return interaction.editReply({ content: error });
       }
-      const user_image = await Canvas.loadImage(url);
+      const userImage = await Canvas.loadImage(url);
       const hazmat = await Canvas.loadImage('images/hazmat/hazmat.png');
-      ctx.drawImage(user_image, 401, 273, 734, 734);
+      ctx.drawImage(userImage, 401, 273, 734, 734);
       ctx.clearRect(940, 267, 214, 111);
       ctx.clearRect(1056, 376, 214, 111);
       ctx.clearRect(1120, 564, 33, 57);

@@ -17,7 +17,7 @@ module.exports = {
     let color = '';
     let randomMessage = 'Thanks!';
 
-    if(repValue == 1) {
+    if (repValue == 1) {
       color = '#04ff00';
       randomMessage = positiveRepMessages[Math.floor(Math.random() * positiveRepMessages.length)];
     }

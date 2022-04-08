@@ -6,15 +6,15 @@ module.exports = {
 
     // Get all attachments from message
     const msgAttachments = [];
-    if(message.attachments.first()) {
-      for(const att of Array.from(message.attachments.values())) {
+    if (message.attachments.first()) {
+      for (const att of Array.from(message.attachments.values())) {
         msgAttachments.push({ url: att.url, name: att.name });
       }
     }
 
     let username = '';
     const member = getMention.member(`<@${message.author.id}>`, message);
-    if(!member) username = message.author.username;
+    if (!member) username = message.author.username;
     else username = getMention.username(member);
 
     // Save message to the database

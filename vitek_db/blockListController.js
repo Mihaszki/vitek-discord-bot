@@ -1,13 +1,13 @@
 module.exports = {
-  toggleBlock: async function(user_id, server_id) {
+  toggleBlock: async function(userId, serverId) {
     const BlockListModel = require('../vitek_db/models/blocklistModel');
-    const isBlocked = await this.isBlocked(user_id, server_id);
+    const isBlocked = await this.isBlocked(userId, serverId);
     try {
-      if(!isBlocked) {
-        await BlockListModel.updateOne({ user_id: user_id }, { $set: { isBlocked: true } });
+      if (!isBlocked) {
+        await BlockListModel.updateOne({ user_id: userId }, { $set: { isBlocked: true } });
       }
       else {
-        await BlockListModel.updateOne({ user_id: user_id }, { $set: { isBlocked: false } });
+        await BlockListModel.updateOne({ user_id: userId }, { $set: { isBlocked: false } });
       }
     }
     catch (error) {
@@ -15,14 +15,14 @@ module.exports = {
     }
   },
 
-  isBlocked: async function(user_id, server_id) {
+  isBlocked: async function(userId, serverId) {
     const BlockListModel = require('../vitek_db/models/blocklistModel');
     try {
-      const user = await BlockListModel.findOne({ user_id: user_id });
-      if(!user) {
+      const user = await BlockListModel.findOne({ user_id: userId });
+      if (!user) {
         const newBlock = new BlockListModel({
-          server_id: server_id,
-          user_id: user_id,
+          server_id: serverId,
+          user_id: userId,
           isBlocked: false,
         });
         await newBlock.save();
@@ -36,9 +36,9 @@ module.exports = {
     }
   },
 
-  isBlockedLocal: function(user_id, blocklist) {
-    const user = blocklist.filter(e => e.user_id == user_id);
-    if(!user[0]) return false;
+  isBlockedLocal: function(userId, blocklist) {
+    const user = blocklist.filter(e => e.user_id == userId);
+    if (!user[0]) return false;
     return user[0].isBlocked;
   },
 

@@ -21,9 +21,9 @@ module.exports = {
     const text = cleanText.emojis(interaction.options.getString('text'));
     const img = interaction.options.getString('image');
 
-    if(img) {
+    if (img) {
       getImage.getImageAndCheckSize(img, interaction, async ({ error, url }) => {
-        if(error) {
+        if (error) {
           return interaction.editReply({ content: error });
         }
         generateQr(url);
@@ -44,7 +44,7 @@ module.exports = {
         },
       );
 
-      if(!customBg) {
+      if (!customBg) {
         const attachment = new MessageAttachment(canvas.toBuffer(), 'qr.png');
         interaction.editReply({ files: [attachment] });
         return;
@@ -54,7 +54,7 @@ module.exports = {
       const data = imageData.data;
 
       for (let i = 0; i < data.length; i += 4) {
-        if(data[i] + data[i + 1] + data[i + 2] < 10) {
+        if (data[i] + data[i + 1] + data[i + 2] < 10) {
           data[i + 3] = 0;
         }
       }
@@ -63,8 +63,8 @@ module.exports = {
 
       const canvas2 = Canvas.createCanvas(canvas.width, canvas.height);
       const ctx2 = canvas2.getContext('2d');
-      const user_image = await Canvas.loadImage(customBg);
-      ctx2.drawImage(user_image, 0, 0, canvas.width, canvas.height);
+      const userImage = await Canvas.loadImage(customBg);
+      ctx2.drawImage(userImage, 0, 0, canvas.width, canvas.height);
       ctx2.drawImage(canvas, 0, 0, canvas.width, canvas.height);
 
       const attachment = new MessageAttachment(canvas2.toBuffer(), 'qr.png');

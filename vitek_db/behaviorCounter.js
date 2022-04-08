@@ -1,10 +1,10 @@
 module.exports = {
-  getRanking: async function(server_id, message, onSuccess) {
+  getRanking: async function(serverId, message, onSuccess) {
     try {
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, 'author.isBot': false } },
+        { $match: { server_id: serverId, 'author.isBot': false } },
         { $group: {
           _id: { 'user_id': '$author.user_id' },
           count: { $sum: 1 },
@@ -16,7 +16,7 @@ module.exports = {
 
       let calculatedData = [];
 
-      for(const user of data) {
+      for (const user of data) {
         const member = getMention.member(`<@${user._id.user_id}>`, message);
         calculatedData.push({
           username: !member ? user.username : getMention.username(member),
@@ -24,7 +24,7 @@ module.exports = {
         });
       }
 
-      if(data.length == 0) return onSuccess([], []);
+      if (data.length == 0) return onSuccess([], []);
       calculatedData = calculatedData.sort((a, b) => (a.value < b.value) ? 1 : -1).slice(0, 15);
       onSuccess(calculatedData.map(a => a.value), calculatedData.map(a => a.username));
     }
@@ -34,21 +34,21 @@ module.exports = {
     }
   },
 
-  getAvailableDates: async function(server_id, interaction, onSuccess) {
+  getAvailableDates: async function(serverId, interaction, onSuccess) {
     try {
-      const { date_timezone, date_locale } = require('../bot_config');
+      const { dateTimezone, dateLocale } = require('../bot_config');
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id } },
+        { $match: { server_id: serverId } },
         { $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: date_timezone } },
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: dateTimezone } },
         } },
         { $sort: { '_id': -1 } },
       ]);
       const dates = [];
-      if(!data || data.length == 0) return onSuccess([ 'No data.' ]);
+      if (!data || data.length == 0) return onSuccess([ 'No data.' ]);
       data.forEach(item => {
-        dates.push(new Date(item._id).toLocaleDateString(date_locale).replace(/\//g, '.'));
+        dates.push(new Date(item._id).toLocaleDateString(dateLocale).replace(/\//g, '.'));
       });
       onSuccess(dates);
     }
@@ -58,18 +58,18 @@ module.exports = {
     }
   },
 
-  getDataForDay: async function(date, server_id, interaction, onSuccess) {
+  getDataForDay: async function(date, serverId, interaction, onSuccess) {
     try {
       const { endOfDay, startOfDay } = require('date-fns');
-      const { date_timezone } = require('../bot_config');
+      const { dateTimezone } = require('../bot_config');
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
       const data = await MessageModel.aggregate([
-        { $match: { server_id: server_id, 'author.isBot': false, createdAt: { $gte: startOfDay(date), $lte: endOfDay(date) } } },
+        { $match: { server_id: serverId, 'author.isBot': false, createdAt: { $gte: startOfDay(date), $lte: endOfDay(date) } } },
         { $group: {
           _id: {
             user_id: '$author.user_id',
-            hour: { $hour: { date: '$createdAt', timezone: date_timezone } },
+            hour: { $hour: { date: '$createdAt', timezone: dateTimezone } },
           },
           count: { $sum: 1 },
           swears: { $sum: '$swears' },
@@ -95,10 +95,10 @@ module.exports = {
         } },
       ]);
 
-      if(!data || data.length == 0) return interaction.editReply({ content: 'There is no data for your date!' });
+      if (!data || data.length == 0) return interaction.editReply({ content: 'There is no data for your date!' });
 
       const users = [];
-      for(const d of data) {
+      for (const d of data) {
         const hours = [];
         const sorted = d.hours.sort((a, b) => (a.hour > b.hour) ? 1 : -1);
         sorted.forEach(hour => {
@@ -108,7 +108,7 @@ module.exports = {
             value: this.calculate(hour.count, hour.swears, hour.words),
           });
         });
-        const member = getMention.member_interaction(`<@${d._id.user_id}>`, interaction);
+        const member = getMention.memberInteraction(`<@${d._id.user_id}>`, interaction);
         users.push({
           user_id: d._id.user_id,
           username: !member ? sorted[sorted.length - 1].username : getMention.username(member),
@@ -124,11 +124,11 @@ module.exports = {
     }
   },
 
-  calculate: function(messages_count, swears) {
-    if(swears == 0) return 100;
-    let final = Math.floor(100 - ((33.1 * swears) / messages_count * 3));
-    if(final > 100) final = 100;
-    else if(final < 0) final = 0;
+  calculate: function(messagesCount, swears) {
+    if (swears == 0) return 100;
+    let final = Math.floor(100 - ((33.1 * swears) / messagesCount * 3));
+    if (final > 100) final = 100;
+    else if (final < 0) final = 0;
     return final;
   },
 };
