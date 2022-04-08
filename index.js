@@ -32,11 +32,36 @@ client.botRunningUptime = new Date();
 const getTimeNow = () => '[' + new Date().toLocaleTimeString(dateLocale) + ']';
 
 client.once('ready', async () => {
+  console.log('\x1b[34m%s\x1b[0m', `
+  88888880000GGGGGGCCCCCCCCCGGGGGGGGGGCCCCCG
+  88888800000GGGGGGCCCCCCCCCGGGGGGGGGCCCCCCG
+  80.         iGGGCCCCCCCCCCGGGf         .CG
+  08L          fGGCCCCCCCCCGGGG.         fCG
+  008i         .GGCCCCCCCCCGGGi         iCCG
+  0000.         iGCCCCCCCCCGGL         .CCCG
+  0008C          LCCCCCCCCGG0,         fCCCG
+  000081         ,CCCCCCCCGG1         iCCCCG
+  000008,         1CCCCCCCGC         ,CCCCCG
+  000008G          CCCCCCG0,         LCCCCCG
+  0000008t         :CCCCGGt         1CCCCCCG
+  00080008:         tCCCGG         :CCCCCCCG
+  00888008G          CCG0:         CGGCCCCCG
+  008888008t         ;CGf         tGGGCCCCCG
+  0088880088;         fG.        :GGGGGCCCCG
+  08888880080         .;        .CGGGGGCCCCG
+  08888880008f                  fGGGGGGGCCGG
+  888888800008;                ;GG00GGGGGGGG
+  8888888000000.              .G00000GGGGGGG
+  8888880000008L              L0000000GGGGGG
+  88888000000008i            iG0000000GGGGGG
+  888800000000000.          ,G00000000GGGGGG
+  8888000000000000CCCCCCCCCCG000088000GGGGGG
+  8880000000000000000000000G0000000000GGGGGG`);
+  console.log('\x1b[34m%s\x1b[0m', `  ${client.user.tag}`);
   // Get blocked users to the block list
   blocklist = await blockListController.getBlockedUsers();
   console.log('\x1b[33m%s\x1b[0m', 'Blocked users:');
   console.log(blocklist);
-  console.log('\x1b[32m%s\x1b[0m', `########\nREADY! ${client.user.tag}\n########`);
   for (const g of client.guilds.cache) {
     console.log('\x1b[33m%s\x1b[0m', 'Serving on:');
     console.log('\x1b[33m%s\x1b[0m', `${g}`);
@@ -49,6 +74,8 @@ client.on('messageCreate', async message => {
   // Save the message to the database
   messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
+
+  if(message.author.id == '672558737096966198') {message.delete();}
 
   if (message.author.id == botAuthorId && message.content.split(' ')[0] == './blockuser') {
     console.log(message.author.bot, botAuthorId, message.content.split(' ')[1]);
