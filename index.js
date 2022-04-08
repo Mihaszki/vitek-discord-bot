@@ -79,7 +79,7 @@ client.on('messageCreate', async message => {
 
   if (message.author.id == botAuthorId && message.content.split(' ')[0] == './blockuser') {
     console.log(message.author.bot, botAuthorId, message.content.split(' ')[1]);
-    await blockListController.toggleBlock(message.author.id, message.guild.id);
+    await blockListController.toggleBlock(message.content.split(' ')[1], message.guild.id);
     blocklist = await blockListController.getBlockedUsers();
     console.log('\x1b[33m%s\x1b[0m', 'Blocked users:');
     console.log(blocklist);
