@@ -132,7 +132,7 @@ module.exports = {
 
       encoder.finish();
       const buffer = encoder.out.getData();
-      const attachment = new MessageAttachment(buffer, 'scifun.gif');
+      const attachment = new MessageAttachment(buffer, 'gigachad.gif');
       interaction.editReply({ files: [attachment] });
     });
   },
