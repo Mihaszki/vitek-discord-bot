@@ -75,8 +75,6 @@ client.on('messageCreate', async message => {
   messageLogger.saveMessage(message);
   console.log(`${getTimeNow()} ${message.author.tag}: ${message.content}`);
 
-  if(message.author.id == '672558737096966198') {message.delete();}
-
   if (message.author.id == botAuthorId && message.content.split(' ')[0] == './blockuser') {
     console.log(message.author.bot, botAuthorId, message.content.split(' ')[1]);
     await blockListController.toggleBlock(message.content.split(' ')[1], message.guild.id);
