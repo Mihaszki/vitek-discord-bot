@@ -25,27 +25,6 @@ module.exports = {
 
       const sliceMsg = str => str.length > sliceLen ? str.slice(0, sliceLen) : str;
 
-      const randomMsg = async () => {
-        const MessageModel = require('./models/messageModel');
-        const count = await MessageModel.where({
-          'server_id': serverId,
-          'author.isBot': false,
-          $and: [
-            { 'cleanContent': { $not: excludeRegex } },
-            { 'cleanContent': { $ne: '' } },
-          ],
-        }).countDocuments();
-        const msg = await MessageModel.findOne({
-          'server_id': serverId,
-          'author.isBot': false,
-          $and: [
-            { 'cleanContent': { $not: excludeRegex } },
-            { 'cleanContent': { $ne: '' } },
-          ],
-        }).skip(Math.floor(Math.random() * count)).exec();
-        return msg.cleanContent;
-      };
-
       const MessageModel = require('./models/messageModel');
       const data = await MessageModel.aggregate([
         { $match: {
@@ -56,29 +35,20 @@ module.exports = {
             { 'cleanContent': { $not: excludeRegex } },
           ],
         } },
-        { $group: {
-          _id: null,
-          cleanContent: { $push: '$cleanContent' },
-        } },
+        { $sample: { size: 1 } }
       ]);
 
       if (!data || data.length == 0) {
-        if (getRandomIfDataNotFound) return onResponse(sliceMsg(await randomMsg()));
+        if (getRandomIfDataNotFound) return onResponse(sliceMsg(await this.getRandomMessage(serverId)));
         this.getMessage(wordlist[0], serverId, response => {
           if (response !== false) return onResponse(sliceMsg(response));
         }, true, sliceLen, true);
         if (!getRandomIfDataNotFound) return;
       }
+      
+      const msg = data[0].cleanContent;
 
-      const items = data[0].cleanContent.filter((item, index) => data[0].cleanContent.indexOf(item) === index);
-      const index = items.indexOf(text);
-      if (index != -1) {
-        items.splice(index, 1);
-      }
-      if (items.length == 0) return onResponse(sliceMsg(await randomMsg()));
-      const msg = items[Math.floor(Math.random() * items.length)];
-
-      if (msg === text) return onResponse(sliceMsg(await randomMsg()));
+      if (msg === text) return onResponse(sliceMsg(await this.getRandomMessage(serverId)));
       else return onResponse(sliceMsg(msg));
     }
     catch (error) {
@@ -86,4 +56,26 @@ module.exports = {
       return onResponse(false);
     }
   },
+
+  async getRandomMessage(serverId) {
+    const { excludeRegex } = require('../bot_config');
+    const MessageModel = require('./models/messageModel');
+    const count = await MessageModel.where({
+      'server_id': serverId,
+      'author.isBot': false,
+      $and: [
+        { 'cleanContent': { $not: excludeRegex } },
+        { 'cleanContent': { $ne: '' } },
+      ],
+    }).countDocuments();
+    const msg = await MessageModel.findOne({
+      'server_id': serverId,
+      'author.isBot': false,
+      $and: [
+        { 'cleanContent': { $not: excludeRegex } },
+        { 'cleanContent': { $ne: '' } },
+      ],
+    }).skip(Math.floor(Math.random() * count)).exec();
+    return msg.cleanContent;
+  }
 };
