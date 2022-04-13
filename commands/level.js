@@ -13,10 +13,21 @@ module.exports = {
         .setName('day')
         .setDescription('Shows level for your date')
         .addStringOption(option => option.setName('date').setRequired(true).setDescription('Enter a date in DD.MM.YYYY format')))
-    .addSubcommand(subcommand =>
+    .addSubcommandGroup(subcommand =>
       subcommand
+      .addSubcommand(subcommand =>
+        subcommand
+          .setName('all-time')
+          .setDescription('Shows all-time ranking'))
+      .addSubcommand(subcommand =>
+        subcommand
+          .setName('for-day')
+          .setDescription('Shows ranking for your date')
+          .addStringOption(option => option.setName('date').setRequired(true).setDescription('Enter a date in DD.MM.YYYY format')))
         .setName('ranking')
-        .setDescription('Shows ranking'))
+        .setDescription('Shows ranking')
+      
+        )
     .addSubcommand(subcommand =>
       subcommand
         .setName('dates-list')
@@ -32,13 +43,29 @@ module.exports = {
 
     const option = interaction.options.getSubcommand();
 
-    if (option == 'ranking') {
+    if (option == 'all-time') {
       await interaction.deferReply();
-      behaviorCounter.getRanking(interaction.guild.id, interaction, (data, labels) => {
-        if (data.length == 0) return interaction.editReply({ content: 'There is no data yet!' });
+
+      behaviorCounter.getRanking(null, interaction.guild.id, interaction, (data, labels) => {
+        if (data.length == 0) return interaction.editReply({ content: 'No data!' });
 
         chartGenerator.sendChart(interaction, data,
-          { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Behavior level ranking', '(Higher is better)', ' '], unit: '%' });
+          { width: 1500, height: 1000, chartLabels: labels, chartTitle: ['Behavior level ranking | All-time', '(Higher is better)', ' '], unit: '%' });
+      });
+    }
+    else if (option == 'for-day') {
+      await interaction.deferReply();
+
+      const userDate = interaction.options.getString('date');
+      const parts = userDate.replace(/\./g, '-').split('-');
+      const date = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+      if (!date.toLocaleString()) return interaction.reply({ content: 'Invalid date!' });
+
+      behaviorCounter.getRanking(date, interaction.guild.id, interaction, (data, labels) => {
+        if (data.length == 0) return interaction.editReply({ content: 'No data!' });
+
+        chartGenerator.sendChart(interaction, data,
+          { width: 1500, height: 1000, chartLabels: labels, chartTitle: [`Behavior level ranking | ${userDate}`, '(Higher is better)', ' '], unit: '%' });
       });
     }
     else if (option == 'today') {
@@ -89,7 +116,8 @@ module.exports = {
     }
     else if (option == 'help') {
       sendEmbed(interaction, 'Level - Help', `Level is a command that can show your "behavior level" based on the messages you send.
-      \`/level ranking\` - Ranking
+      \`/level ranking all-time\` - Ranking
+      \`/level ranking for-day <date DD-MM-YYYY format>\` - Ranking for the date
       \`/level today\` - Show levels over time for today
       \`/level day <date DD-MM-YYYY format>\` - Show levels over time for the date
       \`/level dates\` - Show available dates`);

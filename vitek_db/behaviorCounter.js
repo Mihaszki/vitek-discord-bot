@@ -1,10 +1,18 @@
 module.exports = {
-  getRanking: async function(serverId, message, onSuccess) {
+  getRanking: async function(date, serverId, message, onSuccess) {
     try {
+      const { endOfDay, startOfDay } = require('date-fns');
+      const { dateTimezone } = require('../bot_config');
       const MessageModel = require('./models/messageModel');
       const getMention = require('../vitek_modules/getMention');
+
+      const options = { server_id: serverId, 'author.isBot': false };
+      if(date) {
+        options.createdAt = { $gte: startOfDay(date), $lte: endOfDay(date) };
+      }
+
       const data = await MessageModel.aggregate([
-        { $match: { server_id: serverId, 'author.isBot': false } },
+        { $match: options },
         { $group: {
           _id: { 'user_id': '$author.user_id' },
           count: { $sum: 1 },
