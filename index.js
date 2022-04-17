@@ -93,6 +93,15 @@ client.on('messageCreate', async message => {
       if (response !== false) message.channel.send(response);
     }, true, 2000);
   }
+  else if(!blockListController.isBlockedLocal(message.author.id, blocklist)) {
+    // Allow the bot to reply to mentions
+    const botMention = message.mentions.users.find(x => x.id === message.client.user.id);
+    if(botMention) {
+      return messageGenerator.getMessage(message.cleanContent.replace(new RegExp(`@​${message.client.user.username}`, 'g'), '') || 'a', message.guild.id, response => {
+        if (response !== false) message.channel.send(response);
+      }, true, 2000);
+    }
+  }
 
   // Emoji reaction on a private server
   if (message.guild.id === '771628652533514251' && message.channel.id === '771689939875790868') {
