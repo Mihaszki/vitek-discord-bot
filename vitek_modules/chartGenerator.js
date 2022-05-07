@@ -140,10 +140,10 @@ module.exports = {
               ctx.textBaseline = 'middle';
               const position = element.tooltipPosition();
               let posY = height / 2;
-              if(index % 2 == 0) {
+              if((index + 1) % 2 == 0) {
                 posY -= (calcFontSize + 15);
               }
-              else if(index % 3 == 0) {
+              else if((index + 1) % 3 == 0) {
                 posY += (calcFontSize + 15);
               }
               ctx.shadowBlur = 2;
