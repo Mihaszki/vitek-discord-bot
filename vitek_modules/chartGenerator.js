@@ -139,21 +139,22 @@ module.exports = {
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
               const position = element.tooltipPosition();
-              let posY = height / 2;
-              if((index + 1) % 2 == 0) {
-                posY -= (calcFontSize + 15);
-              }
-              else if((index + 1) % 3 == 0) {
-                posY += (calcFontSize + 15);
-              }
+              const posY = height / 2;
               ctx.shadowBlur = 2;
               ctx.lineWidth = 5;
               ctx.shadowColor = '#000000';
               ctx.fillStyle = '#ffffff';
               ctx.strokeStyle = '#000000';
               ctx.shadowBlur = 0;
-              ctx.strokeText(chartData[index] + unit, position.x, posY);
-              ctx.fillText(chartData[index] + unit, position.x, posY);
+
+              ctx.save();
+              ctx.translate(position.x, posY);
+              ctx.rotate(0.5 * Math.PI);
+              
+              ctx.strokeText(chartData[index] + unit, 0, 0);
+              ctx.fillText(chartData[index] + unit, 0, 0);
+              
+              ctx.restore();
             });
           }
         });
