@@ -33,7 +33,7 @@ module.exports = {
       }
 
       if (data.length == 0) return onSuccess([], []);
-      calculatedData = calculatedData.sort((a, b) => (a.value < b.value) ? 1 : -1).slice(0, 15);
+      calculatedData = calculatedData.sort((a, b) => (a.value < b.value) ? 1 : -1).slice(0, 25);
       onSuccess(calculatedData.map(a => a.value), calculatedData.map(a => a.username));
     }
     catch (error) {
