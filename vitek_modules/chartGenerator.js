@@ -128,17 +128,24 @@ module.exports = {
         ctx.fillRect(0, 0, chart.width, chart.height);
         ctx.restore();
       },
-      afterDatasetsDraw: function(chart) {
+      afterDatasetsDraw: (chart) => {
         const ctx = chart.canvas.getContext('2d');
-        chart.data.datasets.forEach(function(dataset, i) {
+        chart.data.datasets.forEach((dataset, i) => {
           const meta = chart.getDatasetMeta(i);
           if (!meta.hidden && type == 'bar') {
-            meta.data.forEach(function(element, index) {
-              ctx.font = `${Math.round(fontSize * 0.8)}px sans-serif`;
+            const calcFontSize = meta.data.length > 20 ? Math.round(fontSize * 0.5) : Math.round(fontSize * 0.8);
+            meta.data.forEach((element, index) => {
+              ctx.font = `${calcFontSize}px sans-serif`;
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
               const position = element.tooltipPosition();
-              const posY = height / 2;
+              let posY = height / 2;
+              if(index % 2 == 0) {
+                posY -= calcFontSize - 5;
+              }
+              else if(index % 3 == 0) {
+                posY += calcFontSize + 5;
+              }
               ctx.shadowBlur = 2;
               ctx.lineWidth = 5;
               ctx.shadowColor = '#000000';
