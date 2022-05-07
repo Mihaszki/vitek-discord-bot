@@ -61,11 +61,6 @@ module.exports = {
         serverLevels.push({ value: Math.floor(value / counter), hour: hours[i] });
       }
 
-      chartData.unshift({
-        username: 'Server level',
-        hours: serverLevels,
-      });
-
       for (let i = 0; i < chartData.length; i++) {
         const dataNumbers = [];
         let lastIndex = 0;

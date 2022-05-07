@@ -231,7 +231,7 @@ module.exports = {
       };
       const image = await chartJSNodeCanvas.renderToBuffer(configuration);
       const attachment = new MessageAttachment(image, `${attachmentFileName}.png`);
-      const htmlAttachment = new MessageAttachment(Buffer.from(getHTMLData(chartData, {chartTitle, chartLabels, stepSize, fontSize, type, unit, showOneUser, showOnlyID}), 'UTF8'), 'chart_html_version.html');
+      const htmlAttachment = new MessageAttachment(Buffer.from(getHTMLData(chartData, {chartTitle, chartLabels, stepSize, fontSize, type, unit, showOneUser, showOnlyID}), 'UTF8'), 'chart_html_version.htm');
 
       interaction.editReply({ files: [attachment, htmlAttachment] });
     })();
