@@ -51,7 +51,7 @@ module.exports = {
     }
     else if (option == 'ranking') {
       repController.getRanking(interaction.guild.id, interaction, items => {
-        let description = `**Server: ** \`${interaction.guild.name}\`\n\n\`Place | User | Points\`\n`;
+        let description = `**Ranking for: ** \`${interaction.guild.name}\`\n\n\`Place | User | Points\`\n`;
         if (items.length == 0) { description += '**NONE :(**'; }
         else {
           for (let i = 0; i < items.length; i++) {

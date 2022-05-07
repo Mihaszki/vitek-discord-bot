@@ -133,7 +133,7 @@ module.exports = {
         chart.data.datasets.forEach((dataset, i) => {
           const meta = chart.getDatasetMeta(i);
           if (!meta.hidden && type == 'bar') {
-            const calcFontSize = meta.data.length > 20 ? Math.round(fontSize * 0.5) : Math.round(fontSize * 0.8);
+            const calcFontSize = meta.data.length > 15 ? Math.round(fontSize * 0.5) : Math.round(fontSize * 0.8);
             meta.data.forEach((element, index) => {
               ctx.font = `${calcFontSize}px sans-serif`;
               ctx.textAlign = 'center';
@@ -141,10 +141,10 @@ module.exports = {
               const position = element.tooltipPosition();
               let posY = height / 2;
               if(index % 2 == 0) {
-                posY -= calcFontSize - 5;
+                posY -= (calcFontSize + 15);
               }
               else if(index % 3 == 0) {
-                posY += calcFontSize + 5;
+                posY += (calcFontSize + 15);
               }
               ctx.shadowBlur = 2;
               ctx.lineWidth = 5;
