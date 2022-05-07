@@ -51,7 +51,7 @@ module.exports = {
     }
     else if (option == 'ranking') {
       repController.getRanking(interaction.guild.id, interaction, items => {
-        let description = `**Top 20 on** \`${interaction.guild.name}\`\n\n\`Place | User | Points\`\n`;
+        let description = `**Server: ** \`${interaction.guild.name}\`\n\n\`Place | User | Points\`\n`;
         if (items.length == 0) { description += '**NONE :(**'; }
         else {
           for (let i = 0; i < items.length; i++) {
@@ -59,7 +59,7 @@ module.exports = {
             description += `**${i + 1}.** | ${member ? member : items[i].username} | ${items[i].value}\n`;
           }
         }
-        sendEmbed(interaction, `Rep - Top 20 | ${interaction.guild.name}`, description, getMention.guildIcon(interaction));
+        sendEmbed(interaction, `Rep - Ranking | ${interaction.guild.name}`, description, getMention.guildIcon(interaction));
       });
     }
     else if (option == 'history') {
