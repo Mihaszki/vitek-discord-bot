@@ -1,5 +1,5 @@
 module.exports = {
-  sendHTML: function(message, chartData, { chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', showOneUser = false, showOnlyID = '' }) {
+  getHTMLData: function(chartData, { chartTitle, chartLabels = [], fgColor = '#ffffff', stepSize = null, fontSize = 35, type = 'bar', unit = '', showOneUser = false, showOnlyID = '' }) {
     const colors = require('../vitek_modules/colors');
     let html = '';
     let dataSetStr = '[';
@@ -22,7 +22,7 @@ module.exports = {
       chartData.forEach(val => d += `'${val}',`);
       dataSetStr += `
       {
-        label: 'User level',
+        label: 'Data',
         data: [${d}],
         backgroundColor: ${bgColorsStr},
         borderColor: ${bgColorsStr},
@@ -114,6 +114,7 @@ module.exports = {
           label: '${i == 0 ? escapeCharacters(chartData[i].username) : escapeCharacters(username)}',
           pointRadius: 5,
           fontSize: 30,
+          tension: 0.4,
           spanGaps: ${i == 0 ? true : false},
           data: [${_data}],
           borderJoinStyle: 'miter',
@@ -136,7 +137,7 @@ module.exports = {
       dataSetStr += ']';
 
       if (showOneUser && !gotUser) {
-        return message.channel.send('There is no data for the given user!');
+        console.log('There is no data for the given user!');
       }
     }
 
@@ -178,10 +179,10 @@ body {min-height: 100%; background:#212121; color:#f7f7f7}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
-var ctx = document.getElementById('myChart').getContext('2d');
+let ctx = document.getElementById('myChart').getContext('2d');
 Chart.defaults.font.size = ${fontSize};
 Chart.defaults.color = '#f7f7f7';
-var myChart = new Chart(ctx, {
+let myChart = new Chart(ctx, {
   type: '${type}',
   data: {
     labels: ${labelsStr}
@@ -190,6 +191,9 @@ var myChart = new Chart(ctx, {
   options: {
     responsive: true,
     plugins: {
+      legend: {
+        display: ${type == 'line' ? 'true' : 'false'},
+      },
       title: {
         display: true,
         font: {
@@ -205,30 +209,31 @@ var myChart = new Chart(ctx, {
     scales: {
       y: {
         beginAtZero: true,
-        gridLines: {
+        grid: {
           color: 'rgba(255, 255, 255, 0.3)',
+          borderColor: 'rgba(255, 255, 255, 0.3)',
         },
         ticks: {
           stepSize: ${stepSize},
           callback: (value) => value + '${unit}',
           font: {
             size: ${Math.round(fontSize * 0.8)},
+            color: '${fgColor}',
           },
         },
       },
       x: {
         ticks: {
           font: {
-            size: ${Math.round(fontSize * 0.8)},
+            color: '${fgColor}',
+            size: ${fontSize * 0.8},
           },
         },
-        gridLines: {
+        grid: {
           color: 'rgba(255, 255, 255, 0.3)',
+          borderColor: 'rgba(255, 255, 255, 0.3)',
         },
       },
-    },
-    legend: {
-      display: ${type == 'line' ? true : false},
     },
     layout: {
       padding: {
@@ -246,7 +251,6 @@ var myChart = new Chart(ctx, {
 
 </html>
     `;
-
-    message.channel.send('Here\'s the chart, download and open it in a web browser:', { files: [{ attachment: Buffer.from(html, 'UTF8'), name: 'chart.html' }] });
+    return html;
   },
 };

@@ -1,8 +1,9 @@
 module.exports = {
   sendChart: function(interaction, chartData, { width, height, chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#ffffff', chartAreaBgColor = '#35383e', showOneUser = false, showOnlyID = '', attachmentFileName = 'chart' }) {
-    const { MessageAttachment } = require('discord.js');
+    const { MessageAttachment, MessageActionRow, MessageButton } = require('discord.js');
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
     const colors = require('../vitek_modules/colors');
+    const { getHTMLData } = require('./levelChartHtmlTemplate');
 
     const dataSet = [];
     const bgColors = colors.generate(chartData.length + 1);
@@ -230,7 +231,9 @@ module.exports = {
       };
       const image = await chartJSNodeCanvas.renderToBuffer(configuration);
       const attachment = new MessageAttachment(image, `${attachmentFileName}.png`);
-      interaction.editReply({ files: [attachment] });
+      const htmlAttachment = new MessageAttachment(Buffer.from(getHTMLData(chartData, {chartTitle, chartLabels, stepSize, fontSize, type, unit, showOneUser, showOnlyID}), 'UTF8'), 'chart_html_version.html');
+
+      interaction.editReply({ files: [attachment, htmlAttachment] });
     })();
   },
 };
