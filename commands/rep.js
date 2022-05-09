@@ -29,17 +29,14 @@ module.exports = {
         .addUserOption(option => option.setName('user').setDescription('Enter a user')))
     .addSubcommand(subcommand =>
       subcommand
-        .setName('history-full')
-        .setDescription('Saves the user\'s history to a html file')
-        .addUserOption(option => option.setName('user').setDescription('Enter a user')))
-    .addSubcommand(subcommand =>
-      subcommand
         .setName('help')
         .setDescription('Shows help')),
   async execute(interaction) {
     const repController = require('../vitek_db/repController');
     const getMention = require('../vitek_modules/getMention');
+    const { MessageAttachment } = require('discord.js');
     const { sendEmbed } = require('../vitek_modules/embed');
+    const repHistoryHtmlTemplate = require('../vitek_modules/repHistoryHtmlTemplate');
 
     const option = interaction.options.getSubcommand();
 
@@ -79,31 +76,20 @@ module.exports = {
           }
         }
 
+        if (items.length > 0) {
+          console.log(repHistoryHtmlTemplate.generateRepHistoryHTML(getMention.username(member), getMention.avatar(member), member.id, items, allPoints, pointsOnServer, interaction))
+          const att = new MessageAttachment(Buffer.from(repHistoryHtmlTemplate.generateRepHistoryHTML(getMention.username(member), getMention.avatar(member), member.id, items, allPoints, pointsOnServer, interaction), 'UTF8'), 'rep_history_full_html.htm');
+          return sendEmbed(interaction, `Rep - History | ${getMention.username(member)}`, description, getMention.avatar(member), att);
+        }
+
         sendEmbed(interaction, `Rep - History | ${getMention.username(member)}`, description, getMention.avatar(member));
       });
-    }
-    else if (option == 'history-full') {
-      let member = null;
-      const usr = interaction.options.getMember('user');
-      if (!usr) member = interaction.user;
-      else member = usr.user;
-
-      repController.getUserHistory(member.id, interaction.guild.id, interaction, (items, allPoints, pointsOnServer) => {
-        const repHistoryHtmlTemplate = require('../vitek_modules/repHistoryHtmlTemplate');
-
-        if (items.length == 0) { return interaction.reply({ content: 'Not enough data!' }); }
-        else {
-          repHistoryHtmlTemplate.sendHTML(getMention.username(member), getMention.avatar(member), member.id, items, allPoints, pointsOnServer, interaction);
-        }
-      }, null);
     }
     else if (option == 'help') {
       sendEmbed(interaction, 'Rep - Help', `\`/rep add <@User> <reason>\` - Give a positive point to the user
       \`/rep remove <@User> <reason>\` - Give a negative point to the user
       \`/rep history\` - Your rep history
       \`/rep history <@User>\` - User's rep history
-      \`/rep history-full\` - Your full rep history
-      \`/rep history-full <@User>\` - User's full rep history
       \`/rep ranking\` - Ranking`);
     }
   },

@@ -1,11 +1,14 @@
 module.exports = {
-  sendEmbed: function(interaction, title, description, thumbnail = null) {
+  sendEmbed: function(interaction, title, description, thumbnail = null, attachment = null) {
     const { MessageEmbed } = require('discord.js');
     const embed = new MessageEmbed()
       .setColor('#fff200')
       .setTitle(title)
       .setThumbnail(thumbnail == null ? interaction.client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 }) : thumbnail)
       .setDescription(description);
+    if(attachment !== null) {
+      return interaction.reply({ files: [attachment], embeds: [embed] });
+    }
     interaction.reply({ embeds: [embed] });
   },
 

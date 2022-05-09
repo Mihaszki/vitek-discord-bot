@@ -1,6 +1,6 @@
 module.exports = {
   sendChart: function(interaction, chartData, { width, height, chartTitle, chartLabels = [], stepSize = null, fontSize = 35, type = 'bar', unit = '', fgColor = '#ffffff', chartAreaBgColor = '#35383e', showOneUser = false, showOnlyID = '', attachmentFileName = 'chart' }) {
-    const { MessageAttachment, MessageActionRow, MessageButton } = require('discord.js');
+    const { MessageAttachment } = require('discord.js');
     const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
     const colors = require('../vitek_modules/colors');
     const { getHTMLData } = require('./levelChartHtmlTemplate');
