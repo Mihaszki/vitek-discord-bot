@@ -137,7 +137,7 @@ module.exports = {
     }
 
     html += `<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <title>${chartTitle.join(' ')}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

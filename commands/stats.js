@@ -9,8 +9,11 @@ module.exports = {
     const messageLogger = require('../vitek_db/messageLogger');
     const getMention = require('../vitek_modules/getMention');
     const { guildIcon } = require('../vitek_modules/getMention');
+    const { getHTMLData } = require('../vitek_modules/statstHtmlTemplate');
     await interaction.deferReply();
-    messageLogger.count(interaction, (allMessages, messagesNoBots, userRanking, channelRanking) => {
+    messageLogger.count(interaction, (allMessages, messagesNoBots, userRankingAll, channelRankingAll) => {
+      const userRanking = userRankingAll.slice(0, 10);
+      const channelRanking = channelRankingAll.slice(0, 10);
       let description = '**Most active users:**\n`Place | User | Messages`\n';
       for (let i = 0; i < userRanking.length; i++) {
         const member = getMention.memberInteraction(`<@${userRanking[i]._id.user_id}>`, interaction);
@@ -26,10 +29,12 @@ module.exports = {
       description += `\n\`\`\`Messages: ${messagesNoBots}\nMessages (+bots): ${allMessages.count}\nWords: ${allMessages.words}\nSwears: ${allMessages.swears}\`\`\``;
       const embed = new Discord.MessageEmbed()
         .setColor('#fc9803')
-        .setTitle(`Logged messages - ${interaction.guild.name}`)
+        .setTitle(`Stats - ${interaction.guild.name}`)
         .setThumbnail(guildIcon(interaction))
         .setDescription(description);
-      interaction.editReply({ embeds: [embed] });
+
+        const att = new Discord.MessageAttachment(Buffer.from(getHTMLData(allMessages, messagesNoBots, userRankingAll, channelRankingAll, interaction.guild.name), 'UTF8'), 'stats_full_html.htm');
+      interaction.editReply({ embeds: [embed], files: [att] });
     });
   },
 };

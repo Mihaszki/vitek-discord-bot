@@ -64,7 +64,6 @@ module.exports = {
             username: { $last: '$author.tag' },
             count: { $sum: 1 } } },
         { $sort: { count: -1 } },
-        { $limit: 15 },
       ]);
       const channelRanking = await MessageModel.aggregate([
         { $match: { server_id: message.guild.id, channel_id: { $exists: true } } },
@@ -74,7 +73,6 @@ module.exports = {
           count: { $sum: 1 },
           channel_name: { $last: '$channel_name' } } },
         { $sort: { count: -1 } },
-        { $limit: 10 },
       ]);
 
       onSuccess(countThisServer[0], messagesNoBots, userRanking, channelRanking);
