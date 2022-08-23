@@ -65,7 +65,7 @@ module.exports = {
         }
         ctx.fillText(line2, (canvas.width / 2) - (ctx.measureText(line2).width / 2), 770);
 
-        const attachment = new MessageAttachment(canvas.toBuffer(), 'keanu.png');
+        const attachment = new MessageAttachment(canvas.toBuffer(), 'image.png');
         interaction.editReply({ files: [attachment] });
       }).catch(async (err) => {
         console.log(err);
