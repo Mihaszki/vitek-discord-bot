@@ -4,6 +4,7 @@ module.exports = {
   'botAuthor': 'Mihaszki',
   'botAuthorId': '236885810475958272',
   'status': '/info',
+  'messageAutoRespondNumber': 100,
   'githubLink': 'https://github.com/Mihaszki/vitek-discord-bot',
   'dateTimezone': 'Europe/Warsaw',
   'dateLocale': 'pl-PL',

@@ -4,7 +4,7 @@ const messageLogger = require('./vitek_db/messageLogger');
 const messageGenerator = require('./vitek_db/messageGenerator');
 const blockListController = require('./vitek_db/blockListController');
 const { connectToDB } = require('./vitek_db/connectToDB');
-const { prefix, dateLocale, botAuthorId, status } = require('./bot_config');
+const { prefix, dateLocale, botAuthorId, messageAutoRespondNumber, status } = require('./bot_config');
 require('dotenv').config();
 
 // Connect to mongoDB
@@ -32,7 +32,7 @@ client.botRunningUptime = new Date();
 const getTimeNow = () => '[' + new Date().toLocaleTimeString(dateLocale) + ']';
 
 client.once('ready', async () => {
-  console.log('\x1b[34m%s\x1b[0m', `
+  console.log('\x1b[36m%s\x1b[0m', `
   88888880000GGGGGGCCCCCCCCCGGGGGGGGGGCCCCCG
   88888800000GGGGGGCCCCCCCCCGGGGGGGGGCCCCCCG
   80.         iGGGCCCCCCCCCCGGGf         .CG
@@ -57,7 +57,9 @@ client.once('ready', async () => {
   888800000000000.          ,G00000000GGGGGG
   8888000000000000CCCCCCCCCCG000088000GGGGGG
   8880000000000000000000000G0000000000GGGGGG`);
-  console.log('\x1b[34m%s\x1b[0m', `  ${client.user.tag}`);
+  console.log('\x1b[36m%s\x1b[0m', `  ${client.user.tag}`);
+  console.log('\x1b[36m%s\x1b[0m', {prefix, dateLocale, botAuthorId, messageAutoRespondNumber, status});
+
   // Get blocked users to the block list
   blocklist = await blockListController.getBlockedUsers();
   console.log('\x1b[33m%s\x1b[0m', 'Blocked users:');
@@ -67,7 +69,6 @@ client.once('ready', async () => {
     console.log('\x1b[33m%s\x1b[0m', `${g}`);
   }
   client.user.setActivity(status, { type: 'WATCHING' });
-
 });
 
 client.on('messageCreate', async message => {
@@ -107,7 +108,7 @@ client.on('messageCreate', async message => {
 
   if (!message.content.startsWith(prefix)) {
     guildMessageCounter['_' + message.guild.id] = (guildMessageCounter['_' + message.guild.id] + 1) || 1;
-    if (guildMessageCounter['_' + message.guild.id] % 100 === 0 || guildMessageCounterLimits['_' + message.guild.id] === true) {
+    if (guildMessageCounter['_' + message.guild.id] % messageAutoRespondNumber === 0 || guildMessageCounterLimits['_' + message.guild.id] === true) {
       messageGenerator.getMessage(message.cleanContent, message.guild.id, response => {
         if (response !== false) message.channel.send(response);
         guildMessageCounter['_' + message.guild.id] = 1;
