@@ -88,27 +88,23 @@ client.on('messageCreate', async message => {
     guildMessageCounterLimits['_' + message.guild.id] = guildMessageCounterLimits['_' + message.guild.id] ? false : true;
     return;
   }
-  else if (!blockListController.isBlockedLocal(message.author.id, blocklist) && message.content[0] === '.' && message.content.length > 1 && !message.author.bot) {
+  else if (!blockListController.isBlockedLocal(message.author.id, blocklist) &&
+    message.content[0] === '.' &&
+    message.content.length > 1 &&
+    !message.author.bot) {
     console.log(message.cleanContent.slice(1));
     return messageGenerator.getMessage(message.cleanContent.slice(1), message.guild.id, response => {
       if (response !== false) message.channel.send(response);
     }, true, 2000);
   }
 
-  // Emoji reaction on a private server
-  if (message.guild.id === '771628652533514251' && message.channel.id === '771689939875790868') {
-    if (message.attachments.first()) {
-      message.react('955484551818395719')
-        .then(() => message.react('953313703745421363'))
-        .catch(() => console.error('One of the emojis failed to react.'));
-    }
-  }
-
   if (message.author.bot) return;
 
   if (!message.content.startsWith(prefix)) {
     guildMessageCounter['_' + message.guild.id] = (guildMessageCounter['_' + message.guild.id] + 1) || 1;
-    if (guildMessageCounter['_' + message.guild.id] % messageAutoRespondNumber === 0 || guildMessageCounterLimits['_' + message.guild.id] === true) {
+    if (guildMessageCounter['_' + message.guild.id] % messageAutoRespondNumber === 0 ||
+      message.cleanContent.toLowerCase().includes('vitek') ||
+      guildMessageCounterLimits['_' + message.guild.id] === true) {
       messageGenerator.getMessage(message.cleanContent, message.guild.id, response => {
         if (response !== false) message.channel.send(response);
         guildMessageCounter['_' + message.guild.id] = 1;
