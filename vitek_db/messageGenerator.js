@@ -4,7 +4,7 @@ module.exports = {
       const { excludeRegex } = require('../bot_config');
       const { escapeRegex } = require('../vitek_modules/escapeRegex');
       const wordCounts = {};
-      const parsedText = text.toLowerCase().trim().replace(/\s+/g, ' ').replace(/\?|!|\.|,/g, '');
+      const parsedText = text.toLowerCase().trim().replace(/vitek/g, 'a').replace(/\s+/g, ' ').replace(/\?|!|\.|,/g, '');
       if (!parsedText || !parsedText.replace(/\s/g, '').length) return onResponse(false);
       const words = parsedText.split(' ');
 
